@@ -31,7 +31,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1),
     NEXT_PUBLIC_APP_URL: z.string().url(),
-    NEXT_PUBLIC_SITE_NAME: z.string().default("Pal"),
+    NEXT_PUBLIC_SITE_NAME: z.string().default("Platforma Shqiptare"),
   },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,

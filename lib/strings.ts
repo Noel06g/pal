@@ -1,12 +1,12 @@
 /**
- * Pal — të gjitha tekstet e ndërfaqes në një vend (shqip).
+ * Platforma Shqiptare — të gjitha tekstet e ndërfaqes në një vend (shqip).
  * Ndrysho fjalët këtu për t'i pasqyruar kudo në aplikacion.
  */
 export const t = {
   site: {
-    name: "Pal",
+    name: "Platforma Shqiptare",
     tagline: "Të ndërtojmë të ardhmen së bashku",
-    tempName: "Pal — emër i përkohshëm",
+    tempName: "",
     footerNote: "Nismë e pavarur qytetare · pa parti · pa institucione",
   },
 
@@ -26,7 +26,7 @@ export const t = {
   home: {
     heroTitle: "Të ndërtojmë të ardhmen së bashku",
     heroSub:
-      "Pal është një nismë e pavarur qytetare ku qytetarët propozojnë ide e zgjidhje për problemet e vendit, komuniteti i mbështet e diskuton, dhe ekspertët ndërlidhen me idetë.",
+      "Platforma Shqiptare është një nismë e pavarur qytetare ku qytetarët propozojnë ide e zgjidhje për problemet e vendit, komuniteti i mbështet e diskuton, dhe ekspertët ndërlidhen me idetë.",
     heroCtaPrimary: "Propozo një ide",
     heroCtaSecondary: "Shfleto idetë",
     howTitle: "Si funksionon",
@@ -51,7 +51,7 @@ export const t = {
     expertsTeaser: "Ekspertët",
     expertsTeaserSub:
       "Njerëz që ofrojnë njohuri për fushat e tyre. Vetëpropozohu ose propozo dikë nga një ide.",
-    aboutTeaser: "Rreth Pal",
+    aboutTeaser: "Rreth nesh",
     aboutTeaserSub:
       "Një nismë e pavarur qytetare — pa parti, pa institucione. Lexo misionin dhe rregullat tona.",
   },
@@ -115,7 +115,7 @@ export const t = {
     confirmAccept: "Prano",
     confirmReject: "Refuzo",
     confirmIntro:
-      "Je propozuar si ekspert në Pal. Nëse pranon, emri, fusha dhe biografia jote bëhen publike. Kontakti dhe CV-ja mbeten private (vetëm administrata).",
+      "Je propozuar si ekspert në Platformën Shqiptare. Nëse pranon, emri, fusha dhe biografia jote bëhen publike. Kontakti dhe CV-ja mbeten private (vetëm administrata).",
     confirmAccepted: "Faleminderit! Profili yt u konfirmua dhe tani është publik.",
     confirmRejected: "Propozimi u refuzua. Të dhënat e tua nuk do të publikohen.",
     confirmInvalid: "Ky lidhje konfirmimi është e pavlefshme ose ka skaduar.",
@@ -275,10 +275,10 @@ export const t = {
   },
 
   about: {
-    title: "Rreth Pal",
+    title: "Rreth Platformës Shqiptare",
     missionTitle: "Misioni",
     mission:
-      "Pal është një nismë e pavarur qytetare që i jep qytetarëve një hapësirë për të propozuar ide e zgjidhje për problemet e Shqipërisë, për t'i diskutuar bashkë dhe për t'i ndërlidhur me ekspertë. Nuk jemi parti politike dhe nuk përfaqësojmë asnjë institucion.",
+      "Platforma Shqiptare është një nismë e pavarur qytetare që i jep qytetarëve një hapësirë për të propozuar ide e zgjidhje për problemet e Shqipërisë, për t'i diskutuar bashkë dhe për t'i ndërlidhur me ekspertë. Nuk jemi parti politike dhe nuk përfaqësojmë asnjë institucion.",
     principlesTitle: "Parimet",
     principles: [
       "E pavarur dhe jopartiake — pa simbole partiake, pa axhenda.",

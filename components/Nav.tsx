@@ -39,7 +39,10 @@ export function Nav({
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-paper/90 backdrop-blur">
       <div className="container-pal flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="text-2xl font-extrabold tracking-tight text-teal">
+        <Link
+          href="/"
+          className="shrink-0 text-base font-extrabold leading-none tracking-tight text-teal sm:text-lg lg:text-xl"
+        >
           {t.site.name}
         </Link>
 

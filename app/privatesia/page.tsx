@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = { title: "Politika e privatësisë" };
 
-const APP = process.env.NEXT_PUBLIC_SITE_NAME ?? "Pal";
+const APP = process.env.NEXT_PUBLIC_SITE_NAME ?? "Platforma Shqiptare";
 
 export default function PrivacyPage() {
   return (

@@ -32,7 +32,7 @@ async function main() {
 
   // Fallback admin if none configured (so the seed is useful out of the box).
   if (adminEmails.length === 0) {
-    await upsertUser("admin@pal.al", "Administrata Pal", true);
+    await upsertUser("admin@pal.al", "Administrata", true);
     console.log("  admin: admin@pal.al (fallback — set ADMIN_EMAILS to override)");
   }
 

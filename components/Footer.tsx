@@ -11,7 +11,9 @@ export function Footer() {
               {t.site.name}
             </div>
             <p className="mt-2 text-sm text-muted">{t.site.footerNote}</p>
-            <p className="mt-1 text-xs text-muted">{t.site.tempName}</p>
+            {t.site.tempName ? (
+              <p className="mt-1 text-xs text-muted">{t.site.tempName}</p>
+            ) : null}
           </div>
           <nav className="grid grid-cols-2 gap-x-12 gap-y-2 text-sm" aria-label="Footer">
             <Link href="/idete" className="text-ink hover:text-teal">
