@@ -7,7 +7,7 @@ export const t = {
     name: "Platforma Shqiptare",
     tagline: "Të ndërtojmë të ardhmen së bashku",
     tempName: "",
-    footerNote: "Nismë e pavarur qytetare · pa parti · pa institucione",
+    footerNote: "Nismë e pavarur qytetare",
   },
 
   nav: {
@@ -28,7 +28,7 @@ export const t = {
     heroSub:
       "Platforma Shqiptare është një nismë e pavarur qytetare ku qytetarët propozojnë ide e zgjidhje për problemet e vendit, komuniteti i mbështet e diskuton, dhe ekspertët ndërlidhen me idetë.",
     heroCtaPrimary: "Propozo një ide",
-    heroCtaSecondary: "Shfleto idetë",
+    heroCtaSecondary: "Propozo një ekspert",
     howTitle: "Si funksionon",
     how: [
       {
@@ -53,7 +53,7 @@ export const t = {
       "Njerëz që ofrojnë njohuri për fushat e tyre. Vetëpropozohu ose propozo dikë nga një ide.",
     aboutTeaser: "Rreth nesh",
     aboutTeaserSub:
-      "Një nismë e pavarur qytetare — pa parti, pa institucione. Lexo misionin dhe rregullat tona.",
+      "Një nismë e pavarur qytetare. Lexo misionin dhe rregullat tona.",
   },
 
   ideas: {

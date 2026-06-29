@@ -11,7 +11,7 @@ export default function TermsPage() {
         <h1 className="text-4xl font-black tracking-tight">Kushtet e përdorimit</h1>
         <p className="mt-3 leading-relaxed text-muted">
           Duke përdorur {t.site.name}, pranon rregullat e komunitetit më poshtë. {t.site.name} është një
-          nismë e pavarur qytetare — pa parti dhe pa institucione.
+          nismë e pavarur qytetare.
         </p>
 
         <section className="mt-10">

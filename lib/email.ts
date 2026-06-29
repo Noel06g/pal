@@ -31,7 +31,7 @@ function layout(opts: { heading: string; body: string; cta?: { label: string; hr
             }
           </td></tr>
           <tr><td style="padding:18px 28px;border-top:1px solid #E1E2DD;font-size:12px;color:#5C6672;">
-            ${BRAND} — Nismë e pavarur qytetare · pa parti · pa institucione.
+            ${BRAND} — Nismë e pavarur qytetare.
           </td></tr>
         </table>
       </td></tr>

@@ -13,11 +13,11 @@ export function Hero() {
         </h1>
         <p className="mt-5 max-w-2xl text-lg text-muted">{t.home.heroSub}</p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/idete/krijo" className="btn-primary text-base">
-            {t.home.heroCtaPrimary}
-          </Link>
-          <Link href="/idete" className="btn-secondary text-base">
+          <Link href="/ekspertet" className="btn-primary text-base">
             {t.home.heroCtaSecondary}
+          </Link>
+          <Link href="/idete/krijo" className="btn-secondary text-base">
+            {t.home.heroCtaPrimary}
           </Link>
         </div>
       </div>
