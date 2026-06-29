@@ -20,7 +20,10 @@ export default function PrivacyPage() {
           <p>
             {APP} është një nismë e pavarur qytetare. Kontrolluesi i të dhënave është operatori i platformës.
             Për çdo kërkesë lidhur me të dhënat e tua, na kontakto në:{" "}
-            <span className="font-semibold text-ink">[vendos email-in e kontaktit]</span>.
+            <a href="mailto:platformashqiptare2026@gmail.com" className="font-semibold text-teal underline">
+              platformashqiptare2026@gmail.com
+            </a>
+            .
           </p>
         </Section>
 
