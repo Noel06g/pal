@@ -92,8 +92,8 @@ export function ProposeExpertButton({
             <label className="label" htmlFor="nom-contact">
               {t.forms.nomContact}
             </label>
-            <input id="nom-contact" name="contact" required className="input" placeholder="Email i propozuari" />
-            <p className="hint">Përdoret për t&apos;i dërguar email-in e konfirmimit.</p>
+            <input id="nom-contact" name="contact" required className="input" placeholder="Email ose telefon i propozuari" />
+            <p className="hint">Vetëm administrata e sheh — për ta kontaktuar jashtë platformës.</p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">

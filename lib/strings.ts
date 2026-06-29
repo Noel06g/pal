@@ -168,7 +168,7 @@ export const t = {
     nomCv: "CV e propozuar (PDF, opsionale, private)",
     nominateSubmit: "Dërgo propozimin",
     nominateNote:
-      "Personi i propozuar do të marrë një email për të pranuar ose refuzuar. Profili nuk shfaqet publikisht derisa ai/ajo ta pranojë.",
+      "Profili nuk shfaqet publikisht menjëherë — shqyrtohet nga administrata para se të publikohet.",
 
     // Report
     reportReason: "Arsyeja e raportimit",
@@ -273,7 +273,7 @@ export const t = {
     archived: "Ideja u arkivua.",
     reported: "Faleminderit — raportimi u dërgua.",
     expertSelf: "Vetëpropozimi u regjistrua — je tani në direktorinë e ekspertëve.",
-    expertNominated: "Propozimi u dërgua. Personi do të marrë një email konfirmimi.",
+    expertNominated: "Propozimi u dërgua. Do të shqyrtohet nga administrata para se të publikohet.",
     accountDeleted: "Llogaria u fshi.",
     fileTooBig: "Skedari është shumë i madh (maks. 10 MB).",
     fileNotPdf: "Lejohen vetëm skedarë PDF.",

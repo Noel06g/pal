@@ -1,6 +1,5 @@
 "use server";
 
-import { randomBytes } from "crypto";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { getActiveUser } from "@/lib/session";
@@ -8,8 +7,7 @@ import { selfNominateSchema, nominateSchema } from "@/lib/validation";
 import { checkRate } from "@/lib/ratelimit";
 import { buildKey, putObject, validatePdf } from "@/lib/r2";
 import { createNotification } from "@/lib/notify";
-import { sendExpertConfirmEmail, sendExpertProposedEmail } from "@/lib/email";
-import { fieldName } from "@/lib/fields";
+import { sendExpertProposedEmail } from "@/lib/email";
 import { t } from "@/lib/strings";
 import { ok, fail, type ActionResult } from "./_helpers";
 
@@ -105,7 +103,7 @@ export async function proposeExpert(formData: FormData): Promise<ActionResult> {
   const cv = await prepareCv(formData);
   if (cv && !cv.ok) return fail(cv.error);
 
-  const token = randomBytes(32).toString("hex");
+  // Proposed experts stay PENDING for admin review (no nominee email).
   const expert = await db.expertProfile.create({
     data: {
       name: input.name,
@@ -118,8 +116,6 @@ export async function proposeExpert(formData: FormData): Promise<ActionResult> {
       status: "PENDING",
       source: "NOMINATED",
       fromIdeaId: idea.id,
-      confirmToken: token,
-      confirmTokenExpires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14), // 14 days
     },
   });
 
@@ -136,11 +132,6 @@ export async function proposeExpert(formData: FormData): Promise<ActionResult> {
       },
     });
   }
-
-  // Email the proposed person (consent / confirmation).
-  sendExpertConfirmEmail(input.contact, input.name, fieldName(input.fieldKey), token).catch(
-    () => {},
-  );
 
   // Notify the idea author (in-app + email).
   await createNotification({
