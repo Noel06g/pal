@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+  /* Visible, consistent focus ring for keyboard users. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-teal ring-offset-2 ring-offset-paper;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: #cfe3dd;
+  }
+}
+
+@layer components {
+  .container-pal {
+    @apply mx-auto w-full max-w-content px-4 sm:px-6;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-[10px] px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:ring-2;
+  }
+  .btn-primary {
+    @apply btn bg-teal text-white hover:bg-teal-dk;
+  }
+  .btn-secondary {
+    @apply btn border border-border bg-card text-ink hover:bg-teal-tint;
+  }
+  .btn-ghost {
+    @apply btn text-ink hover:bg-teal-tint;
+  }
+  .btn-danger {
+    @apply btn bg-danger text-white hover:opacity-90;
+  }
+  .btn-danger-soft {
+    @apply btn bg-danger-tint text-danger hover:opacity-90;
+  }
+
+  .card {
+    @apply rounded-[14px] border border-border bg-card shadow-card;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-border bg-teal-tint px-2.5 py-1 text-xs font-semibold text-teal-dk;
+  }
+
+  .input {
+    @apply w-full rounded-[10px] border border-border bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-muted focus-visible:border-teal;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-semibold text-ink;
+  }
+  .hint {
+    @apply mt-1 text-xs text-muted;
+  }
+
+  .badge-ok {
+    @apply inline-flex items-center rounded-full bg-teal-tint px-2 py-0.5 text-xs font-semibold text-teal-dk;
+  }
+  .badge-amber {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold;
+    background: #f6efdd;
+    color: #9a6b16;
+  }
+  .badge-muted {
+    @apply inline-flex items-center rounded-full bg-paper px-2 py-0.5 text-xs font-semibold text-muted;
+  }
+
+  .link-underline {
+    @apply text-teal underline decoration-from-font underline-offset-2 hover:text-teal-dk;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,204 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { db } from "@/lib/db";
+import { getCurrentUser } from "@/lib/session";
+import { SupportButton } from "@/components/SupportButton";
+import { ArchiveButton } from "@/components/ArchiveButton";
+import { ReportButton } from "@/components/ReportButton";
+import { ProposeExpertButton } from "@/components/ProposeExpertButton";
+import { CommentList, type CommentData } from "@/components/CommentList";
+import { CommentForm } from "@/components/CommentForm";
+import { fieldName } from "@/lib/fields";
+import { t } from "@/lib/strings";
+
+function fmtDate(d: Date) {
+  return new Intl.DateTimeFormat("sq-AL", { dateStyle: "medium" }).format(d);
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const idea = await db.idea.findUnique({ where: { id }, select: { title: true, summary: true } });
+  if (!idea) return { title: t.common.notFoundTitle };
+  return { title: idea.title, description: idea.summary.slice(0, 160) };
+}
+
+export default async function IdeaDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const user = await getCurrentUser();
+
+  const idea = await db.idea.findUnique({
+    where: { id },
+    include: {
+      author: { select: { id: true, name: true } },
+      documents: true,
+      comments: {
+        orderBy: { createdAt: "desc" },
+        include: { author: { select: { name: true } } },
+      },
+      _count: { select: { supports: true } },
+    },
+  });
+  if (!idea) notFound();
+
+  const [supported, fieldExperts] = await Promise.all([
+    user
+      ? db.support.findUnique({
+          where: { ideaId_userId: { ideaId: idea.id, userId: user.id } },
+          select: { id: true },
+        })
+      : Promise.resolve(null),
+    db.expertProfile.findMany({
+      where: { status: "CONFIRMED", fieldKey: idea.fieldKey },
+      orderBy: { createdAt: "desc" },
+      take: 8,
+      select: { id: true, name: true, bio: true, fieldKey: true },
+    }),
+  ]);
+
+  const isArchived = idea.status === "ARCHIVED";
+  const isOwner = user?.id === idea.author.id;
+  const canModerate = isOwner || Boolean(user?.isAdmin);
+
+  const comments: CommentData[] = idea.comments.map((c) => ({
+    id: c.id,
+    body: c.body,
+    stance: c.stance,
+    isSolution: c.isSolution,
+    authorName: c.author.name,
+    createdAt: fmtDate(c.createdAt),
+  }));
+
+  return (
+    <div className="container-pal py-10">
+      <Link href="/idete" className="text-sm text-muted hover:text-teal">
+        {t.idea.backToList}
+      </Link>
+
+      <div className="mt-4 grid gap-8 lg:grid-cols-[1fr_300px]">
+        {/* Main column */}
+        <article>
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <span className="chip">{fieldName(idea.fieldKey)}</span>
+            {isArchived ? (
+              <span className="badge-muted">{t.ideas.statusArchived}</span>
+            ) : (
+              <span className="badge-ok">{t.ideas.statusActive}</span>
+            )}
+            {idea.subfield && <span className="badge-muted">{idea.subfield}</span>}
+          </div>
+
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tight">{idea.title}</h1>
+          <p className="mt-2 text-sm text-muted">
+            {t.ideas.by} <span className="font-semibold text-ink">{idea.author.name}</span> · {fmtDate(idea.createdAt)}
+          </p>
+
+          {idea.fieldKey === "other" && idea.otherText && (
+            <p className="mt-3 rounded-[10px] bg-paper p-3 text-sm text-muted">
+              <span className="font-semibold text-ink">Fusha (Tjetër):</span> {idea.otherText}
+            </p>
+          )}
+
+          <div className="mt-5 whitespace-pre-wrap text-base leading-relaxed text-ink">
+            {idea.summary}
+          </div>
+
+          {isArchived && (
+            <p className="mt-6 rounded-[10px] border border-border bg-paper p-3 text-sm text-muted">
+              {t.ideas.archivedNote}
+            </p>
+          )}
+
+          {/* Documents */}
+          {idea.documents.length > 0 && (
+            <section className="mt-8">
+              <h2 className="mb-3 text-lg font-bold">{t.idea.documents}</h2>
+              <ul className="space-y-2">
+                {idea.documents.map((d) => (
+                  <li key={d.id}>
+                    <a
+                      href={`/api/files/${d.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-[10px] border border-border bg-card px-3 py-2 text-sm hover:bg-teal-tint"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+                        <path d="M4 1.5h5L13 5v9.5H4V1.5Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+                        <path d="M9 1.5V5h4" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+                      </svg>
+                      <span className="font-medium text-teal-dk">{d.fileName}</span>
+                      <span className="text-xs text-muted">({Math.round(d.size / 1024)} KB)</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Comments */}
+          <section className="mt-10">
+            <h2 className="mb-4 text-xl font-bold">
+              {t.idea.commentsTitle} ({comments.length})
+            </h2>
+            {!isArchived && (
+              <div className="mb-6">
+                <CommentForm ideaId={idea.id} loggedIn={Boolean(user)} />
+              </div>
+            )}
+            <CommentList comments={comments} canModerate={canModerate} loggedIn={Boolean(user)} />
+          </section>
+        </article>
+
+        {/* Sidebar */}
+        <aside className="space-y-5 lg:sticky lg:top-20 lg:self-start">
+          <div className="card space-y-3 p-5">
+            <div className="text-center">
+              <div className="text-3xl font-extrabold text-teal">{idea._count.supports}</div>
+              <div className="text-xs text-muted">{t.ideas.supports}</div>
+            </div>
+            <SupportButton
+              ideaId={idea.id}
+              initialSupported={Boolean(supported)}
+              initialCount={idea._count.supports}
+              loggedIn={Boolean(user)}
+              disabled={isArchived}
+            />
+            {!isArchived && (
+              <ProposeExpertButton ideaId={idea.id} fieldKey={idea.fieldKey} loggedIn={Boolean(user)} />
+            )}
+            <ReportButton ideaId={idea.id} loggedIn={Boolean(user)} variant="button" />
+            {isOwner && !isArchived && <ArchiveButton ideaId={idea.id} />}
+          </div>
+
+          {/* Ekspertë në këtë fushë */}
+          <div className="card p-5">
+            <h2 className="mb-3 text-base font-bold">{t.idea.expertsInField}</h2>
+            {fieldExperts.length > 0 ? (
+              <ul className="space-y-3">
+                {fieldExperts.map((e) => (
+                  <li key={e.id} className="border-b border-border pb-3 last:border-0 last:pb-0">
+                    <div className="font-semibold text-ink">{e.name}</div>
+                    <p className="mt-0.5 line-clamp-3 text-xs text-muted">{e.bio}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-muted">{t.idea.noExpertsInField}</p>
+            )}
+            <Link href={`/ekspertet?fusha=${idea.fieldKey}`} className="mt-3 inline-block text-sm font-semibold text-teal hover:underline">
+              {t.home.viewAll} →
+            </Link>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
