@@ -3,8 +3,8 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { IdeaCard, type IdeaCardData } from "@/components/IdeaCard";
 import { IdeasSearch } from "@/components/IdeasSearch";
-import { FIELDS, fieldName, isValidFieldKey } from "@/lib/fields";
-import { OTHER_FIELD } from "@/lib/fields";
+import { FieldFilter } from "@/components/FieldFilter";
+import { fieldName, isValidFieldKey } from "@/lib/fields";
 import { t } from "@/lib/strings";
 import type { Prisma } from "@prisma/client";
 
@@ -75,52 +75,9 @@ export default async function IdeasPage({
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
-        {/* Sidebar filter */}
+        {/* Sidebar filter (collapses into a button on mobile) */}
         <aside>
-          <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-muted">
-            {t.ideas.filterTitle}
-          </h2>
-          <ul className="space-y-1">
-            <li>
-              <Link
-                href={filterHref(null)}
-                className={[
-                  "block rounded-md px-3 py-2 text-sm",
-                  !activeField ? "bg-teal-tint font-semibold text-teal-dk" : "text-ink hover:bg-teal-tint",
-                ].join(" ")}
-              >
-                {t.ideas.filterAll}
-              </Link>
-            </li>
-            {FIELDS.map((f) => (
-              <li key={f.key}>
-                <Link
-                  href={filterHref(f.key)}
-                  className={[
-                    "block rounded-md px-3 py-2 text-sm leading-snug",
-                    activeField === f.key
-                      ? "bg-teal-tint font-semibold text-teal-dk"
-                      : "text-ink hover:bg-teal-tint",
-                  ].join(" ")}
-                >
-                  {f.n}. {f.name}
-                </Link>
-              </li>
-            ))}
-            <li>
-              <Link
-                href={filterHref(OTHER_FIELD.key)}
-                className={[
-                  "block rounded-md px-3 py-2 text-sm",
-                  activeField === OTHER_FIELD.key
-                    ? "bg-teal-tint font-semibold text-teal-dk"
-                    : "text-ink hover:bg-teal-tint",
-                ].join(" ")}
-              >
-                {OTHER_FIELD.name}
-              </Link>
-            </li>
-          </ul>
+          <FieldFilter activeField={activeField} q={q} />
         </aside>
 
         {/* Results */}

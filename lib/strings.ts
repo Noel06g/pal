@@ -61,6 +61,7 @@ export const t = {
     listSub: "Ide e zgjidhje për problemet e vendit.",
     searchPlaceholder: "Kërko sipas titullit, përmbledhjes ose autorit…",
     filterTitle: "Fushat",
+    filterButton: "Filtro sipas fushës",
     filterAll: "Të gjitha",
     sortNote: "Renditur sipas mbështetjes — të arkivuarat në fund.",
     empty: "Nuk u gjet asnjë ide. Provo një filtër tjetër ose propozo një ide të re.",
