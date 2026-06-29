@@ -4,22 +4,15 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { getActiveUser } from "@/lib/session";
 import { ideaSchema } from "@/lib/validation";
-import { verifyTurnstile } from "@/lib/turnstile";
 import { checkRate } from "@/lib/ratelimit";
 import { buildKey, putObject, validatePdf } from "@/lib/r2";
 import { OTHER_FIELD } from "@/lib/fields";
 import { t } from "@/lib/strings";
-import { ok, fail, getClientIp, type ActionResult } from "./_helpers";
+import { ok, fail, type ActionResult } from "./_helpers";
 
 export async function createIdea(formData: FormData): Promise<ActionResult<{ id: string }>> {
   const user = await getActiveUser();
   if (!user) return fail(t.common.loginRequired);
-
-  const turnstileToken = String(formData.get("turnstileToken") ?? "");
-  const ip = await getClientIp();
-  if (!(await verifyTurnstile(turnstileToken, ip))) {
-    return fail(t.toast.turnstileFailed);
-  }
 
   if (!(await checkRate("idea", user.id))) return fail(t.toast.rateLimited);
 

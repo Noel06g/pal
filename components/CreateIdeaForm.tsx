@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createIdea } from "@/app/actions/ideas";
-import { Turnstile } from "@/components/Turnstile";
 import { useToast } from "@/components/Toast";
 import { FIELDS, OTHER_FIELD, fieldSubs } from "@/lib/fields";
 import { t } from "@/lib/strings";
@@ -119,8 +118,6 @@ export function CreateIdeaForm() {
         />
         <p className="hint">PDF, maks. 10 MB. Dokumentet janë publike.</p>
       </div>
-
-      <Turnstile />
 
       <button type="submit" disabled={pending} className="btn-primary w-full disabled:opacity-60">
         {pending ? t.common.loading : t.forms.ideaSubmit}

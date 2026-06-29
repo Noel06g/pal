@@ -4,22 +4,15 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { getActiveUser } from "@/lib/session";
 import { commentSchema } from "@/lib/validation";
-import { verifyTurnstile } from "@/lib/turnstile";
 import { checkRate } from "@/lib/ratelimit";
 import { createNotification } from "@/lib/notify";
 import { sendNewCommentEmail } from "@/lib/email";
 import { t } from "@/lib/strings";
-import { ok, fail, getClientIp, type ActionResult } from "./_helpers";
+import { ok, fail, type ActionResult } from "./_helpers";
 
 export async function addComment(formData: FormData): Promise<ActionResult> {
   const user = await getActiveUser();
   if (!user) return fail(t.common.loginRequired);
-
-  const turnstileToken = String(formData.get("turnstileToken") ?? "");
-  const ip = await getClientIp();
-  if (!(await verifyTurnstile(turnstileToken, ip))) {
-    return fail(t.toast.turnstileFailed);
-  }
 
   if (!(await checkRate("comment", user.id))) return fail(t.toast.rateLimited);
 

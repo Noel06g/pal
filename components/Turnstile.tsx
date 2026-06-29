@@ -56,7 +56,12 @@ export function Turnstile() {
           if (inputRef.current) inputRef.current.value = token;
         },
         "expired-callback": () => {
+          // Token expired (~5 min). Clear it and fetch a fresh one so a slow
+          // second attempt doesn't submit a stale token.
           if (inputRef.current) inputRef.current.value = "";
+          if (widgetId.current && window.turnstile) {
+            window.turnstile.reset(widgetId.current);
+          }
         },
         "error-callback": () => {
           if (inputRef.current) inputRef.current.value = "";

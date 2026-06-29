@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { addComment } from "@/app/actions/comments";
-import { Turnstile } from "@/components/Turnstile";
 import { useToast } from "@/components/Toast";
 import { t } from "@/lib/strings";
 
@@ -11,7 +10,6 @@ export function CommentForm({ ideaId, loggedIn }: { ideaId: string; loggedIn: bo
   const router = useRouter();
   const toast = useToast();
   const [pending, setPending] = useState(false);
-  const [resetKey, setResetKey] = useState(0);
 
   if (!loggedIn) {
     return (
@@ -34,7 +32,6 @@ export function CommentForm({ ideaId, loggedIn }: { ideaId: string; loggedIn: bo
     if (res.ok) {
       toast(t.toast.commented, "success");
       form.reset();
-      setResetKey((k) => k + 1);
       router.refresh();
     } else {
       toast(res.error, "error");
@@ -84,10 +81,6 @@ export function CommentForm({ ideaId, loggedIn }: { ideaId: string; loggedIn: bo
           <input type="checkbox" name="isSolution" className="h-4 w-4 accent-teal" />
           {t.forms.commentIsSolution}
         </label>
-      </div>
-
-      <div key={resetKey}>
-        <Turnstile />
       </div>
 
       <button type="submit" disabled={pending} className="btn-primary disabled:opacity-60">
