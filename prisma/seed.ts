@@ -1,4 +1,8 @@
-import { PrismaClient, Stance } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+
+// String union (matches the Stance enum values) so the seed works against both
+// the Postgres schema (enum) and the SQLite preview schema (string).
+type Stance = "PRO" | "KUNDER" | "NEUTRAL";
 
 const db = new PrismaClient();
 

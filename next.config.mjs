@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
+const isDev = process.env.NODE_ENV !== "production";
+// Next.js dev (HMR / React Refresh) needs 'unsafe-eval'; production stays strict.
+const scriptSrc = isDev
+  ? "'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com"
+  : "'self' 'unsafe-inline' https://challenges.cloudflare.com";
+
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
@@ -16,7 +22,7 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+      `script-src ${scriptSrc}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob:",
       "font-src 'self' data:",

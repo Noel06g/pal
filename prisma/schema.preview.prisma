@@ -1,0 +1,189 @@
+// LOCAL PREVIEW ONLY — SQLite, zero external accounts.
+// Production uses prisma/schema.prisma (PostgreSQL). Do not deploy this one.
+// Enums are represented as strings and Postgres-only bits removed for SQLite.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model PendingRegistration {
+  email     String   @id
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  isAdmin       Boolean   @default(false)
+  isBanned      Boolean   @default(false)
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+
+  ideas         Idea[]
+  comments      Comment[]
+  supports      Support[]
+  reports       Report[]
+  notifications Notification[]
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Idea {
+  id        String   @id @default(cuid())
+  title     String
+  summary   String
+  fieldKey  String
+  subfield  String?
+  otherText String?
+  status    String   @default("ACTIVE")
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  comments  Comment[]
+  supports  Support[]
+  documents Document[]
+  reports   Report[]
+  experts   ExpertProfile[]
+
+  @@index([fieldKey])
+  @@index([status])
+  @@index([authorId])
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  ideaId     String
+  idea       Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  body       String
+  stance     String
+  isSolution Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([ideaId])
+}
+
+model Support {
+  id        String   @id @default(cuid())
+  ideaId    String
+  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([ideaId, userId])
+  @@index([userId])
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  ideaId      String
+  idea        Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  fileName    String
+  storageKey  String
+  contentType String
+  size        Int
+  createdAt   DateTime @default(now())
+
+  @@index([ideaId])
+}
+
+model ExpertProfile {
+  id       String  @id @default(cuid())
+  name     String
+  fieldKey String
+  bio      String
+  status   String  @default("PENDING")
+  source   String
+
+  contact         String
+  reason          String
+  cvFileName      String?
+  cvStorageKey    String?
+  cvContentType   String?
+  cvSize          Int?
+  proposerName    String?
+  proposerContact String?
+
+  confirmToken        String?   @unique
+  confirmTokenExpires DateTime?
+
+  fromIdeaId String?
+  fromIdea   Idea?    @relation(fields: [fromIdeaId], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now())
+
+  @@index([status])
+  @@index([fieldKey])
+}
+
+model Report {
+  id            String   @id @default(cuid())
+  ideaId        String?
+  idea          Idea?    @relation(fields: [ideaId], references: [id], onDelete: SetNull)
+  ideaTitle     String
+  commentId     String?
+  reason        String
+  reporterId    String?
+  reporter      User?    @relation(fields: [reporterId], references: [id], onDelete: SetNull)
+  reporterEmail String
+  resolved      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@index([resolved])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  message   String
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+}
