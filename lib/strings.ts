@@ -238,6 +238,12 @@ export const t = {
     error: "Diçka shkoi keq",
     errorBody: "Lidhja mund të ketë skaduar ose është përdorur tashmë. Provo përsëri.",
     banned: "Kjo llogari është pezulluar.",
+    errorVerification:
+      "Lidhja e hyrjes ka skaduar ose është përdorur tashmë. Kërko një lidhje të re më poshtë.",
+    errorGeneric: "Hyrja dështoi. Provo përsëri më poshtë.",
+    alreadyIn: "Je tashmë i kyçur",
+    alreadyInBody: "Je i kyçur si",
+    goAccount: "Shko te llogaria",
   },
 
   common: {
