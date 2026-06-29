@@ -38,6 +38,7 @@ function loadScript(): Promise<void> {
  */
 export function Turnstile() {
   const ref = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const widgetId = useRef<string | null>(null);
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
@@ -51,16 +52,14 @@ export function Turnstile() {
         sitekey: siteKey,
         theme: "light",
         callback: (token: string) => {
-          const input = ref.current?.querySelector<HTMLInputElement>(
-            'input[name="turnstileToken"]',
-          );
-          if (input) input.value = token;
+          // Write the token to the hidden input so it submits with the form.
+          if (inputRef.current) inputRef.current.value = token;
         },
         "expired-callback": () => {
-          const input = ref.current?.querySelector<HTMLInputElement>(
-            'input[name="turnstileToken"]',
-          );
-          if (input) input.value = "";
+          if (inputRef.current) inputRef.current.value = "";
+        },
+        "error-callback": () => {
+          if (inputRef.current) inputRef.current.value = "";
         },
       });
     });
@@ -76,7 +75,7 @@ export function Turnstile() {
   return (
     <div className="my-3">
       <div ref={ref} />
-      <input type="hidden" name="turnstileToken" defaultValue="" />
+      <input ref={inputRef} type="hidden" name="turnstileToken" defaultValue="" />
       {!siteKey && (
         <p className="hint text-danger">
           Mungon NEXT_PUBLIC_TURNSTILE_SITE_KEY.
