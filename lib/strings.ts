@@ -272,7 +272,7 @@ export const t = {
     commentDeleted: "Komenti u fshi.",
     archived: "Ideja u arkivua.",
     reported: "Faleminderit — raportimi u dërgua.",
-    expertSelf: "Vetëpropozimi u regjistrua — je tani në direktorinë e ekspertëve.",
+    expertSelf: "Vetëpropozimi u dërgua. Do të shqyrtohet nga administrata para se të publikohet.",
     expertNominated: "Propozimi u dërgua. Do të shqyrtohet nga administrata para se të publikohet.",
     accountDeleted: "Llogaria u fshi.",
     fileTooBig: "Skedari është shumë i madh (maks. 10 MB).",

@@ -54,6 +54,9 @@ export function SelfNominateButton({
       </button>
       <Modal open={open} onClose={() => setOpen(false)} title={t.experts.selfNominate}>
         <form onSubmit={onSubmit} className="space-y-4">
+          <p className="rounded-[10px] bg-teal-tint/50 p-3 text-xs text-teal-dk">
+            {t.forms.nominateNote}
+          </p>
           <div>
             <label className="label" htmlFor="self-name">
               {t.forms.expName}

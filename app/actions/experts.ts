@@ -27,7 +27,7 @@ async function prepareCv(formData: FormData): Promise<PreparedCv> {
   return { ok: true, name: file.name, type: file.type, bytes };
 }
 
-/** Self-nomination → CONFIRMED immediately, public directory. */
+/** Self-nomination → PENDING for admin review (not public until approved). */
 export async function selfNominateExpert(formData: FormData): Promise<ActionResult> {
   const user = await getActiveUser();
   if (!user) return fail(t.common.loginRequired);
@@ -52,7 +52,7 @@ export async function selfNominateExpert(formData: FormData): Promise<ActionResu
       bio: parsed.data.bio,
       reason: parsed.data.reason,
       contact: parsed.data.contact,
-      status: "CONFIRMED",
+      status: "PENDING",
       source: "SELF",
     },
   });
@@ -71,7 +71,7 @@ export async function selfNominateExpert(formData: FormData): Promise<ActionResu
     });
   }
 
-  revalidatePath("/ekspertet");
+  revalidatePath("/admin");
   return ok();
 }
 
