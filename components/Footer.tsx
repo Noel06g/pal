@@ -16,14 +16,14 @@ export function Footer() {
             ) : null}
           </div>
           <nav className="grid grid-cols-2 gap-x-12 gap-y-2 text-sm" aria-label="Footer">
-            <Link href="/idete" className="text-ink hover:text-teal">
-              {t.nav.ideas}
+            <Link href="/rreth" className="text-ink hover:text-teal">
+              {t.nav.about}
             </Link>
             <Link href="/ekspertet" className="text-ink hover:text-teal">
               {t.nav.experts}
             </Link>
-            <Link href="/rreth" className="text-ink hover:text-teal">
-              {t.nav.about}
+            <Link href="/idete" className="text-ink hover:text-teal">
+              {t.nav.ideas}
             </Link>
             <Link href="/privatesia" className="text-ink hover:text-teal">
               Privatësia
