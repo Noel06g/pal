@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { getActiveUser } from "@/lib/session";
-import { selfNominateSchema, nominateSchema } from "@/lib/validation";
+import { selfNominateSchema, nominateSchema, nominateGeneralSchema } from "@/lib/validation";
 import { checkRate } from "@/lib/ratelimit";
 import { buildKey, putObject, validatePdf } from "@/lib/r2";
 import { createNotification } from "@/lib/notify";
@@ -149,6 +149,58 @@ export async function proposeExpert(formData: FormData): Promise<ActionResult> {
   }
 
   revalidatePath(`/idete/${idea.id}`);
+  return ok();
+}
+
+/** Nomination from the experts page (not tied to an idea) → PENDING for admin review. */
+export async function proposeExpertGeneral(formData: FormData): Promise<ActionResult> {
+  const user = await getActiveUser();
+  if (!user) return fail(t.common.loginRequired);
+  if (!(await checkRate("general", user.id))) return fail(t.toast.rateLimited);
+
+  const parsed = nominateGeneralSchema.safeParse({
+    fieldKey: formData.get("fieldKey"),
+    name: formData.get("name"),
+    bio: formData.get("bio"),
+    reason: formData.get("reason"),
+    contact: formData.get("contact"),
+    proposerName: formData.get("proposerName"),
+    proposerContact: formData.get("proposerContact"),
+  });
+  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? t.common.error);
+  const input = parsed.data;
+
+  const cv = await prepareCv(formData);
+  if (cv && !cv.ok) return fail(cv.error);
+
+  const expert = await db.expertProfile.create({
+    data: {
+      name: input.name,
+      fieldKey: input.fieldKey,
+      bio: input.bio,
+      reason: input.reason,
+      contact: input.contact,
+      proposerName: input.proposerName,
+      proposerContact: input.proposerContact,
+      status: "PENDING",
+      source: "NOMINATED",
+    },
+  });
+
+  if (cv && cv.ok) {
+    const key = buildKey("expert-cv", expert.id, cv.name);
+    await putObject(key, cv.bytes, cv.type);
+    await db.expertProfile.update({
+      where: { id: expert.id },
+      data: {
+        cvFileName: cv.name,
+        cvStorageKey: key,
+        cvContentType: cv.type,
+        cvSize: cv.bytes.length,
+      },
+    });
+  }
+
   return ok();
 }
 

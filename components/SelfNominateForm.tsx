@@ -11,18 +11,21 @@ import { t } from "@/lib/strings";
 export function SelfNominateButton({
   loggedIn,
   defaultName,
+  variant = "primary",
 }: {
   loggedIn: boolean;
   defaultName?: string;
+  variant?: "primary" | "secondary";
 }) {
   const router = useRouter();
   const toast = useToast();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
+  const triggerClass = variant === "secondary" ? "btn-secondary" : "btn-primary";
 
   if (!loggedIn) {
     return (
-      <a href="/hyr" className="btn-primary">
+      <a href="/hyr" className={triggerClass}>
         {t.experts.selfNominate}
       </a>
     );
@@ -46,7 +49,7 @@ export function SelfNominateButton({
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className="btn-primary">
+      <button type="button" onClick={() => setOpen(true)} className={triggerClass}>
         {t.experts.selfNominate}
       </button>
       <Modal open={open} onClose={() => setOpen(false)} title={t.experts.selfNominate}>

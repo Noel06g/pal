@@ -76,7 +76,9 @@ export function CreateIdeaForm() {
                 {f.n}. {f.name}
               </option>
             ))}
-            <option value={OTHER_FIELD.key}>{OTHER_FIELD.name}</option>
+            <option value={OTHER_FIELD.key}>
+              {FIELDS.length + 1}. {OTHER_FIELD.name} — Specifiko
+            </option>
           </select>
         </div>
 

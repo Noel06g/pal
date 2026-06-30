@@ -46,6 +46,9 @@ export const nominateSchema = z.object({
   fromIdeaId: z.string().min(1),
 });
 
+// Same as nominateSchema but not tied to an idea (used on the experts page).
+export const nominateGeneralSchema = nominateSchema.omit({ fromIdeaId: true });
+
 export const reportSchema = z.object({
   ideaId: z.string().min(1).optional(),
   commentId: z.string().min(1).optional(),
@@ -61,4 +64,5 @@ export type IdeaInput = z.infer<typeof ideaSchema>;
 export type CommentInput = z.infer<typeof commentSchema>;
 export type SelfNominateInput = z.infer<typeof selfNominateSchema>;
 export type NominateInput = z.infer<typeof nominateSchema>;
+export type NominateGeneralInput = z.infer<typeof nominateGeneralSchema>;
 export type ReportInput = z.infer<typeof reportSchema>;

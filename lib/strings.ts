@@ -135,8 +135,8 @@ export const t = {
     ideaOtherPh: "Përshkruaj shkurt fushën që ke parasysh…",
     ideaDocs: "Dokumente mbështetëse (PDF, opsionale, publike)",
     ideaSubmit: "Publiko idenë",
-    chooseField: "Zgjedh një fushë…",
-    chooseSubfield: "Zgjedh një nënfushë…",
+    chooseField: "Zgjidh një fushë",
+    chooseSubfield: "Zgjidh një nënfushë",
 
     // Comment
     commentBody: "Komenti yt",
