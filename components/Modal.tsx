@@ -35,7 +35,7 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-[90] flex items-start justify-center overflow-y-auto bg-ink/40 p-4 sm:items-center"
+      className="fixed inset-0 z-[90] flex items-start justify-center bg-ink/40 p-4 sm:items-center"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -46,9 +46,9 @@ export function Modal({
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
-        className="card my-8 w-full max-w-lg p-5 sm:p-6"
+        className="card flex max-h-[calc(100dvh-2rem)] w-full max-w-lg flex-col overflow-hidden p-0"
       >
-        <div className="mb-4 flex items-start justify-between gap-4">
+        <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
           <h2 className="text-lg font-bold">{title}</h2>
           <button
             type="button"
@@ -66,7 +66,7 @@ export function Modal({
             </svg>
           </button>
         </div>
-        {children}
+        <div className="overflow-y-auto px-5 py-5 sm:px-6">{children}</div>
       </div>
     </div>
   );

@@ -49,6 +49,7 @@ type ExpertRow = {
   bio: string;
   status: "PENDING" | "CONFIRMED" | "REJECTED";
   source: "SELF" | "NOMINATED";
+  awaitingConsent: boolean;
   contact: string;
   reason: string;
   cvFileName: string | null;
@@ -311,6 +312,7 @@ function ExpertAdminCard({
             <span className="badge-muted">{e.source === "SELF" ? "Vetëpropozim" : "Propozim"}</span>
             {e.status === "CONFIRMED" && <span className="badge-ok">{t.admin.confirmed}</span>}
             {e.status === "REJECTED" && <span className="badge-amber">Refuzuar</span>}
+            {e.awaitingConsent && <span className="badge-amber">Pret pëlqimin</span>}
           </div>
           <p className="mt-2 text-sm text-muted">{e.bio}</p>
 

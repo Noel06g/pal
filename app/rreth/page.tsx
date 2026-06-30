@@ -11,12 +11,17 @@ export default function AboutPage() {
 
         <section className="mt-10">
           <h2 className="text-xl font-bold">{t.about.missionTitle}</h2>
-          <p className="mt-3 leading-relaxed text-muted">{t.about.mission}</p>
+          <div className="mt-3 space-y-3 leading-relaxed text-muted">
+            {t.about.mission.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
         </section>
 
         <section className="mt-10">
           <h2 className="text-xl font-bold">{t.about.principlesTitle}</h2>
-          <ul className="mt-3 space-y-2">
+          <p className="mt-3 leading-relaxed text-muted">{t.about.principlesIntro}</p>
+          <ul className="mt-4 space-y-2">
             {t.about.principles.map((p, i) => (
               <li key={i} className="flex gap-3 text-muted">
                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-teal" />

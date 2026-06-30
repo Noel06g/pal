@@ -94,7 +94,7 @@ export async function sendExpertConfirmEmail(
     heading: `Je propozuar si ekspert në ${BRAND}`,
     body: `<p style="margin:0 0 12px;">Përshëndetje ${escapeHtml(proposedName)},</p>
            <p style="margin:0 0 12px;">Dikush të ka propozuar si ekspert në fushën <strong>${escapeHtml(fieldName)}</strong> në ${BRAND}.</p>
-           <p style="margin:0 0 16px;">Nëse <strong>pranon</strong>, emri, fusha dhe biografia jote bëhen publike. Kontakti dhe CV-ja mbeten <strong>private</strong> (vetëm administrata i sheh).</p>
+           <p style="margin:0 0 16px;">Nëse <strong>pranon</strong>, profili yt (emri, fusha dhe biografia) shqyrtohet nga administrata para se të publikohet. Kontakti dhe CV-ja mbeten <strong>private</strong> (vetëm administratorët e faqes i shohin).</p>
            <div>
              <a href="${acceptHref}" style="display:inline-block;background:#13615C;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;border-radius:10px;margin-right:8px;">Prano</a>
              <a href="${rejectHref}" style="display:inline-block;background:#F4E8E8;color:#A33A3A;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;border-radius:10px;">Refuzo</a>

@@ -20,16 +20,18 @@ export const t = {
     signIn: "Hyr",
     signOut: "Dil",
     newIdea: "Propozo një ide",
+    newExpert: "Propozo një ekspert/e",
     menu: "Menyja",
   },
 
   home: {
     heroTitle: "Të ndërtojmë të ardhmen së bashku",
     heroSub:
-      "Platforma Shqiptare është një nismë e pavarur qytetare ku qytetarët propozojnë ide e zgjidhje për problemet e vendit, komuniteti i mbështet e diskuton, dhe ekspertët ndërlidhen me idetë.",
+      "Platforma Shqiptare është një nismë e pavarur qytetare ku qytetarët propozojnë ekspertë të fushave të ndryshme, diskutojnë për ide e zgjidhje për problemet e vendit. Shqipëria i ka ekspertët, brenda dhe jashtë Shqipërisë. Shqiptarët i kanë idetë, i kanë edhe zgjidhjet! Le t'i bëjmë bashkë!",
+    heroTagline: "Propozo ekspertë. Diskuto ide. Ndërto zgjidhje për Shqipërinë që meritojmë të gjithë!",
     heroCtaPrimary: "Propozo një ide",
-    heroCtaSecondary: "Propozo një ekspert",
-    howTitle: "Si funksionon",
+    heroCtaSecondary: "Propozo një ekspert/e",
+    howTitle: "Propozo idenë dhe zgjidhjen tënde",
     how: [
       {
         title: "Propozo një ide",
@@ -45,15 +47,21 @@ export const t = {
       },
     ],
     fieldsTitle: "14 fushat",
-    fieldsSub: "Çdo ide i përket një fushe. Kliko një fushë për të parë idetë e saj.",
+    fieldsSub: "Çdo propozim i përket një fushe. Kliko një fushë për të parë ekspertët dhe idetë në lidhje me të.",
     mostSupported: "Idetë më të mbështetura",
     viewAll: "Shiko të gjitha",
     expertsTeaser: "Ekspertët",
     expertsTeaserSub:
-      "Njerëz që ofrojnë njohuri për fushat e tyre. Vetëpropozohu ose propozo dikë nga një ide.",
+      "Njerëz që ofrojnë njohuri për fushat e tyre. Vetëpropozohu ose propozo dikë që është ekspert/e dhe mund të japë një kontribut për mirëqeverisjen e Shqipërisë!",
     aboutTeaser: "Rreth nesh",
     aboutTeaserSub:
       "Një nismë e pavarur qytetare. Lexo misionin dhe rregullat tona.",
+    whyTitle: "Pse Platforma Shqiptare?",
+    why: [
+      "Kjo platformë bazohet në një bindje të thjeshtë: Shqipërisë nuk i mungojnë njerëzit e aftë, por mekanizmat që i bëjnë ata të dukshëm, i lidhin me njëri-tjetrin dhe u japin mundësinë të kontribuojnë për të mirën publike. Akademikë, studiues, profesionistë, sipërmarrës, inxhinierë, mjekë, juristë, ekonomistë, pedagogë, artistë, ekspertë të teknologjisë dhe shumë të tjerë përbëjnë një kapital të jashtëzakonshëm njerëzor që meriton të dëgjohet dhe të angazhohet.",
+      "Përmes Platformës Shqiptare, çdo qytetar mund të propozojë ekspertë që i vlerëson për integritetin, profesionalizmin dhe kontributin e tyre, si edhe të paraqesë problematika, ide dhe zgjidhje për çështje që ndikojnë në zhvillimin e vendit. Këto ide diskutohen dhe pasurohen me kontributin e ekspertëve, duke nxitur dialog, bashkëpunim dhe zgjidhje të bazuara në njohuri, përvojë dhe evidencë.",
+      "Nëse njeh një ekspert ose eksperte nga Shqipëria apo diaspora që mund të japë një kontribut të vlefshëm për një qeverisje më të mirë, politika publike më efektive dhe zhvillimin e vendit, propozoje në Platformën Shqiptare. Ne do ta kontaktojmë dhe do ta ftojmë të bëhet pjesë e këtij rrjeti kombëtar të ekspertizës.",
+    ],
   },
 
   ideas: {
@@ -81,7 +89,7 @@ export const t = {
     archive: "Arkivo idenë",
     archiveConfirm:
       "Arkivimi do të thotë që një ekspert e mori përsipër idenë. Pas arkivimit nuk pranohen mbështetje ose komente të reja. Vazhdo?",
-    proposeExpert: "Propozo një ekspert",
+    proposeExpert: "Propozo një ekspert/e",
     expertsInField: "Ekspertë në këtë fushë",
     noExpertsInField: "Ende s'ka ekspertë të konfirmuar në këtë fushë.",
     documents: "Dokumente mbështetëse",
@@ -116,8 +124,8 @@ export const t = {
     confirmAccept: "Prano",
     confirmReject: "Refuzo",
     confirmIntro:
-      "Je propozuar si ekspert në Platformën Shqiptare. Nëse pranon, emri, fusha dhe biografia jote bëhen publike. Kontakti dhe CV-ja mbeten private (vetëm administrata).",
-    confirmAccepted: "Faleminderit! Profili yt u konfirmua dhe tani është publik.",
+      "Je propozuar si ekspert në Platformën Shqiptare. Nëse pranon, profili yt (emri, fusha dhe biografia) shqyrtohet nga administrata para se të publikohet. Kontakti dhe CV-ja mbeten private (vetëm administratorët e faqes).",
+    confirmAccepted: "Faleminderit! Pëlqimi yt u regjistrua. Profili do të publikohet pas shqyrtimit nga administrata.",
     confirmRejected: "Propozimi u refuzua. Të dhënat e tua nuk do të publikohen.",
     confirmInvalid: "Ky lidhje konfirmimi është e pavlefshme ose ka skaduar.",
     confirmAlready: "Ky propozim është trajtuar tashmë.",
@@ -153,7 +161,7 @@ export const t = {
     expReason: "Arsyeja / motivimi (private)",
     expReasonPh: "Pse dëshiron të kontribuosh…",
     expContact: "Kontakti (privat)",
-    expContactPh: "Email ose telefon — vetëm administrata e sheh",
+    expContactPh: "Email ose telefon — vetëm administratorët e faqes e shohin",
     expCv: "CV (PDF, opsionale, private)",
     selfNominateSubmit: "Dërgo vetëpropozimin",
 
@@ -284,23 +292,31 @@ export const t = {
   about: {
     title: "Rreth Platformës Shqiptare",
     missionTitle: "Misioni",
-    mission:
-      "Platforma Shqiptare është një nismë e pavarur qytetare që i jep qytetarëve një hapësirë për të propozuar ide e zgjidhje për problemet e Shqipërisë, për t'i diskutuar bashkë dhe për t'i ndërlidhur me ekspertë. Nuk jemi parti politike dhe nuk përfaqësojmë asnjë institucion.",
+    mission: [
+      "Platforma Shqiptare është një nismë e pavarur qytetare që synon të krijojë një rrjet të gjerë ekspertësh, akademikësh dhe profesionistësh nga fusha të ndryshme, duke e vendosur ekspertizën në shërbim të zhvillimit të vendit. Platforma është një nismë që synon të identifikojë dhe të bëjë bashkë ekspertë, profesionistë dhe qytetarë të angazhuar për të ndërtuar zgjidhje konkrete për sfidat e Shqipërisë.",
+      "Në këtë platformë, qytetarët mund të propozojnë ekspertë nga fusha të ndryshme, të ndajnë ide, të diskutojnë problematika dhe të kontribuojnë me zgjidhje për çështje me interes publik. Besojmë se Shqipëria ka një potencial të jashtëzakonshëm njerëzor, si brenda vendit ashtu edhe në diasporë, i cili shpesh mbetet i pashfrytëzuar.",
+      "Shpesh dëgjojmë të thuhet se Shqipërisë i mungojnë ekspertët për të ndërtuar politika më të mira dhe për të garantuar një qeverisje më cilësore. Ne besojmë të kundërtën. Shqipëria ka shumë profesionistë me integritet, përvojë dhe vizion, të cilët mund të japin një kontribut të vyer në hartimin e politikave publike, zhvillimin ekonomik, arsimin, shëndetësinë, drejtësinë, teknologjinë, mjedisin dhe çdo fushë tjetër të rëndësishme për të ardhmen e vendit.",
+      "Platforma synon të ndërtojë ura bashkëpunimi ndërmjet ekspertizës shqiptare në çdo vend të botës dhe angazhimit qytetar, duke promovuar kulturën e dialogut, inovacionit dhe pjesëmarrjes aktive në proceset e zhvillimit dhe vendimmarrjes, dhe duke promovuar këtë metodë të mirëqeverisjes si model! Besojmë se zgjidhjet më të mira lindin kur ekspertët dhe qytetarët punojnë së bashku, ndajnë njohuritë dhe kontribuojnë në mënyrë të hapur për të mirën e përbashkët.",
+      "Nëse njeh një ekspert ose eksperte nga Shqipëria apo diaspora që mendon se mund të kontribuojë me njohuritë dhe përvojën e tij ose të saj për një qeverisje më të mirë dhe për zhvillimin e vendit, propozoje në këtë platformë. Ne do ta kontaktojmë për ta ftuar të bëhet pjesë e këtij rrjeti të ekspertizës dhe të kontribuojë në ndërtimin e ideve dhe zgjidhjeve që i shërbejnë interesit publik.",
+      "Kjo platformë e nisur nga ekspertë të pavarur të mirëqeverisjes, në Shqipëri dhe në diasporë, nuk është një parti politike dhe nuk përfaqëson asnjë institucion. Platforma Shqiptare është një hapësirë e pavarur, gjithëpërfshirëse dhe e hapur për çdo ekspert dhe qytetar që dëshiron të kontribuojë me njohuritë, përvojën dhe idetë e tij për ndërtimin e një Shqipërie më të zhvilluar, më demokratike dhe më të drejtë.",
+      "Shqipëria ka ekspertët që i duhen, ka idetë, ka edhe zgjidhjet! Le t'i bëjmë bashkë dhe t'u japim mundësinë të kontribuojnë për Shqipërinë që të gjithë meritojmë.",
+    ],
     principlesTitle: "Parimet",
+    principlesIntro:
+      "Kjo platformë u jep qytetarëve mundësinë të identifikojnë, po aq sa ekspertët, edhe problematikat që hasin në komunitetet e tyre, të propozojnë ide dhe zgjidhje konkrete, si dhe të marrin pjesë në diskutime të hapura mbi çështje me interes publik. Çdo propozim mund të pasurohet përmes kontributit të ekspertëve, duke krijuar një dialog konstruktiv ndërmjet qytetarëve dhe profesionistëve dhe duke nxitur zhvillimin e zgjidhjeve të bazuara në evidencë, përvojë dhe praktika të mira, ashtu siç duhet të jetë një qeverisje e mirë, duke funksionuar si një platformë:",
     principles: [
-      "E pavarur dhe jopartiake — pa simbole partiake, pa axhenda.",
+      "E pavarur dhe jopartiake.",
       "E hapur — leximi i lirë për të gjithë, pa llogari.",
-      "Me përgjegjësi — çdo ide nënshkruhet me emrin e vërtetë.",
+      "Me përgjegjësi — çdo ide dhe propozim nënshkruhet me emrin e vërtetë.",
       "Me cilësi — ekspertët ndihmojnë që idetë të bëhen të zbatueshme.",
       "Me respekt — diskutim civil, pa fyerje dhe pa gjuhë urrejtjeje.",
     ],
     rulesTitle: "Rregullat e komunitetit",
     rules: [
-      "Përdor emrin tënd të vërtetë. Një llogari për person.",
-      "Mos publiko gjuhë urrejtjeje, fyerje, shpifje apo përmbajtje të paligjshme.",
-      "Mos publiko të dhëna personale të të tjerëve pa pëlqim.",
-      "Mos bëj spam, reklama apo manipulim të mbështetjes.",
-      "Respekto qëndrimet e ndryshme — diskuto idenë, jo personin.",
+      "Përdorimi i emrit të vërtetë. Një llogari për person.",
+      "Ndalimi i gjuhës së urrejtjes, fyerjeve, shpifjeve apo përmbajtjeve të paligjshme.",
+      "Ndalimi i publikimit të të dhënave personale të të tjerëve pa pëlqim.",
+      "Respektimi i qëndrimeve të ndryshme.",
     ],
     penaltyTitle: "Pasojat",
     penalty:

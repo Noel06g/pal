@@ -97,7 +97,7 @@ export function ProposeExpertGeneralButton({ loggedIn }: { loggedIn: boolean }) 
               className="input"
               placeholder="Email ose telefon i propozuari"
             />
-            <p className="hint">Vetëm administrata e sheh — për ta kontaktuar jashtë platformës.</p>
+            <p className="hint">Vetëm administratorët e faqes e shohin — për ta kontaktuar jashtë platformës.</p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">

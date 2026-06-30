@@ -69,6 +69,7 @@ export default async function AdminPage() {
           bio: e.bio,
           status: e.status,
           source: e.source,
+          awaitingConsent: Boolean(e.confirmToken),
           contact: e.contact,
           reason: e.reason,
           cvFileName: e.cvFileName,

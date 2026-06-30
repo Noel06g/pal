@@ -12,6 +12,7 @@ export function Hero() {
           {t.home.heroTitle}
         </h1>
         <p className="mt-5 max-w-2xl text-lg text-muted">{t.home.heroSub}</p>
+        <p className="mt-4 max-w-2xl text-lg font-bold text-ink">{t.home.heroTagline}</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/ekspertet" className="btn-primary text-base">
             {t.home.heroCtaSecondary}

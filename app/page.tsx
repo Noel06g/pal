@@ -40,7 +40,21 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      {/* Si funksionon */}
+      {/* Pse Platforma Shqiptare? */}
+      <section className="border-b border-border bg-card/60">
+        <div className="container-pal py-14">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.whyTitle}</h2>
+            <div className="mt-5 space-y-4 leading-relaxed text-muted">
+              {t.home.why.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Propozo idenë dhe zgjidhjen tënde */}
       <section className="container-pal py-14">
         <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.howTitle}</h2>
         <ol className="mt-8 grid gap-5 sm:grid-cols-3">
@@ -54,6 +68,28 @@ export default async function HomePage() {
             </li>
           ))}
         </ol>
+      </section>
+
+      {/* Ekspertët teaser — mbi 14 fushat */}
+      <section className="container-pal py-14">
+        <div className="mb-8 flex items-end justify-between gap-4">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.expertsTeaser}</h2>
+            <p className="mt-2 text-muted">{t.home.expertsTeaserSub}</p>
+          </div>
+          <Link href="/ekspertet" className="link-underline shrink-0 text-sm font-semibold">
+            {t.home.viewAll} →
+          </Link>
+        </div>
+        {experts.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {experts.map((e) => (
+              <ExpertCard key={e.id} expert={e} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted">{t.experts.empty}</p>
+        )}
       </section>
 
       {/* 14 fushat */}
@@ -84,30 +120,6 @@ export default async function HomePage() {
         ) : (
           <p className="text-muted">{t.ideas.empty}</p>
         )}
-      </section>
-
-      {/* Ekspertët teaser */}
-      <section className="border-t border-border bg-card/60">
-        <div className="container-pal py-14">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <div className="max-w-2xl">
-              <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.expertsTeaser}</h2>
-              <p className="mt-2 text-muted">{t.home.expertsTeaserSub}</p>
-            </div>
-            <Link href="/ekspertet" className="link-underline shrink-0 text-sm font-semibold">
-              {t.home.viewAll} →
-            </Link>
-          </div>
-          {experts.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {experts.map((e) => (
-                <ExpertCard key={e.id} expert={e} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-muted">{t.experts.empty}</p>
-          )}
-        </div>
       </section>
 
       {/* Rreth teaser */}

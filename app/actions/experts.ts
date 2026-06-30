@@ -7,7 +7,9 @@ import { selfNominateSchema, nominateSchema, nominateGeneralSchema } from "@/lib
 import { checkRate } from "@/lib/ratelimit";
 import { buildKey, putObject, validatePdf } from "@/lib/r2";
 import { createNotification } from "@/lib/notify";
-import { sendExpertProposedEmail } from "@/lib/email";
+import { sendExpertProposedEmail, sendExpertConfirmEmail } from "@/lib/email";
+import { fieldName } from "@/lib/fields";
+import { randomBytes } from "node:crypto";
 import { t } from "@/lib/strings";
 import { ok, fail, type ActionResult } from "./_helpers";
 
@@ -25,6 +27,30 @@ async function prepareCv(formData: FormData): Promise<PreparedCv> {
     return { ok: false, error: check.reason === "size" ? t.toast.fileTooBig : t.toast.fileNotPdf };
   }
   return { ok: true, name: file.name, type: file.type, bytes };
+}
+
+function looksLikeEmail(s: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.trim());
+}
+
+/**
+ * If the proposed person's contact is an email, send them a consent
+ * (accept / reject) link. They stay PENDING for admin approval either way.
+ */
+async function emailNomineeForConsent(
+  expertId: string,
+  name: string,
+  fieldKey: string,
+  contact: string,
+): Promise<void> {
+  if (!looksLikeEmail(contact)) return;
+  const token = randomBytes(32).toString("hex");
+  const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  await db.expertProfile.update({
+    where: { id: expertId },
+    data: { confirmToken: token, confirmTokenExpires: expires },
+  });
+  sendExpertConfirmEmail(contact.trim(), name, fieldName(fieldKey), token).catch(() => {});
 }
 
 /** Self-nomination → PENDING for admin review (not public until approved). */
@@ -103,7 +129,7 @@ export async function proposeExpert(formData: FormData): Promise<ActionResult> {
   const cv = await prepareCv(formData);
   if (cv && !cv.ok) return fail(cv.error);
 
-  // Proposed experts stay PENDING for admin review (no nominee email).
+  // Proposed experts stay PENDING for admin review.
   const expert = await db.expertProfile.create({
     data: {
       name: input.name,
@@ -132,6 +158,9 @@ export async function proposeExpert(formData: FormData): Promise<ActionResult> {
       },
     });
   }
+
+  // Ask the proposed person for consent by email (if their contact is an email).
+  await emailNomineeForConsent(expert.id, input.name, input.fieldKey, input.contact);
 
   // Notify the idea author (in-app + email).
   await createNotification({
@@ -201,6 +230,9 @@ export async function proposeExpertGeneral(formData: FormData): Promise<ActionRe
     });
   }
 
+  // Ask the proposed person for consent by email (if their contact is an email).
+  await emailNomineeForConsent(expert.id, input.name, input.fieldKey, input.contact);
+
   return ok();
 }
 
@@ -218,11 +250,12 @@ export async function confirmExpert(
   }
 
   if (decision === "prano") {
+    // Consent recorded — stays PENDING for admin approval before going public.
     await db.expertProfile.update({
       where: { id: expert.id },
-      data: { status: "CONFIRMED", confirmToken: null, confirmTokenExpires: null },
+      data: { confirmToken: null, confirmTokenExpires: null },
     });
-    revalidatePath("/ekspertet");
+    revalidatePath("/admin");
     return ok({ outcome: "accepted" });
   } else {
     await db.expertProfile.update({

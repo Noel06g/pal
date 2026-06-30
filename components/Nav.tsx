@@ -17,9 +17,9 @@ type Notif = {
 };
 
 const links = [
-  { href: "/idete", label: t.nav.ideas },
-  { href: "/ekspertet", label: t.nav.experts },
   { href: "/rreth", label: t.nav.about },
+  { href: "/ekspertet", label: t.nav.experts },
+  { href: "/idete", label: t.nav.ideas },
 ];
 
 export function Nav({
@@ -63,6 +63,9 @@ export function Nav({
         </nav>
 
         <div className="flex items-center gap-2">
+          <Link href="/ekspertet" className="btn-secondary hidden lg:inline-flex">
+            {t.nav.newExpert}
+          </Link>
           <Link href="/idete/krijo" className="btn-primary hidden sm:inline-flex">
             {t.nav.newIdea}
           </Link>
@@ -128,6 +131,13 @@ export function Nav({
                 {l.label}
               </Link>
             ))}
+            <Link
+              href="/ekspertet"
+              onClick={() => setOpen(false)}
+              className="btn-secondary mt-1"
+            >
+              {t.nav.newExpert}
+            </Link>
             <Link
               href="/idete/krijo"
               onClick={() => setOpen(false)}
