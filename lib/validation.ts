@@ -55,6 +55,9 @@ export const nominateNewSchema = z.object({
   proposerContact: z.string().trim().min(5, "Vendos kontaktin tënd.").max(200),
 });
 
+/** Propose a brand-new person from the experts directory (not tied to an idea). */
+export const nominateNewGeneralSchema = nominateNewSchema.omit({ ideaId: true });
+
 /** Link an existing expert to an idea (optionally suggest a bio edit -> admin queue). */
 export const proposeExistingSchema = z.object({
   ideaId: z.string().min(1),
@@ -85,6 +88,7 @@ export type IdeaInput = z.infer<typeof ideaSchema>;
 export type CommentInput = z.infer<typeof commentSchema>;
 export type SelfRegisterInput = z.infer<typeof selfRegisterSchema>;
 export type NominateNewInput = z.infer<typeof nominateNewSchema>;
+export type NominateNewGeneralInput = z.infer<typeof nominateNewGeneralSchema>;
 export type ProposeExistingInput = z.infer<typeof proposeExistingSchema>;
 export type ExpertEditInput = z.infer<typeof expertEditSchema>;
 export type ReportInput = z.infer<typeof reportSchema>;

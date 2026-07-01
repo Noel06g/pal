@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { ExpertCard } from "@/components/ExpertCard";
 import { SelfNominateButton } from "@/components/SelfNominateForm";
+import { ProposeExpertGeneralButton } from "@/components/ProposeExpertGeneralButton";
 import { FIELDS, fieldName, isValidFieldKey } from "@/lib/fields";
 import { t } from "@/lib/strings";
 
@@ -32,7 +33,14 @@ export default async function ExpertsPage({
           <h1 className="text-3xl font-extrabold tracking-tight">{t.experts.title}</h1>
           <p className="mt-1 text-muted">{t.experts.sub}</p>
         </div>
-        <SelfNominateButton loggedIn={Boolean(user)} defaultName={user?.name ?? undefined} />
+        <div className="flex flex-wrap gap-2">
+          <ProposeExpertGeneralButton loggedIn={Boolean(user)} fieldKey={activeField ?? undefined} />
+          <SelfNominateButton
+            loggedIn={Boolean(user)}
+            defaultName={user?.name ?? undefined}
+            variant="secondary"
+          />
+        </div>
       </div>
 
       {/* Area filter */}

@@ -7,6 +7,7 @@ import { getActiveUser } from "@/lib/session";
 import {
   selfRegisterSchema,
   nominateNewSchema,
+  nominateNewGeneralSchema,
   proposeExistingSchema,
   expertEditSchema,
 } from "@/lib/validation";
@@ -255,6 +256,60 @@ export async function proposeNewExpert(formData: FormData): Promise<ActionResult
   if (author?.email) sendExpertProposedToAuthorEmail(author.email, idea.title, idea.id).catch(() => {});
 
   revalidatePath(`/idete/${idea.id}`);
+  return ok();
+}
+
+/** Propose a brand-new person from the experts directory (no idea link) → AWAITING_NOMINEE. */
+export async function proposeNewExpertGeneral(formData: FormData): Promise<ActionResult> {
+  const user = await getActiveUser();
+  if (!user) return fail(t.common.loginRequired);
+  if (!(await checkRate("general", user.id))) return fail(t.toast.rateLimited);
+
+  const parsed = nominateNewGeneralSchema.safeParse({
+    areas: areasFrom(formData),
+    name: formData.get("name"),
+    bio: formData.get("bio"),
+    reason: formData.get("reason"),
+    contact: formData.get("contact"),
+    proposerName: formData.get("proposerName"),
+    proposerContact: formData.get("proposerContact"),
+  });
+  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? t.common.error);
+  const input = parsed.data;
+
+  const email = normalizeEmail(input.contact);
+  if (email) {
+    const dup = await db.expertProfile.findFirst({
+      where: { contactEmail: email, status: { not: "REJECTED" } },
+      select: { id: true },
+    });
+    if (dup) return fail("Ky ekspert ekziston tashmë në platformë.");
+  }
+
+  const cv = await prepareCv(formData);
+  if (cv && !cv.ok) return fail(cv.error);
+
+  const confirmToken = newToken();
+  const expert = await db.expertProfile.create({
+    data: {
+      name: input.name,
+      areas: input.areas,
+      bio: input.bio,
+      reason: input.reason,
+      contact: input.contact,
+      contactEmail: email,
+      proposerName: input.proposerName,
+      proposerContact: input.proposerContact,
+      status: "AWAITING_NOMINEE",
+      source: "NOMINATED",
+      confirmToken,
+      confirmTokenExpires: in30Days(),
+    },
+  });
+  if (cv && cv.ok) await storeCv(expert.id, cv);
+  if (email) sendNomineeConfirmEmail(email, input.name, confirmToken).catch(() => {});
+
+  revalidatePath("/admin");
   return ok();
 }
 
