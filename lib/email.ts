@@ -70,38 +70,104 @@ export async function sendNewCommentEmail(to: string, ideaTitle: string, ideaId:
   await send(to, `Koment i ri në «${ideaTitle}»`, html);
 }
 
-/** 3. An expert was proposed for your idea. */
-export async function sendExpertProposedEmail(to: string, ideaTitle: string, ideaId: string) {
+function twoButtons(acceptHref: string, rejectHref: string, acceptLabel = "Prano", rejectLabel = "Refuzo") {
+  return `<div>
+    <a href="${acceptHref}" style="display:inline-block;background:#13615C;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;border-radius:10px;margin-right:8px;">${acceptLabel}</a>
+    <a href="${rejectHref}" style="display:inline-block;background:#F4E8E8;color:#A33A3A;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;border-radius:10px;">${rejectLabel}</a>
+  </div>`;
+}
+
+/** 1. Invite an existing expert to approve a specific idea-link (accept/reject by email). */
+export async function sendIdeaInviteEmail(to: string, expertName: string, ideaTitle: string, token: string) {
+  const acceptHref = `${APP_URL}/ekspertet/ide/${token}?vendim=prano`;
+  const rejectHref = `${APP_URL}/ekspertet/ide/${token}?vendim=refuzo`;
+  const html = layout({
+    heading: `Je propozuar si ekspert për një ide`,
+    body: `<p style="margin:0 0 12px;">Përshëndetje ${escapeHtml(expertName)},</p>
+           <p style="margin:0 0 12px;">Je propozuar si ekspert për idenë «<strong>${escapeHtml(ideaTitle)}</strong>» në ${BRAND}.</p>
+           <p style="margin:0 0 16px;">Duke pranuar, kontakti yt i jepet autorit të idesë dhe ti merr kontaktin e tij, që të bisedoni jashtë platformës.</p>
+           ${twoButtons(acceptHref, rejectHref)}
+           <p style="font-size:12px;color:#5C6672;margin:16px 0 0;">Nëse nuk e ke pritur këtë email, thjesht injoroje ose kliko “Refuzo”.</p>`,
+  });
+  await send(to, `Je propozuar si ekspert për «${ideaTitle}»`, html);
+}
+
+/** 2. Confirm a brand-new nomination (accept makes name/areas/bio public after admin review). */
+export async function sendNomineeConfirmEmail(to: string, name: string, token: string) {
+  const acceptHref = `${APP_URL}/ekspertet/konfirmo/${token}?vendim=prano`;
+  const rejectHref = `${APP_URL}/ekspertet/konfirmo/${token}?vendim=refuzo`;
+  const html = layout({
+    heading: `Je propozuar si ekspert në ${BRAND}`,
+    body: `<p style="margin:0 0 12px;">Përshëndetje ${escapeHtml(name)},</p>
+           <p style="margin:0 0 12px;">Dikush të ka propozuar si ekspert në ${BRAND}.</p>
+           <p style="margin:0 0 16px;">Nëse <strong>pranon</strong>, emri, fushat dhe biografia jote bëhen publike pas shqyrtimit nga administrata. Kontakti dhe CV-ja mbeten <strong>private</strong> (vetëm administratorët e faqes). Në faqen e konfirmimit mund të ngarkosh CV-në dhe të krijosh një llogari.</p>
+           ${twoButtons(acceptHref, rejectHref)}
+           <p style="font-size:12px;color:#5C6672;margin:16px 0 0;">Nëse nuk e ke pritur këtë email, thjesht injoroje ose kliko “Refuzo”.</p>`,
+  });
+  await send(to, `Je propozuar si ekspert në ${BRAND}`, html);
+}
+
+/** 3. Tell the idea author their proposal is pending the expert's reply. */
+export async function sendExpertProposedToAuthorEmail(to: string, ideaTitle: string, ideaId: string) {
   const href = `${APP_URL}/idete/${ideaId}`;
   const html = layout({
     heading: "U propozua një ekspert për idenë tënde",
-    body: `<p style="margin:0;">U propozua një ekspert për idenë tënde «<strong>${escapeHtml(ideaTitle)}</strong>». Pasi eksperti ta konfirmojë, do të shfaqet publikisht.</p>`,
+    body: `<p style="margin:0;">U propozua një ekspert për idenë tënde «<strong>${escapeHtml(ideaTitle)}</strong>»; në pritje të përgjigjes së tij.</p>`,
     cta: { label: "Shiko idenë", href },
   });
   await send(to, `U propozua një ekspert për «${ideaTitle}»`, html);
 }
 
-/** 4. Confirmation request to a proposed expert (accept / reject links). */
-export async function sendExpertConfirmEmail(
+/** 4. The expert responded; on accept include the expert's contact. */
+export async function sendExpertResponseToAuthorEmail(
   to: string,
-  proposedName: string,
-  fieldName: string,
-  token: string,
+  ideaTitle: string,
+  ideaId: string,
+  accepted: boolean,
+  expertContact?: string,
 ) {
-  const acceptHref = `${APP_URL}/ekspertet/konfirmo/${token}?vendim=prano`;
-  const rejectHref = `${APP_URL}/ekspertet/konfirmo/${token}?vendim=refuzo`;
+  const href = `${APP_URL}/idete/${ideaId}`;
+  const body = accepted
+    ? `<p style="margin:0 0 12px;">Eksperti pranoi propozimin për idenë «<strong>${escapeHtml(ideaTitle)}</strong>».</p>
+       <p style="margin:0;">Kontakti i ekspertit: <strong>${escapeHtml(expertContact ?? "")}</strong>. Mund ta kontaktoni jashtë platformës.</p>`
+    : `<p style="margin:0;">Eksperti nuk e pranoi propozimin për idenë «<strong>${escapeHtml(ideaTitle)}</strong>».</p>`;
+  const html = layout({ heading: accepted ? "Eksperti pranoi" : "Eksperti nuk pranoi", body, cta: { label: "Shiko idenë", href } });
+  await send(to, `Përgjigje për «${ideaTitle}»`, html);
+}
+
+/** 5. Give the expert the author's contact on acceptance. */
+export async function sendAuthorContactToExpertEmail(to: string, ideaTitle: string, ideaId: string, authorContact: string) {
+  const href = `${APP_URL}/idete/${ideaId}`;
   const html = layout({
-    heading: `Je propozuar si ekspert në ${BRAND}`,
-    body: `<p style="margin:0 0 12px;">Përshëndetje ${escapeHtml(proposedName)},</p>
-           <p style="margin:0 0 12px;">Dikush të ka propozuar si ekspert në fushën <strong>${escapeHtml(fieldName)}</strong> në ${BRAND}.</p>
-           <p style="margin:0 0 16px;">Nëse <strong>pranon</strong>, profili yt (emri, fusha dhe biografia) shqyrtohet nga administrata para se të publikohet. Kontakti dhe CV-ja mbeten <strong>private</strong> (vetëm administratorët e faqes i shohin).</p>
-           <div>
-             <a href="${acceptHref}" style="display:inline-block;background:#13615C;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;border-radius:10px;margin-right:8px;">Prano</a>
-             <a href="${rejectHref}" style="display:inline-block;background:#F4E8E8;color:#A33A3A;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;border-radius:10px;">Refuzo</a>
-           </div>
-           <p style="font-size:12px;color:#5C6672;margin:16px 0 0;">Nëse nuk e ke pritur këtë email, thjesht injoroje ose kliko “Refuzo”.</p>`,
+    heading: "Kontakti i autorit të idesë",
+    body: `<p style="margin:0 0 12px;">Faleminderit që pranove propozimin për idenë «<strong>${escapeHtml(ideaTitle)}</strong>».</p>
+           <p style="margin:0;">Kontakti i autorit: <strong>${escapeHtml(authorContact)}</strong>. Mund ta kontaktoni jashtë platformës.</p>`,
+    cta: { label: "Shiko idenë", href },
   });
-  await send(to, `Je propozuar si ekspert në ${BRAND}`, html);
+  await send(to, `Kontakti i autorit për «${ideaTitle}»`, html);
+}
+
+/** 6. Expert signalled "po e marr përsipër" — author confirms (idea then auto-archives). */
+export async function sendTakeoverConfirmEmail(to: string, ideaTitle: string, ideaId: string) {
+  const href = `${APP_URL}/idete/${ideaId}`;
+  const html = layout({
+    heading: "Një ekspert po e merr përsipër idenë tënde",
+    body: `<p style="margin:0;">Një ekspert shprehu se po e merr përsipër idenë «<strong>${escapeHtml(ideaTitle)}</strong>». Konfirmo në faqen e idesë; pas konfirmimit ideja arkivohet.</p>`,
+    cta: { label: "Konfirmo", href },
+  });
+  await send(to, `Konfirmo marrjen përsipër të «${ideaTitle}»`, html);
+}
+
+/** 7. Admin published or rejected an expert profile. */
+export async function sendProfileDecisionEmail(to: string, name: string, published: boolean) {
+  const html = layout({
+    heading: published ? "Profili yt u publikua" : "Profili yt nuk u miratua",
+    body: published
+      ? `<p style="margin:0;">Përshëndetje ${escapeHtml(name)}, profili yt si ekspert u miratua dhe tani është publik në ${BRAND}.</p>`
+      : `<p style="margin:0;">Përshëndetje ${escapeHtml(name)}, profili yt si ekspert nuk u miratua. Të dhënat e tua nuk publikohen.</p>`,
+    cta: published ? { label: "Shiko ekspertët", href: `${APP_URL}/ekspertet` } : undefined,
+  });
+  await send(to, published ? `Profili yt u publikua` : `Profili yt nuk u miratua`, html);
 }
 
 function escapeHtml(s: string) {

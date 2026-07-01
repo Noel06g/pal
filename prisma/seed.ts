@@ -198,15 +198,15 @@ async function main() {
     });
   }
 
-  // ── Experts: 5 confirmed across fields + 1 pending ──
+  // ── Experts: 5 published across areas + 1 awaiting nominee ──
   const experts: Array<{
     id: string;
     name: string;
-    fieldKey: string;
+    areas: string[];
     bio: string;
     contact: string;
     reason: string;
-    status: "CONFIRMED" | "PENDING";
+    status: "PUBLISHED" | "PENDING_REVIEW" | "AWAITING_NOMINEE";
     source: "SELF" | "NOMINATED";
     confirmToken?: string;
     fromIdeaId?: string;
@@ -216,41 +216,41 @@ async function main() {
     {
       id: "seed-expert-1",
       name: "Dr. Elira Tafa",
-      fieldKey: "shendetesia",
+      areas: ["shendetesia"],
       bio: "Mjeke e shëndetit publik me 15 vjet përvojë në politika spitalore dhe menaxhim të kujdesit parësor.",
       contact: "elira.tafa@example.al",
       reason: "Dëshiroj të ndihmoj reformat shëndetësore me të dhëna.",
-      status: "CONFIRMED",
+      status: "PUBLISHED",
       source: "SELF",
     },
     {
       id: "seed-expert-2",
       name: "Ardit Bregu",
-      fieldKey: "ekonomia",
+      areas: ["ekonomia"],
       bio: "Ekonomist, fokusuar te politika fiskale dhe tregu i punës. Ish-këshilltar në organizata ndërkombëtare.",
       contact: "+355 69 000 0000",
       reason: "Kontribut në analizë ekonomike.",
-      status: "CONFIRMED",
+      status: "PUBLISHED",
       source: "SELF",
     },
     {
       id: "seed-expert-3",
       name: "Ina Marku",
-      fieldKey: "digjitalizimi",
+      areas: ["digjitalizimi"],
       bio: "Inxhiniere softueri dhe eksperte e qeverisjes elektronike. Ka ndërtuar shërbime digjitale publike.",
       contact: "ina.marku@example.al",
       reason: "Digjitalizimi i shërbimeve publike.",
-      status: "CONFIRMED",
+      status: "PUBLISHED",
       source: "SELF",
     },
     {
       id: "seed-expert-4",
       name: "Prof. Gjergj Nika",
-      fieldKey: "arsimi",
+      areas: ["arsimi"],
       bio: "Pedagog dhe studiues i politikave arsimore, me fokus te vlerësimi dhe zhvillimi i mësuesve.",
       contact: "gjergj.nika@example.al",
       reason: "Reforma në arsim.",
-      status: "CONFIRMED",
+      status: "PUBLISHED",
       source: "NOMINATED",
       fromIdeaId: "seed-idea-provim-mesuesit",
       proposerName: "Besnik Hoxha",
@@ -259,21 +259,21 @@ async function main() {
     {
       id: "seed-expert-5",
       name: "Sara Doçi",
-      fieldKey: "mjedisi",
+      areas: ["mjedisi"],
       bio: "Eksperte e energjisë së gjelbër dhe projekteve të qëndrueshmërisë në zonat rurale.",
       contact: "sara.doci@example.al",
       reason: "Energjia e rinovueshme.",
-      status: "CONFIRMED",
+      status: "PUBLISHED",
       source: "SELF",
     },
     {
       id: "seed-expert-pending",
       name: "Klodian Rama",
-      fieldKey: "infrastruktura",
+      areas: ["infrastruktura"],
       bio: "Inxhinier transporti me përvojë në planifikimin e rrjeteve të transportit publik.",
       contact: "klodian.rama@example.al",
       reason: "Propozuar për idenë e transportit ndërqytetas.",
-      status: "PENDING",
+      status: "AWAITING_NOMINEE",
       source: "NOMINATED",
       fromIdeaId: "seed-idea-transport-orare",
       proposerName: "Drita Leka",
@@ -286,28 +286,40 @@ async function main() {
       where: { id: e.id },
       update: {
         name: e.name,
-        fieldKey: e.fieldKey,
+        areas: e.areas,
         bio: e.bio,
         status: e.status,
       },
       create: {
         id: e.id,
         name: e.name,
-        fieldKey: e.fieldKey,
+        areas: e.areas,
         bio: e.bio,
         status: e.status,
         source: e.source,
         contact: e.contact,
+        contactEmail: e.contact.includes("@") ? e.contact.toLowerCase() : null,
         reason: e.reason,
         proposerName: e.proposerName ?? null,
         proposerContact: e.proposerContact ?? null,
-        fromIdeaId: e.fromIdeaId ?? null,
         confirmToken: e.confirmToken ?? null,
         confirmTokenExpires: e.confirmToken
           ? new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
           : null,
       },
     });
+    // Preserve seed idea↔expert associations as links.
+    if (e.fromIdeaId) {
+      await db.ideaExpert.upsert({
+        where: { ideaId_expertId: { ideaId: e.fromIdeaId, expertId: e.id } },
+        update: {},
+        create: {
+          ideaId: e.fromIdeaId,
+          expertId: e.id,
+          status: e.status === "PUBLISHED" ? "APPROVED" : "AWAITING_EXPERT",
+        },
+      });
+    }
   }
 
   // ── Reports (idempotent by deterministic id) ──

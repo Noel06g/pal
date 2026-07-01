@@ -4,7 +4,6 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { ExpertCard } from "@/components/ExpertCard";
 import { SelfNominateButton } from "@/components/SelfNominateForm";
-import { ProposeExpertGeneralButton } from "@/components/ProposeExpertGeneralButton";
 import { FIELDS, fieldName, isValidFieldKey } from "@/lib/fields";
 import { t } from "@/lib/strings";
 
@@ -19,11 +18,11 @@ export default async function ExpertsPage({
   const activeField = sp.fusha && isValidFieldKey(sp.fusha) ? sp.fusha : null;
   const user = await getCurrentUser();
 
-  // PUBLIC directory: only confirmed experts, and ONLY public fields selected.
+  // PUBLIC directory: only PUBLISHED profiles; filter by ANY of an expert's areas.
   const experts = await db.expertProfile.findMany({
-    where: { status: "CONFIRMED", ...(activeField ? { fieldKey: activeField } : {}) },
+    where: { status: "PUBLISHED", ...(activeField ? { areas: { has: activeField } } : {}) },
     orderBy: { createdAt: "desc" },
-    select: { id: true, name: true, fieldKey: true, bio: true },
+    select: { id: true, name: true, areas: true, bio: true },
   });
 
   return (
@@ -33,17 +32,10 @@ export default async function ExpertsPage({
           <h1 className="text-3xl font-extrabold tracking-tight">{t.experts.title}</h1>
           <p className="mt-1 text-muted">{t.experts.sub}</p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <ProposeExpertGeneralButton loggedIn={Boolean(user)} />
-          <SelfNominateButton
-            loggedIn={Boolean(user)}
-            defaultName={user?.name ?? undefined}
-            variant="secondary"
-          />
-        </div>
+        <SelfNominateButton loggedIn={Boolean(user)} defaultName={user?.name ?? undefined} />
       </div>
 
-      {/* Field filter */}
+      {/* Area filter */}
       <div className="mb-6 flex flex-wrap gap-2">
         <Link
           href="/ekspertet"

@@ -74,6 +74,10 @@ model User {
   notifications Notification[]
   accounts      Account[]
   sessions      Session[]
+
+  expertProfile ExpertProfile? @relation("ExpertOwner")
+  proposedLinks IdeaExpert[]   @relation("ProposedLinks")
+  proposedEdits ExpertEdit[]   @relation("ProposedEdits")
 }
 
 enum IdeaStatus {
@@ -88,14 +92,27 @@ enum Stance {
 }
 
 enum ExpertStatus {
-  PENDING
-  CONFIRMED
+  AWAITING_NOMINEE
+  PENDING_REVIEW
+  PUBLISHED
   REJECTED
 }
 
 enum ExpertSource {
   SELF
   NOMINATED
+}
+
+enum LinkStatus {
+  AWAITING_EXPERT
+  APPROVED
+  REJECTED
+}
+
+enum EditStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Idea {
@@ -110,11 +127,11 @@ model Idea {
   author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt DateTime   @default(now())
 
-  comments  Comment[]
-  supports  Support[]
-  documents Document[]
-  reports   Report[]
-  experts   ExpertProfile[] // experts proposed from this idea
+  comments    Comment[]
+  supports    Support[]
+  documents   Document[]
+  reports     Report[]
+  expertLinks IdeaExpert[]
 
   @@index([fieldKey])
   @@index([status])
@@ -162,15 +179,22 @@ model Document {
 }
 
 model ExpertProfile {
-  id     String       @id @default(cuid())
-  name   String // public
-  fieldKey String // public, exactly one
-  bio    String       @db.Text // public
-  status ExpertStatus @default(PENDING)
+  id String @id @default(cuid())
+
+  // PUBLIC
+  name   String
+  areas  String[] // 1–3 field keys
+  bio    String       @db.Text
+  status ExpertStatus @default(PENDING_REVIEW)
   source ExpertSource
 
-  // PRIVATE — admin only
+  // ACCOUNT OWNERSHIP (optional; null = unclaimed / admin-managed)
+  ownerUserId String? @unique
+  owner       User?   @relation("ExpertOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
+
+  // PRIVATE — admin only; revealed to a single idea author ONLY via an APPROVED IdeaExpert link
   contact         String
+  contactEmail    String? // normalized (lowercased, de-accented) email for dedup + claim matching
   reason          String  @db.Text
   cvFileName      String?
   cvStorageKey    String?
@@ -179,16 +203,49 @@ model ExpertProfile {
   proposerName    String?
   proposerContact String?
 
-  // nomination confirmation
+  // nominee confirmation + account claim
   confirmToken        String?   @unique
   confirmTokenExpires DateTime?
 
-  fromIdeaId String?
-  fromIdea   Idea?   @relation(fields: [fromIdeaId], references: [id], onDelete: SetNull)
-  createdAt  DateTime @default(now())
+  ideaLinks    IdeaExpert[]
+  pendingEdits ExpertEdit[]
+  createdAt    DateTime     @default(now())
 
   @@index([status])
-  @@index([fieldKey])
+  @@index([contactEmail])
+}
+
+model IdeaExpert {
+  id           String        @id @default(cuid())
+  ideaId       String
+  idea         Idea          @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  expertId     String
+  expert       ExpertProfile @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  proposedById String?
+  proposedBy   User?         @relation("ProposedLinks", fields: [proposedById], references: [id], onDelete: SetNull)
+
+  status           LinkStatus @default(AWAITING_EXPERT)
+  contactsSharedAt DateTime? // set on APPROVED -> mutual contact exchange unlocked
+  takenOn          Boolean    @default(false) // expert signalled "po e marr përsipër"
+  authorConfirmed  Boolean    @default(false) // author confirmed the takeover -> idea auto-archives
+
+  approveToken        String?   @unique // lets a no-account expert approve/refuse this link by email
+  approveTokenExpires DateTime?
+  createdAt           DateTime  @default(now())
+
+  @@unique([ideaId, expertId])
+  @@index([status])
+}
+
+model ExpertEdit {
+  id           String        @id @default(cuid())
+  expertId     String
+  expert       ExpertProfile @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  proposedById String?
+  proposedBy   User?         @relation("ProposedEdits", fields: [proposedById], references: [id], onDelete: SetNull)
+  changes      Json // proposed field changes (name/areas/bio/...)
+  status       EditStatus    @default(PENDING)
+  createdAt    DateTime      @default(now())
 }
 
 model Report {

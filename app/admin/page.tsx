@@ -16,7 +16,7 @@ export default async function AdminPage() {
   const admin = await requireAdmin();
   if (!admin) redirect("/");
 
-  const [reports, ideas, users, experts] = await Promise.all([
+  const [reports, ideas, users, experts, edits] = await Promise.all([
     db.report.findMany({ orderBy: [{ resolved: "asc" }, { createdAt: "desc" }] }),
     db.idea.findMany({
       orderBy: { createdAt: "desc" },
@@ -30,6 +30,11 @@ export default async function AdminPage() {
       include: { _count: { select: { ideas: true } } },
     }),
     db.expertProfile.findMany({ orderBy: [{ status: "asc" }, { createdAt: "desc" }] }),
+    db.expertEdit.findMany({
+      where: { status: "PENDING" },
+      orderBy: { createdAt: "desc" },
+      include: { expert: { select: { name: true } } },
+    }),
   ]);
 
   return (
@@ -65,19 +70,32 @@ export default async function AdminPage() {
         experts={experts.map((e) => ({
           id: e.id,
           name: e.name,
-          fieldKey: e.fieldKey,
+          areas: e.areas,
           bio: e.bio,
           status: e.status,
           source: e.source,
-          awaitingConsent: Boolean(e.confirmToken),
+          hasAccount: Boolean(e.ownerUserId),
           contact: e.contact,
           reason: e.reason,
           cvFileName: e.cvFileName,
           proposerName: e.proposerName,
           proposerContact: e.proposerContact,
-          fromIdeaId: e.fromIdeaId,
+        }))}
+        edits={edits.map((ed) => ({
+          id: ed.id,
+          expertName: ed.expert.name,
+          summary: editSummary(ed.changes),
         }))}
       />
     </div>
   );
+}
+
+function editSummary(changes: unknown): string {
+  const c = (changes ?? {}) as Record<string, unknown>;
+  const parts: string[] = [];
+  if (typeof c.name === "string") parts.push(`Emri → ${c.name}`);
+  if (Array.isArray(c.areas)) parts.push(`Fushat → ${c.areas.join(", ")}`);
+  if (typeof c.bio === "string") parts.push(`Bio → ${c.bio.slice(0, 120)}${c.bio.length > 120 ? "…" : ""}`);
+  return parts.join(" · ") || "Ndryshim i propozuar";
 }

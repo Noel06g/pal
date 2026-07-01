@@ -4,7 +4,9 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { DeleteAccountButton } from "@/components/DeleteAccountButton";
+import { AccountExpertPanel } from "@/components/AccountExpertPanel";
 import { fieldShort } from "@/lib/fields";
+import { normalizeEmail } from "@/lib/normalize";
 import { t } from "@/lib/strings";
 
 export const metadata: Metadata = { title: t.account.title };
@@ -13,11 +15,59 @@ export default async function AccountPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/hyr?next=/llogaria");
 
-  const ideas = await db.idea.findMany({
-    where: { authorId: user.id },
-    orderBy: { createdAt: "desc" },
-    include: { _count: { select: { supports: true, comments: true } } },
-  });
+  const [ideas, profile] = await Promise.all([
+    db.idea.findMany({
+      where: { authorId: user.id },
+      orderBy: { createdAt: "desc" },
+      include: { _count: { select: { supports: true, comments: true } } },
+    }),
+    db.expertProfile.findUnique({
+      where: { ownerUserId: user.id },
+      select: {
+        id: true,
+        name: true,
+        areas: true,
+        bio: true,
+        contact: true,
+        status: true,
+        cvFileName: true,
+        ideaLinks: {
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            status: true,
+            takenOn: true,
+            authorConfirmed: true,
+            contactsSharedAt: true,
+            idea: { select: { id: true, title: true } },
+          },
+        },
+      },
+    }),
+  ]);
+
+  const normalized = normalizeEmail(user.email ?? "");
+  const claimable =
+    profile || !normalized
+      ? []
+      : await db.expertProfile.findMany({
+          where: { ownerUserId: null, contactEmail: normalized, status: { not: "REJECTED" } },
+          select: { id: true, name: true, areas: true },
+        });
+
+  const profileForPanel = profile
+    ? {
+        ...profile,
+        ideaLinks: profile.ideaLinks.map((l) => ({
+          id: l.id,
+          status: l.status,
+          takenOn: l.takenOn,
+          authorConfirmed: l.authorConfirmed,
+          contactsShared: Boolean(l.contactsSharedAt),
+          idea: l.idea,
+        })),
+      }
+    : null;
 
   return (
     <div className="container-pal py-10">
@@ -56,6 +106,8 @@ export default async function AccountPage() {
           <p className="text-muted">{t.account.noIdeas}</p>
         )}
       </section>
+
+      <AccountExpertPanel profile={profileForPanel} claimable={claimable} />
 
       <section className="mt-12">
         <div className="card border-danger/30 p-6">

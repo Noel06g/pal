@@ -7,6 +7,7 @@ import { SupportButton } from "@/components/SupportButton";
 import { ArchiveButton } from "@/components/ArchiveButton";
 import { ReportButton } from "@/components/ReportButton";
 import { ProposeExpertButton } from "@/components/ProposeExpertButton";
+import { ConfirmTakeoverButton } from "@/components/ConfirmTakeoverButton";
 import { CommentList, type CommentData } from "@/components/CommentList";
 import { CommentForm } from "@/components/CommentForm";
 import { fieldName } from "@/lib/fields";
@@ -49,7 +50,7 @@ export default async function IdeaDetailPage({
   });
   if (!idea) notFound();
 
-  const [supported, fieldExperts] = await Promise.all([
+  const [supported, fieldExperts, expertLinks] = await Promise.all([
     user
       ? db.support.findUnique({
           where: { ideaId_userId: { ideaId: idea.id, userId: user.id } },
@@ -57,16 +58,29 @@ export default async function IdeaDetailPage({
         })
       : Promise.resolve(null),
     db.expertProfile.findMany({
-      where: { status: "CONFIRMED", fieldKey: idea.fieldKey },
+      where: { status: "PUBLISHED", areas: { has: idea.fieldKey } },
       orderBy: { createdAt: "desc" },
       take: 8,
-      select: { id: true, name: true, bio: true, fieldKey: true },
+      select: { id: true, name: true, bio: true, areas: true },
+    }),
+    db.ideaExpert.findMany({
+      where: { ideaId: idea.id },
+      orderBy: { createdAt: "desc" },
+      include: { expert: { select: { id: true, name: true, status: true, contact: true } } },
     }),
   ]);
 
   const isArchived = idea.status === "ARCHIVED";
   const isOwner = user?.id === idea.author.id;
   const canModerate = isOwner || Boolean(user?.isAdmin);
+
+  // Publicly, only APPROVED links to PUBLISHED experts are shown.
+  const publicLinks = expertLinks.filter((l) => l.status === "APPROVED" && l.expert.status === "PUBLISHED");
+  // The author additionally sees pending replies and the private contact reveal.
+  const authorPending = isOwner ? expertLinks.filter((l) => l.status === "AWAITING_EXPERT") : [];
+  const authorApproved = isOwner ? expertLinks.filter((l) => l.status === "APPROVED") : [];
+  const showExpertsCard =
+    publicLinks.length > 0 || authorPending.length > 0 || authorApproved.length > 0;
 
   const comments: CommentData[] = idea.comments.map((c) => ({
     id: c.id,
@@ -178,6 +192,59 @@ export default async function IdeaDetailPage({
             {isOwner && !isArchived && <ArchiveButton ideaId={idea.id} />}
           </div>
 
+          {/* Ekspertët e propozuar për këtë ide */}
+          {showExpertsCard && (
+            <div className="card p-5">
+              <h2 className="mb-3 text-base font-bold">{t.idea.linkedExperts}</h2>
+              <ul className="space-y-3">
+                {isOwner ? (
+                  <>
+                    {authorApproved.map((l) => (
+                      <li key={l.id} className="border-b border-border pb-3 last:border-0 last:pb-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          {l.expert.status === "PUBLISHED" ? (
+                            <Link href={`/ekspertet/${l.expert.id}`} className="font-semibold text-ink hover:text-teal">
+                              {l.expert.name}
+                            </Link>
+                          ) : (
+                            <span className="font-semibold text-ink">{l.expert.name}</span>
+                          )}
+                          <span className="badge-ok">{t.idea.linkApproved}</span>
+                        </div>
+                        {l.contactsSharedAt && (
+                          <p className="mt-1 text-xs text-muted">
+                            {t.idea.contactLabel}: <span className="font-medium text-ink">{l.expert.contact}</span>
+                          </p>
+                        )}
+                        {l.takenOn && !l.authorConfirmed && (
+                          <div className="mt-2">
+                            <ConfirmTakeoverButton linkId={l.id} />
+                          </div>
+                        )}
+                        {l.authorConfirmed && (
+                          <p className="mt-1 text-xs font-medium text-teal-dk">{t.idea.takenOver}</p>
+                        )}
+                      </li>
+                    ))}
+                    {authorPending.map((l) => (
+                      <li key={l.id} className="border-b border-border pb-3 text-sm text-muted last:border-0 last:pb-0">
+                        {t.idea.awaitingResponse} <span className="font-semibold text-ink">{l.expert.name}</span>
+                      </li>
+                    ))}
+                  </>
+                ) : (
+                  publicLinks.map((l) => (
+                    <li key={l.id} className="border-b border-border pb-3 last:border-0 last:pb-0">
+                      <Link href={`/ekspertet/${l.expert.id}`} className="font-semibold text-ink hover:text-teal">
+                        {l.expert.name}
+                      </Link>
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
+          )}
+
           {/* Ekspertë në këtë fushë */}
           <div className="card p-5">
             <h2 className="mb-3 text-base font-bold">{t.idea.expertsInField}</h2>
@@ -185,7 +252,9 @@ export default async function IdeaDetailPage({
               <ul className="space-y-3">
                 {fieldExperts.map((e) => (
                   <li key={e.id} className="border-b border-border pb-3 last:border-0 last:pb-0">
-                    <div className="font-semibold text-ink">{e.name}</div>
+                    <Link href={`/ekspertet/${e.id}`} className="font-semibold text-ink hover:text-teal">
+                      {e.name}
+                    </Link>
                     <p className="mt-0.5 line-clamp-3 text-xs text-muted">{e.bio}</p>
                   </li>
                 ))}

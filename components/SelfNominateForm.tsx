@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Modal } from "@/components/Modal";
-import { selfNominateExpert } from "@/app/actions/experts";
+import { selfRegisterExpert } from "@/app/actions/experts";
 import { useToast } from "@/components/Toast";
-import { FIELDS } from "@/lib/fields";
+import { AreaPicker } from "@/components/AreaPicker";
 import { t } from "@/lib/strings";
 
 export function SelfNominateButton({
@@ -21,6 +21,7 @@ export function SelfNominateButton({
   const toast = useToast();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
+  const [areas, setAreas] = useState<string[]>([]);
   const triggerClass = variant === "secondary" ? "btn-secondary" : "btn-primary";
 
   if (!loggedIn) {
@@ -34,13 +35,20 @@ export function SelfNominateButton({
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (pending) return;
+    if (areas.length < 1) {
+      toast("Zgjidh të paktën një fushë.", "error");
+      return;
+    }
     setPending(true);
     const fd = new FormData(e.currentTarget);
-    const res = await selfNominateExpert(fd);
+    fd.delete("areas");
+    for (const a of areas) fd.append("areas", a);
+    const res = await selfRegisterExpert(fd);
     setPending(false);
     if (res.ok) {
       toast(t.toast.expertSelf, "success");
       setOpen(false);
+      setAreas([]);
       router.refresh();
     } else {
       toast(res.error, "error");
@@ -54,30 +62,20 @@ export function SelfNominateButton({
       </button>
       <Modal open={open} onClose={() => setOpen(false)} title={t.experts.selfNominate}>
         <form onSubmit={onSubmit} className="space-y-4">
-          <p className="rounded-[10px] bg-teal-tint/50 p-3 text-xs text-teal-dk">
-            {t.forms.nominateNote}
-          </p>
+          <p className="rounded-[10px] bg-teal-tint/50 p-3 text-xs text-teal-dk">{t.forms.selfRegisterNote}</p>
+
           <div>
             <label className="label" htmlFor="self-name">
               {t.forms.expName}
             </label>
             <input id="self-name" name="name" required defaultValue={defaultName} className="input" />
           </div>
+
           <div>
-            <label className="label" htmlFor="self-field">
-              {t.forms.expField}
-            </label>
-            <select id="self-field" name="fieldKey" required className="input" defaultValue="">
-              <option value="" disabled>
-                {t.forms.chooseField}
-              </option>
-              {FIELDS.map((f) => (
-                <option key={f.key} value={f.key}>
-                  {f.n}. {f.name}
-                </option>
-              ))}
-            </select>
+            <span className="label">{t.forms.expAreas}</span>
+            <AreaPicker value={areas} onChange={setAreas} />
           </div>
+
           <div>
             <label className="label" htmlFor="self-bio">
               {t.forms.expBio}
@@ -98,10 +96,11 @@ export function SelfNominateButton({
           </div>
           <div>
             <label className="label" htmlFor="self-cv">
-              {t.forms.expCv}
+              {t.forms.expCvRequired}
             </label>
-            <input id="self-cv" name="cv" type="file" accept="application/pdf" className="input" />
+            <input id="self-cv" name="cv" type="file" accept="application/pdf" required className="input" />
           </div>
+
           <div className="flex justify-end gap-2">
             <button type="button" onClick={() => setOpen(false)} className="btn-ghost">
               {t.common.cancel}

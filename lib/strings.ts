@@ -92,6 +92,12 @@ export const t = {
     proposeExpert: "Propozo një ekspert/e",
     expertsInField: "Ekspertë në këtë fushë",
     noExpertsInField: "Ende s'ka ekspertë të konfirmuar në këtë fushë.",
+    linkedExperts: "Ekspertët e propozuar",
+    linkApproved: "E miratuar",
+    awaitingResponse: "Në pritje të përgjigjes nga",
+    contactLabel: "Kontakti",
+    confirmTakeover: "Konfirmo marrjen përsipër",
+    takenOver: "Marrë përsipër · arkivuar",
     documents: "Dokumente mbështetëse",
     download: "Shkarko",
     commentsTitle: "Komentet",
@@ -127,8 +133,17 @@ export const t = {
       "Je propozuar si ekspert në Platformën Shqiptare. Nëse pranon, profili yt (emri, fusha dhe biografia) shqyrtohet nga administrata para se të publikohet. Kontakti dhe CV-ja mbeten private (vetëm administratorët e faqes).",
     confirmAccepted: "Faleminderit! Pëlqimi yt u regjistrua. Profili do të publikohet pas shqyrtimit nga administrata.",
     confirmRejected: "Propozimi u refuzua. Të dhënat e tua nuk do të publikohen.",
-    confirmInvalid: "Ky lidhje konfirmimi është e pavlefshme ose ka skaduar.",
+    confirmInvalid: "Kjo lidhje konfirmimi është e pavlefshme ose ka skaduar.",
     confirmAlready: "Ky propozim është trajtuar tashmë.",
+    confirmCvNote:
+      "Nëse nuk e ke ngarkuar ende, ngarko CV-në (PDF) — është e detyrueshme para se profili të publikohet.",
+    engagedIdeas: "Idetë ku është angazhuar",
+    noEngagedIdeas: "Ende s'ka ide të lidhura.",
+    linkConfirmTitle: "Konfirmo propozimin për idenë",
+    linkIntro:
+      "Je propozuar si ekspert për një ide. Duke pranuar, kontakti yt i jepet autorit të idesë dhe ti merr kontaktin e tij, që të bisedoni jashtë platformës.",
+    linkAccepted: "Faleminderit! Pranove propozimin dhe kontaktet u shkëmbyen.",
+    linkRejected: "E refuzove propozimin për këtë ide.",
   },
 
   forms: {
@@ -178,6 +193,20 @@ export const t = {
     nominateNote:
       "Profili nuk shfaqet publikisht menjëherë — shqyrtohet nga administrata para se të publikohet.",
 
+    // Experts v2
+    expAreas: "Fushat (1–3)",
+    expCvRequired: "CV (PDF, e detyrueshme)",
+    expCvReplace: "Zëvendëso CV-në (PDF, opsionale)",
+    areasHint: "fusha të zgjedhura (maks. 3)",
+    selfRegisterNote:
+      "Profili yt shqyrtohet nga administrata para se të publikohet. Kontakti dhe CV-ja mbeten private (vetëm administratorët e faqes).",
+    typeaheadHint: "Kërko një ekspert ekzistues me emër, ose propozo një person të ri.",
+    searchExpertPh: "Kërko me emër…",
+    noExpertFound: "Nuk u gjet asnjë ekspert. Propozo një person të ri.",
+    proposeNewPerson: "Propozo një person të ri",
+    backToSearch: "Kthehu te kërkimi",
+    nomContactHint: "Vetëm administratorët e faqes e shohin — për ta kontaktuar jashtë platformës.",
+
     // Report
     reportReason: "Arsyeja e raportimit",
     reportReasonPh: "Pse po e raporton këtë përmbajtje…",
@@ -197,6 +226,15 @@ export const t = {
     title: "Llogaria ime",
     yourIdeas: "Idetë e mia",
     noIdeas: "Ende s'ke propozuar asnjë ide.",
+    expertProfile: "Profili im si ekspert",
+    linksAwaitingYou: "Ide që presin përgjigjen tënde",
+    linkConsentNote: "Duke pranuar, kontakti yt i jepet autorit të idesë dhe ti merr kontaktin e tij.",
+    approvedLinks: "Idetë e pranuara",
+    awaitingAuthorConfirm: "Në pritje të konfirmimit të autorit",
+    takeOver: "Po e marr përsipër",
+    editProfile: "Profili & të dhënat",
+    claimTitle: "Profile për t'u pretenduar",
+    claimBtn: "Pretendo profilin",
     deleteTitle: "Fshi llogarinë",
     deleteWarn:
       "Fshirja e llogarisë heq përfundimisht të dhënat e tua personale, idetë, komentet dhe mbështetjet. Ky veprim s'kthehet mbrapsht.",
@@ -210,6 +248,8 @@ export const t = {
     tabIdeas: "Idetë",
     tabAccounts: "Llogaritë",
     tabExperts: "Ekspertët",
+    tabEdits: "Ndryshime",
+    tabMerge: "Bashko dublikatët",
     reportPost: "Postimi",
     reportReason: "Arsyeja",
     reportReporter: "Raportuesi",
@@ -229,6 +269,12 @@ export const t = {
     proposer: "Propozuesi",
     contact: "Kontakti",
     reason: "Arsyeja",
+    mergeTitle: "Bashko dublikatët",
+    mergeNote: "Zgjidh profilin që mbetet dhe atë që bashkohet në të (lidhjet lëvizin, fushat kufizohen në 3).",
+    mergeKeep: "Profili që mbetet",
+    mergeDrop: "Profili që bashkohet (fshihet)",
+    mergeBtn: "Bashko",
+    mergeConfirm: "Bashko këto dy profile? Ky veprim s'kthehet mbrapsht.",
   },
 
   notifications: {
@@ -282,6 +328,12 @@ export const t = {
     reported: "Faleminderit — raportimi u dërgua.",
     expertSelf: "Vetëpropozimi u dërgua. Do të shqyrtohet nga administrata para se të publikohet.",
     expertNominated: "Propozimi u dërgua. Do të shqyrtohet nga administrata para se të publikohet.",
+    profileSaved: "Profili u ruajt.",
+    profileClaimed: "Profili u pretendua.",
+    linkAccepted: "Pranove propozimin.",
+    linkRejected: "Refuzove propozimin.",
+    takeoverMarked: "Njoftove autorin — pret konfirmimin.",
+    takeoverConfirmed: "Konfirmove; ideja u arkivua.",
     accountDeleted: "Llogaria u fshi.",
     fileTooBig: "Skedari është shumë i madh (maks. 10 MB).",
     fileNotPdf: "Lejohen vetëm skedarë PDF.",
