@@ -27,8 +27,8 @@ export const t = {
   home: {
     heroTitle: "Të ndërtojmë të ardhmen së bashku",
     heroSub:
-      "Platforma Shqiptare është një nismë e pavarur qytetare ku qytetarët propozojnë ekspertë të fushave të ndryshme, diskutojnë për ide e zgjidhje për problemet e vendit. Shqipëria i ka ekspertët, brenda dhe jashtë Shqipërisë. Shqiptarët i kanë idetë, i kanë edhe zgjidhjet! Le t'i bëjmë bashkë!",
-    heroTagline: "Propozo ekspertë. Diskuto ide. Ndërto zgjidhje për Shqipërinë që meritojmë të gjithë!",
+      "Platforma Shqiptare është një nismë e pavarur qytetare ku qytetarët propozojnë dhe vetëpropozohen si ekspertë të fushave të ndryshme, diskutojnë për ide e zgjidhje për problemet e vendit. Shqipëria i ka ekspertët, brenda dhe jashtë Shqipërisë. Shqiptarët i kanë idetë, i kanë edhe zgjidhjet! Le t'i bëjmë bashkë!",
+    heroTagline: "Vetëpropozohu ose propozo ekspertë. Diskuto ide. Ndërto zgjidhje për Shqipërinë që meritojmë të gjithë!",
     heroCtaPrimary: "Propozo një ide",
     heroCtaSecondary: "Propozo një ekspert/e",
     howTitle: "Propozo idenë dhe zgjidhjen tënde",
