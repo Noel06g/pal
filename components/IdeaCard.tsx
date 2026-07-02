@@ -19,10 +19,7 @@ function truncate(s: string, n: number) {
 
 export function IdeaCard({ idea }: { idea: IdeaCardData }) {
   return (
-    <Link
-      href={`/idete/${idea.id}`}
-      className="card flex h-full flex-col p-5 transition-shadow hover:shadow-[0_2px_4px_rgba(26,34,48,0.06),0_12px_32px_rgba(26,34,48,0.10)]"
-    >
+    <Link href={`/idete/${idea.id}`} className="card card-lift flex h-full flex-col p-5">
       <div className="mb-3 flex items-center gap-2">
         <span className="chip">{fieldShort(idea.fieldKey)}</span>
         {idea.archived ? (

@@ -43,15 +43,20 @@ export function SelfNominateButton({
     const fd = new FormData(e.currentTarget);
     fd.delete("areas");
     for (const a of areas) fd.append("areas", a);
-    const res = await selfRegisterExpert(fd);
-    setPending(false);
-    if (res.ok) {
-      toast(t.toast.expertSelf, "success");
-      setOpen(false);
-      setAreas([]);
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await selfRegisterExpert(fd);
+      if (res.ok) {
+        toast(t.toast.expertSelf, "success");
+        setOpen(false);
+        setAreas([]);
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 

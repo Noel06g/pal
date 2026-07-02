@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { getActiveUser } from "@/lib/session";
 import { ideaSchema } from "@/lib/validation";
 import { checkRate } from "@/lib/ratelimit";
-import { buildKey, putObject, validatePdf } from "@/lib/r2";
+import { buildKey, putObject, deleteObject, validatePdf } from "@/lib/r2";
 import { OTHER_FIELD } from "@/lib/fields";
 import { t } from "@/lib/strings";
 import { ok, fail, type ActionResult } from "./_helpers";
@@ -13,8 +13,6 @@ import { ok, fail, type ActionResult } from "./_helpers";
 export async function createIdea(formData: FormData): Promise<ActionResult<{ id: string }>> {
   const user = await getActiveUser();
   if (!user) return fail(t.common.loginRequired);
-
-  if (!(await checkRate("idea", user.id))) return fail(t.toast.rateLimited);
 
   const parsed = ideaSchema.safeParse({
     title: formData.get("title"),
@@ -42,35 +40,59 @@ export async function createIdea(formData: FormData): Promise<ActionResult<{ id:
     prepared.push({ name: file.name, type: file.type, bytes });
   }
 
-  const idea = await db.idea.create({
-    data: {
-      title: input.title,
-      summary: input.summary,
-      fieldKey: input.fieldKey,
-      subfield: input.subfield ? input.subfield : null,
-      otherText: input.fieldKey === OTHER_FIELD.key ? input.otherText : null,
-      authorId: user.id,
-    },
-  });
+  // Rate-limit only well-formed submissions, so a validation round-trip
+  // doesn't burn one of the user's 5 ideas/hour.
+  if (!(await checkRate("idea", user.id))) return fail(t.toast.rateLimited);
 
-  // Upload + record documents.
-  for (const f of prepared) {
-    const key = buildKey("idea-docs", idea.id, f.name);
-    await putObject(key, f.bytes, f.type);
-    await db.document.create({
-      data: {
-        ideaId: idea.id,
-        fileName: f.name,
-        storageKey: key,
-        contentType: f.type,
-        size: f.bytes.length,
-      },
-    });
+  // Upload to R2 FIRST, then create the idea + documents atomically — a
+  // failed upload can no longer leave a half-created idea behind.
+  const ideaId = crypto.randomUUID();
+  const uploaded: Array<{ name: string; type: string; key: string; size: number }> = [];
+  try {
+    for (const f of prepared) {
+      const key = buildKey("idea-docs", ideaId, f.name);
+      await putObject(key, f.bytes, f.type);
+      uploaded.push({ name: f.name, type: f.type, key, size: f.bytes.length });
+    }
+  } catch {
+    for (const u of uploaded) await deleteObject(u.key).catch(() => {});
+    return fail(t.common.error);
+  }
+
+  try {
+    await db.$transaction([
+      db.idea.create({
+        data: {
+          id: ideaId,
+          title: input.title,
+          summary: input.summary,
+          fieldKey: input.fieldKey,
+          subfield:
+            input.fieldKey !== OTHER_FIELD.key && input.subfield ? input.subfield : null,
+          otherText: input.fieldKey === OTHER_FIELD.key ? input.otherText : null,
+          authorId: user.id,
+        },
+      }),
+      ...uploaded.map((u) =>
+        db.document.create({
+          data: {
+            ideaId,
+            fileName: u.name,
+            storageKey: u.key,
+            contentType: u.type,
+            size: u.size,
+          },
+        }),
+      ),
+    ]);
+  } catch {
+    for (const u of uploaded) await deleteObject(u.key).catch(() => {});
+    return fail(t.common.error);
   }
 
   revalidatePath("/idete");
   revalidatePath("/");
-  return ok({ id: idea.id });
+  return ok({ id: ideaId });
 }
 
 export async function archiveIdea(ideaId: string): Promise<ActionResult> {

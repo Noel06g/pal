@@ -16,6 +16,7 @@ export type CommentData = {
   isSolution: boolean;
   authorName: string;
   createdAt: string;
+  canDelete: boolean;
 };
 
 function StanceBadge({ stance }: { stance: Stance }) {
@@ -29,11 +30,9 @@ function StanceBadge({ stance }: { stance: Stance }) {
 
 export function CommentList({
   comments,
-  canModerate,
   loggedIn,
 }: {
   comments: CommentData[];
-  canModerate: boolean;
   loggedIn: boolean;
 }) {
   const router = useRouter();
@@ -41,14 +40,21 @@ export function CommentList({
   const [pendingId, setPendingId] = useState<string | null>(null);
 
   async function onDelete(id: string) {
+    if (pendingId) return;
+    if (!window.confirm(t.idea.deleteCommentConfirm)) return;
     setPendingId(id);
-    const res = await deleteComment(id);
-    setPendingId(null);
-    if (res.ok) {
-      toast(t.toast.commentDeleted, "success");
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await deleteComment(id);
+      if (res.ok) {
+        toast(t.toast.commentDeleted, "success");
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPendingId(null);
     }
   }
 
@@ -70,7 +76,7 @@ export function CommentList({
           </div>
           <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">{c.body}</p>
           <div className="mt-3 flex items-center gap-4">
-            {canModerate && (
+            {c.canDelete && (
               <button
                 type="button"
                 onClick={() => onDelete(c.id)}

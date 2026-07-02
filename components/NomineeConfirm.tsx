@@ -27,13 +27,18 @@ export function NomineeConfirm({ token, initialAccept }: { token: string; initia
   async function reject() {
     if (pending) return;
     setPending(true);
-    const res = await confirmNominee(token, "refuzo");
-    setPending(false);
-    if (res.ok) {
-      setOutcome(res.data?.outcome ?? "rejected");
-      setMode("done");
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await confirmNominee(token, "refuzo");
+      if (res.ok) {
+        setOutcome(res.data?.outcome ?? "rejected");
+        setMode("done");
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 
@@ -42,14 +47,19 @@ export function NomineeConfirm({ token, initialAccept }: { token: string; initia
     if (pending) return;
     setPending(true);
     const fd = new FormData(e.currentTarget);
-    const res = await confirmNominee(token, "prano", fd);
-    setPending(false);
-    if (res.ok) {
-      setOutcome(res.data?.outcome ?? "accepted");
-      setMode("done");
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await confirmNominee(token, "prano", fd);
+      if (res.ok) {
+        setOutcome(res.data?.outcome ?? "accepted");
+        setMode("done");
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 

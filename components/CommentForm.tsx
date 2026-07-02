@@ -27,14 +27,19 @@ export function CommentForm({ ideaId, loggedIn }: { ideaId: string; loggedIn: bo
     setPending(true);
     const form = e.currentTarget;
     const fd = new FormData(form);
-    const res = await addComment(fd);
-    setPending(false);
-    if (res.ok) {
-      toast(t.toast.commented, "success");
-      form.reset();
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await addComment(fd);
+      if (res.ok) {
+        toast(t.toast.commented, "success");
+        form.reset();
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 

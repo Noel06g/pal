@@ -8,6 +8,7 @@ import { t } from "@/lib/strings";
 import {
   adminResolveReport,
   adminDeleteReportedIdea,
+  adminDeleteReportedComment,
   adminDeleteIdea,
   adminSetBan,
   adminDeleteUser,
@@ -89,15 +90,21 @@ export function AdminPanel({
   const [busy, setBusy] = useState<string | null>(null);
 
   async function run(key: string, fn: () => Promise<{ ok: boolean; error?: string }>, confirmMsg?: string) {
+    if (busy) return;
     if (confirmMsg && !window.confirm(confirmMsg)) return;
     setBusy(key);
-    const res = await fn();
-    setBusy(null);
-    if (res.ok) {
-      toast(t.common.success, "success");
-      router.refresh();
-    } else {
-      toast(res.error ?? t.common.error, "error");
+    try {
+      const res = await fn();
+      if (res.ok) {
+        toast(t.common.success, "success");
+        router.refresh();
+      } else {
+        toast(res.error ?? t.common.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setBusy(null);
     }
   }
 
@@ -145,7 +152,18 @@ export function AdminPanel({
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-ink">{r.ideaTitle}</span>
+                    {r.ideaId ? (
+                      <a
+                        href={`/idete/${r.ideaId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-semibold text-teal hover:underline"
+                      >
+                        {r.ideaTitle}
+                      </a>
+                    ) : (
+                      <span className="font-semibold text-ink">{r.ideaTitle}</span>
+                    )}
                     {r.resolved && <span className="badge-muted">{t.admin.resolved}</span>}
                   </div>
                   <p className="mt-1 text-sm text-muted">{r.reason}</p>
@@ -161,6 +179,17 @@ export function AdminPanel({
                       className="btn-danger-soft text-xs"
                     >
                       {t.admin.reportDelete}
+                    </button>
+                  )}
+                  {r.commentId && (
+                    <button
+                      onClick={() =>
+                        run(`rep-delc-${r.id}`, () => adminDeleteReportedComment(r.id), "Fshi komentin e raportuar?")
+                      }
+                      disabled={busy === `rep-delc-${r.id}`}
+                      className="btn-danger-soft text-xs"
+                    >
+                      {t.admin.reportDeleteComment}
                     </button>
                   )}
                   {!r.resolved && (
@@ -341,6 +370,8 @@ function ExpertAdminCard({
   run: (k: string, fn: () => Promise<{ ok: boolean; error?: string }>, c?: string) => void;
 }) {
   const sb = statusBadge[e.status];
+  // A nominated person must consent first — "Mirato" appears only after that.
+  const canApprove = e.status === "PENDING_REVIEW";
   const canReview = e.status === "AWAITING_NOMINEE" || e.status === "PENDING_REVIEW";
   return (
     <div className="card p-4">
@@ -378,23 +409,23 @@ function ExpertAdminCard({
           </dl>
         </div>
         <div className="flex shrink-0 flex-col gap-2">
+          {canApprove && (
+            <button
+              onClick={() => run(`exp-ok-${e.id}`, () => adminApproveExpert(e.id))}
+              disabled={busy === `exp-ok-${e.id}`}
+              className="btn-primary text-xs"
+            >
+              {t.admin.approve}
+            </button>
+          )}
           {canReview && (
-            <>
-              <button
-                onClick={() => run(`exp-ok-${e.id}`, () => adminApproveExpert(e.id))}
-                disabled={busy === `exp-ok-${e.id}`}
-                className="btn-primary text-xs"
-              >
-                {t.admin.approve}
-              </button>
-              <button
-                onClick={() => run(`exp-no-${e.id}`, () => adminRejectExpert(e.id))}
-                disabled={busy === `exp-no-${e.id}`}
-                className="btn-secondary text-xs"
-              >
-                {t.admin.reject}
-              </button>
-            </>
+            <button
+              onClick={() => run(`exp-no-${e.id}`, () => adminRejectExpert(e.id))}
+              disabled={busy === `exp-no-${e.id}`}
+              className="btn-secondary text-xs"
+            >
+              {t.admin.reject}
+            </button>
           )}
           <button
             onClick={() => run(`exp-del-${e.id}`, () => adminDeleteExpert(e.id), "Fshi këtë ekspert?")}

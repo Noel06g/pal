@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     template: `%s · ${t.site.name}`,
   },
   description:
-    "Pal — nismë e pavarur qytetare ku qytetarët propozojnë ide e zgjidhje për problemet e Shqipërisë.",
+    "Platforma Shqiptare — nismë e pavarur qytetare ku qytetarët propozojnë ekspertë, ide e zgjidhje për problemet e Shqipërisë.",
   openGraph: {
     title: `${t.site.name} — ${t.site.tagline}`,
     description:

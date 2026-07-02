@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { FIELD_KEYS, OTHER_FIELD } from "@/lib/fields";
+import { FIELD_KEYS, OTHER_FIELD, fieldSubs } from "@/lib/fields";
 
 const stance = z.enum(["PRO", "KUNDER", "NEUTRAL"]);
 
@@ -18,7 +18,12 @@ export const ideaSchema = z
   .refine(
     (d) => d.fieldKey !== OTHER_FIELD.key || (d.otherText && d.otherText.length >= 3),
     { message: "Shpjego fushën kur zgjedh «Tjetër».", path: ["otherText"] },
-  );
+  )
+  // A subfield must belong to the chosen field (never free text).
+  .refine((d) => !d.subfield || fieldSubs(d.fieldKey).includes(d.subfield), {
+    message: "Nënfushë e pavlefshme.",
+    path: ["subfield"],
+  });
 
 export const commentSchema = z.object({
   ideaId: z.string().min(1),
@@ -73,11 +78,16 @@ export const expertEditSchema = z.object({
   contact: z.string().trim().min(5, "Vendos një kontakt.").max(200),
 });
 
-export const reportSchema = z.object({
-  ideaId: z.string().min(1).optional(),
-  commentId: z.string().min(1).optional(),
-  reason: z.string().trim().min(5, "Shkruaj arsyen e raportimit.").max(2000),
-});
+export const reportSchema = z
+  .object({
+    ideaId: z.string().min(1).optional(),
+    commentId: z.string().min(1).optional(),
+    reason: z.string().trim().min(5, "Shkruaj arsyen e raportimit.").max(2000),
+  })
+  // Exactly one target: either an idea or a comment.
+  .refine((d) => Boolean(d.ideaId) !== Boolean(d.commentId), {
+    message: "Raportimi duhet të ketë një objekt të vetëm.",
+  });
 
 export const registerSchema = z.object({
   email: z.string().trim().toLowerCase().email("Email i pavlefshëm."),

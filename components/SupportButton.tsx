@@ -36,15 +36,20 @@ export function SupportButton({
   async function onClick() {
     if (pending || disabled) return;
     setPending(true);
-    const res = await toggleSupport(ideaId);
-    setPending(false);
-    if (res.ok && res.data) {
-      setSupported(res.data.supported);
-      setCount(res.data.count);
-      toast(res.data.supported ? t.toast.supported : t.toast.unsupported, "success");
-      router.refresh();
-    } else if (!res.ok) {
-      toast(res.error, "error");
+    try {
+      const res = await toggleSupport(ideaId);
+      if (res.ok && res.data) {
+        setSupported(res.data.supported);
+        setCount(res.data.count);
+        toast(res.data.supported ? t.toast.supported : t.toast.unsupported, "success");
+        router.refresh();
+      } else if (!res.ok) {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 

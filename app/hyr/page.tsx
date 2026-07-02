@@ -13,10 +13,12 @@ export default async function SignInPage({
   searchParams: Promise<{ next?: string; error?: string }>;
 }) {
   const user = await getCurrentUser();
-  const { next, error } = await searchParams;
+  const { next: rawNext, error } = await searchParams;
+  // Internal paths only — "//evil.com" is a protocol-relative external URL.
+  const next = rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : null;
 
   // If there's a `next` target and the user is logged in, send them there.
-  if (user && next && next.startsWith("/")) redirect(next);
+  if (user && next) redirect(next);
 
   // Already signed in (no specific target): show a clear state instead of a
   // silent redirect, so it never feels like "sign-in does nothing".
@@ -65,7 +67,7 @@ export default async function SignInPage({
         )}
 
         <div className="mt-8">
-          <AuthForm />
+          <AuthForm next={next ?? undefined} />
         </div>
       </div>
     </div>

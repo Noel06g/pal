@@ -3,8 +3,9 @@ import { env } from "@/lib/env";
 const VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
 /**
- * Verify a Cloudflare Turnstile token server-side. Required on registration,
- * create-idea and create-comment (spec §11).
+ * Verify a Cloudflare Turnstile token server-side. Enforced on the
+ * registration/sign-in flow; idea and comment writes are protected by
+ * login + per-user rate limits instead.
  */
 export async function verifyTurnstile(token: string | undefined, ip?: string): Promise<boolean> {
   if (!token) return false;

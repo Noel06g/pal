@@ -20,20 +20,28 @@ export async function submitReport(formData: FormData): Promise<ActionResult> {
   if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? t.common.error);
   const { ideaId, commentId, reason } = parsed.data;
 
-  // Snapshot the post title + reporter email so the report survives deletion.
+  // The reported content must actually exist; snapshot its title so the
+  // report survives a later deletion. Report.ideaId is a real FK, so only
+  // store ids we verified — otherwise report.create throws P2003.
   let ideaTitle = "—";
+  let verifiedIdeaId: string | null = null;
+  let verifiedCommentId: string | null = null;
   if (ideaId) {
     const idea = await db.idea.findUnique({
       where: { id: ideaId },
       select: { title: true },
     });
-    if (idea) ideaTitle = idea.title;
+    if (!idea) return fail(t.common.error);
+    ideaTitle = idea.title;
+    verifiedIdeaId = ideaId;
   } else if (commentId) {
     const comment = await db.comment.findUnique({
       where: { id: commentId },
       select: { idea: { select: { title: true } } },
     });
-    if (comment) ideaTitle = `Koment në «${comment.idea.title}»`;
+    if (!comment) return fail(t.common.error);
+    ideaTitle = `Koment në «${comment.idea.title}»`;
+    verifiedCommentId = commentId;
   }
 
   const reporter = await db.user.findUnique({
@@ -43,8 +51,8 @@ export async function submitReport(formData: FormData): Promise<ActionResult> {
 
   await db.report.create({
     data: {
-      ideaId: ideaId ?? null,
-      commentId: commentId ?? null,
+      ideaId: verifiedIdeaId,
+      commentId: verifiedCommentId,
       ideaTitle,
       reason,
       reporterId: user.id,

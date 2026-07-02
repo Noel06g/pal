@@ -16,19 +16,19 @@ export function Footer() {
             ) : null}
           </div>
           <nav className="grid grid-cols-2 gap-x-12 gap-y-2 text-sm" aria-label="Footer">
-            <Link href="/rreth" className="text-ink hover:text-teal">
+            <Link href="/rreth" className="transition-colors text-ink hover:text-teal">
               {t.nav.about}
             </Link>
-            <Link href="/ekspertet" className="text-ink hover:text-teal">
+            <Link href="/ekspertet" className="transition-colors text-ink hover:text-teal">
               {t.nav.experts}
             </Link>
-            <Link href="/idete" className="text-ink hover:text-teal">
+            <Link href="/idete" className="transition-colors text-ink hover:text-teal">
               {t.nav.ideas}
             </Link>
-            <Link href="/privatesia" className="text-ink hover:text-teal">
+            <Link href="/privatesia" className="transition-colors text-ink hover:text-teal">
               Privatësia
             </Link>
-            <Link href="/kushtet" className="text-ink hover:text-teal">
+            <Link href="/kushtet" className="transition-colors text-ink hover:text-teal">
               Kushtet
             </Link>
           </nav>

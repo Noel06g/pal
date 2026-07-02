@@ -26,9 +26,21 @@ export async function deleteAccount(): Promise<ActionResult> {
     await deleteObject(d.storageKey).catch(() => {});
   }
 
+  // Also remove their expert profile (contact + CV are personal data; the
+  // schema's onDelete: SetNull would otherwise leave them behind).
+  const profile = await db.expertProfile.findUnique({
+    where: { ownerUserId: user.id },
+    select: { id: true, cvStorageKey: true },
+  });
+  if (profile) {
+    if (profile.cvStorageKey) await deleteObject(profile.cvStorageKey).catch(() => {});
+    await db.expertProfile.delete({ where: { id: profile.id } }).catch(() => {});
+  }
+
   await db.user.delete({ where: { id: user.id } });
 
   await signOut({ redirect: false });
   revalidatePath("/");
+  revalidatePath("/ekspertet");
   return ok();
 }

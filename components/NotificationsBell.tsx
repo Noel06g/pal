@@ -37,14 +37,14 @@ export function NotificationsBell({
     if (!n.read) {
       setItems((prev) => prev.map((x) => (x.id === n.id ? { ...x, read: true } : x)));
       setCount((c) => Math.max(0, c - 1));
-      await markNotificationRead(n.id);
+      await markNotificationRead(n.id).catch(() => {});
     }
   }
 
   async function handleMarkAll() {
     setItems((prev) => prev.map((x) => ({ ...x, read: true })));
     setCount(0);
-    await markAllNotificationsRead();
+    await markAllNotificationsRead().catch(() => {});
   }
 
   return (

@@ -31,6 +31,9 @@ export const t = {
     heroTagline: "Vetëpropozohu ose propozo ekspertë. Diskuto ide. Ndërto zgjidhje për Shqipërinë që meritojmë të gjithë!",
     heroCtaPrimary: "Propozo një ide",
     heroCtaSecondary: "Propozo një ekspert/e",
+    statIdeas: "Ide të propozuara",
+    statExperts: "Ekspertë",
+    statFields: "Fusha tematike",
     howTitle: "Propozo idenë dhe zgjidhjen tënde",
     how: [
       {
@@ -98,6 +101,7 @@ export const t = {
     linkedExperts: "Ekspertët e propozuar",
     linkApproved: "E miratuar",
     awaitingResponse: "Në pritje të përgjigjes nga",
+    pendingExpert: "një ekspert i propozuar",
     contactLabel: "Kontakti",
     confirmTakeover: "Konfirmo marrjen përsipër",
     takenOver: "Marrë përsipër · arkivuar",
@@ -107,6 +111,7 @@ export const t = {
     addComment: "Shto një koment",
     commentLogin: "Hyr për të komentuar",
     deleteComment: "Fshi",
+    deleteCommentConfirm: "Fshi këtë koment? Ky veprim s'kthehet mbrapsht.",
     proposesSolution: "Propozon një zgjidhje",
     field: "Fusha",
     subfield: "Nënfusha",
@@ -258,6 +263,7 @@ export const t = {
     reportReporter: "Raportuesi",
     reportResolve: "Zgjidh",
     reportDelete: "Fshi postimin",
+    reportDeleteComment: "Fshi komentin",
     resolved: "Zgjidhur",
     delete: "Fshi",
     ban: "Pezullo llogarinë",
@@ -305,6 +311,7 @@ export const t = {
 
   common: {
     save: "Ruaj",
+    edit: "Ndrysho",
     cancel: "Anulo",
     submit: "Dërgo",
     close: "Mbyll",

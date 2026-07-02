@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
-import { getCurrentUser } from "@/lib/session";
+import { getActiveUser } from "@/lib/session";
 import { SupportButton } from "@/components/SupportButton";
 import { ArchiveButton } from "@/components/ArchiveButton";
 import { ReportButton } from "@/components/ReportButton";
@@ -34,7 +34,9 @@ export default async function IdeaDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const user = await getCurrentUser();
+  // getActiveUser: banned users see the logged-out (read-only) UI — the same
+  // rule every server action enforces.
+  const user = await getActiveUser();
 
   const idea = await db.idea.findUnique({
     where: { id },
@@ -89,6 +91,8 @@ export default async function IdeaDetailPage({
     isSolution: c.isSolution,
     authorName: c.author.name,
     createdAt: fmtDate(c.createdAt),
+    // Own comment, own idea, or admin — mirrors deleteComment's server rule.
+    canDelete: Boolean(user && (c.authorId === user.id || canModerate)),
   }));
 
   return (
@@ -167,7 +171,7 @@ export default async function IdeaDetailPage({
                 <CommentForm ideaId={idea.id} loggedIn={Boolean(user)} />
               </div>
             )}
-            <CommentList comments={comments} canModerate={canModerate} loggedIn={Boolean(user)} />
+            <CommentList comments={comments} loggedIn={Boolean(user)} />
           </section>
         </article>
 
@@ -228,7 +232,11 @@ export default async function IdeaDetailPage({
                     ))}
                     {authorPending.map((l) => (
                       <li key={l.id} className="border-b border-border pb-3 text-sm text-muted last:border-0 last:pb-0">
-                        {t.idea.awaitingResponse} <span className="font-semibold text-ink">{l.expert.name}</span>
+                        {/* Unpublished nominees stay anonymous until they consent. */}
+                        {t.idea.awaitingResponse}{" "}
+                        <span className="font-semibold text-ink">
+                          {l.expert.status === "PUBLISHED" ? l.expert.name : t.idea.pendingExpert}
+                        </span>
                       </li>
                     ))}
                   </>

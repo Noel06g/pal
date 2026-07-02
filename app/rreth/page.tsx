@@ -7,7 +7,8 @@ export default function AboutPage() {
   return (
     <div className="container-pal py-12">
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-4xl font-black tracking-tight">{t.about.title}</h1>
+        <div className="accent-bar" aria-hidden />
+        <h1 className="text-balance text-4xl font-black tracking-tight">{t.about.title}</h1>
 
         <section className="mt-10">
           <h2 className="text-xl font-bold">{t.about.missionTitle}</h2>

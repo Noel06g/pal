@@ -14,13 +14,18 @@ export function ConfirmTakeoverButton({ linkId }: { linkId: string }) {
   async function onClick() {
     if (pending) return;
     setPending(true);
-    const res = await authorConfirmTakeover(linkId);
-    setPending(false);
-    if (res.ok) {
-      toast(t.toast.takeoverConfirmed, "success");
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await authorConfirmTakeover(linkId);
+      if (res.ok) {
+        toast(t.toast.takeoverConfirmed, "success");
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 

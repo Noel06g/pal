@@ -32,6 +32,22 @@ function loadScript(): Promise<void> {
   return scriptPromise;
 }
 
+// Track live widget ids so a failed submit can request a fresh token
+// (Turnstile tokens are single-use: the server verify consumes them).
+const activeWidgets = new Set<string>();
+
+/** Reset all rendered Turnstile widgets to obtain a fresh token. */
+export function resetTurnstile() {
+  if (!window.turnstile) return;
+  for (const id of activeWidgets) {
+    try {
+      window.turnstile.reset(id);
+    } catch {
+      // widget may already be gone
+    }
+  }
+}
+
 /**
  * Cloudflare Turnstile widget. Writes the token into a hidden input named
  * "turnstileToken" so it is submitted with the surrounding form / FormData.
@@ -67,10 +83,12 @@ export function Turnstile() {
           if (inputRef.current) inputRef.current.value = "";
         },
       });
+      if (widgetId.current) activeWidgets.add(widgetId.current);
     });
     return () => {
       cancelled = true;
       if (widgetId.current && window.turnstile) {
+        activeWidgets.delete(widgetId.current);
         window.turnstile.remove(widgetId.current);
         widgetId.current = null;
       }

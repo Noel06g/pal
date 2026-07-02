@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NotificationsBell } from "@/components/NotificationsBell";
@@ -33,6 +33,16 @@ export function Nav({
 }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+
+  // Close the mobile menu with Escape (keyboard parity with click-toggle).
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
@@ -101,6 +111,7 @@ export function Nav({
             className="rounded-md p-2 text-ink hover:bg-teal-tint md:hidden"
             aria-label={t.nav.menu}
             aria-expanded={open}
+            aria-controls="mobile-menu"
             onClick={() => setOpen((o) => !o)}
           >
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden>
@@ -116,7 +127,7 @@ export function Nav({
 
       {/* Mobile menu */}
       {open && (
-        <nav className="border-t border-border bg-paper md:hidden" aria-label="Mobile">
+        <nav id="mobile-menu" className="border-t border-border bg-paper md:hidden" aria-label="Mobile">
           <div className="container-pal flex flex-col gap-1 py-3">
             {links.map((l) => (
               <Link

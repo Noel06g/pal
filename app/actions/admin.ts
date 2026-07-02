@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/session";
 import { deleteObject } from "@/lib/r2";
 import { sendProfileDecisionEmail } from "@/lib/email";
+import { isValidFieldKey } from "@/lib/fields";
 import { ok, fail, type ActionResult } from "./_helpers";
 
 export async function adminDeleteIdea(ideaId: string): Promise<ActionResult> {
@@ -34,6 +35,22 @@ export async function adminDeleteComment(commentId: string): Promise<ActionResul
 export async function adminResolveReport(reportId: string): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
+  await db.report.update({ where: { id: reportId }, data: { resolved: true } });
+  revalidatePath("/admin");
+  return ok();
+}
+
+/** Delete the comment referenced by a report (comment moderation path). */
+export async function adminDeleteReportedComment(reportId: string): Promise<ActionResult> {
+  const admin = await requireAdmin();
+  if (!admin) return fail("forbidden");
+  const report = await db.report.findUnique({
+    where: { id: reportId },
+    select: { commentId: true },
+  });
+  if (report?.commentId) {
+    await db.comment.delete({ where: { id: report.commentId } }).catch(() => {});
+  }
   await db.report.update({ where: { id: reportId }, data: { resolved: true } });
   revalidatePath("/admin");
   return ok();
@@ -80,14 +97,36 @@ export async function adminDeleteUser(userId: string): Promise<ActionResult> {
   });
   for (const d of docs) await deleteObject(d.storageKey).catch(() => {});
 
+  // Remove the user's expert profile too (onDelete: SetNull would otherwise
+  // leave their contact/CV behind as an orphaned profile).
+  const profile = await db.expertProfile.findUnique({
+    where: { ownerUserId: userId },
+    select: { id: true, cvStorageKey: true },
+  });
+  if (profile) {
+    if (profile.cvStorageKey) await deleteObject(profile.cvStorageKey).catch(() => {});
+    await db.expertProfile.delete({ where: { id: profile.id } }).catch(() => {});
+  }
+
   await db.user.delete({ where: { id: userId } }).catch(() => {});
   revalidatePath("/admin");
+  revalidatePath("/ekspertet");
   return ok();
 }
 
 export async function adminApproveExpert(expertId: string): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
+  const current = await db.expertProfile.findUnique({
+    where: { id: expertId },
+    select: { status: true, source: true },
+  });
+  if (!current) return fail("not found");
+  // A nominated person must consent (accept the email invite) BEFORE the
+  // profile can ever be published.
+  if (current.status === "AWAITING_NOMINEE") {
+    return fail("I propozuari s'ka dhënë ende pëlqimin — nuk mund të publikohet.");
+  }
   const expert = await db.expertProfile.update({
     where: { id: expertId },
     data: { status: "PUBLISHED", confirmToken: null, confirmTokenExpires: null },
@@ -107,6 +146,12 @@ export async function adminRejectExpert(expertId: string): Promise<ActionResult>
     where: { id: expertId },
     data: { status: "REJECTED", confirmToken: null, confirmTokenExpires: null },
     select: { name: true, contactEmail: true, owner: { select: { email: true } } },
+  });
+  // Kill any still-pending idea links (and their email tokens) so a rejected
+  // expert can no longer accept an invite and trigger a contact exchange.
+  await db.ideaExpert.updateMany({
+    where: { expertId, status: "AWAITING_EXPERT" },
+    data: { status: "REJECTED", approveToken: null, approveTokenExpires: null },
   });
   const to = expert.owner?.email ?? expert.contactEmail;
   if (to) sendProfileDecisionEmail(to, expert.name, false).catch(() => {});
@@ -138,7 +183,10 @@ export async function adminApproveEdit(editId: string): Promise<ActionResult> {
   const changes = (edit.changes ?? {}) as Record<string, unknown>;
   const data: { name?: string; areas?: string[]; bio?: string } = {};
   if (typeof changes.name === "string") data.name = changes.name;
-  if (Array.isArray(changes.areas)) data.areas = changes.areas.map(String).slice(0, 3);
+  if (Array.isArray(changes.areas)) {
+    const valid = changes.areas.map(String).filter((k) => isValidFieldKey(k));
+    if (valid.length > 0) data.areas = valid.slice(0, 3);
+  }
   if (typeof changes.bio === "string") data.bio = changes.bio;
   await db.expertProfile.update({ where: { id: edit.expertId }, data });
   await db.expertEdit.update({ where: { id: editId }, data: { status: "APPROVED" } });
@@ -161,8 +209,23 @@ export async function adminMergeExperts(keepId: string, dropId: string): Promise
   if (!admin) return fail("forbidden");
   if (keepId === dropId) return fail("Zgjidh dy profile të ndryshme.");
   const [keep, drop] = await Promise.all([
-    db.expertProfile.findUnique({ where: { id: keepId }, select: { id: true, areas: true } }),
-    db.expertProfile.findUnique({ where: { id: dropId }, select: { id: true, areas: true, cvStorageKey: true } }),
+    db.expertProfile.findUnique({
+      where: { id: keepId },
+      select: { id: true, areas: true, ownerUserId: true, contactEmail: true, cvStorageKey: true },
+    }),
+    db.expertProfile.findUnique({
+      where: { id: dropId },
+      select: {
+        id: true,
+        areas: true,
+        ownerUserId: true,
+        contactEmail: true,
+        cvStorageKey: true,
+        cvFileName: true,
+        cvContentType: true,
+        cvSize: true,
+      },
+    }),
   ]);
   if (!keep || !drop) return fail("not found");
 
@@ -176,11 +239,35 @@ export async function adminMergeExperts(keepId: string, dropId: string): Promise
   }
   await db.expertEdit.updateMany({ where: { expertId: dropId }, data: { expertId: keepId } });
 
-  const merged = Array.from(new Set([...keep.areas, ...drop.areas])).slice(0, 3);
-  await db.expertProfile.update({ where: { id: keepId }, data: { areas: merged } });
+  // Carry over what `keep` lacks: account ownership, contact email, CV.
+  const transferOwner = !keep.ownerUserId && drop.ownerUserId ? drop.ownerUserId : null;
+  const transferCv = !keep.cvStorageKey && drop.cvStorageKey;
 
-  if (drop.cvStorageKey) await deleteObject(drop.cvStorageKey).catch(() => {});
-  await db.expertProfile.delete({ where: { id: dropId } }).catch(() => {});
+  const merged = Array.from(new Set([...keep.areas, ...drop.areas])).slice(0, 3);
+  // Atomic: delete `drop` first (frees its unique ownerUserId), then apply
+  // the merged fields to `keep` — or neither.
+  await db.$transaction([
+    db.expertProfile.delete({ where: { id: dropId } }),
+    db.expertProfile.update({
+      where: { id: keepId },
+      data: {
+        areas: merged,
+        ...(transferOwner ? { ownerUserId: transferOwner } : {}),
+        ...(!keep.contactEmail && drop.contactEmail ? { contactEmail: drop.contactEmail } : {}),
+        ...(transferCv
+          ? {
+              cvStorageKey: drop.cvStorageKey,
+              cvFileName: drop.cvFileName,
+              cvContentType: drop.cvContentType,
+              cvSize: drop.cvSize,
+            }
+          : {}),
+      },
+    }),
+  ]);
+
+  // Only remove the dropped CV from storage if it was NOT transferred.
+  if (drop.cvStorageKey && !transferCv) await deleteObject(drop.cvStorageKey).catch(() => {});
 
   revalidatePath("/admin");
   revalidatePath("/ekspertet");

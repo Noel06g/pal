@@ -10,7 +10,8 @@ export default function PrivacyPage() {
     <div className="container-pal py-12">
       <div className="mx-auto max-w-2xl prose-pal space-y-8">
         <header>
-          <h1 className="text-4xl font-black tracking-tight">Politika e privatësisë</h1>
+          <div className="accent-bar" aria-hidden />
+        <h1 className="text-balance text-4xl font-black tracking-tight">Politika e privatësisë</h1>
           <p className="mt-2 text-sm text-muted">
             E përditësuar së fundi: {new Date().toLocaleDateString("sq-AL", { dateStyle: "long" })}
           </p>

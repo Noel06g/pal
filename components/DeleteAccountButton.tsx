@@ -15,14 +15,19 @@ export function DeleteAccountButton() {
     if (pending) return;
     if (!window.confirm(t.account.deleteConfirm)) return;
     setPending(true);
-    const res = await deleteAccount();
-    setPending(false);
-    if (res.ok) {
-      toast(t.toast.accountDeleted, "success");
-      router.push("/");
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await deleteAccount();
+      if (res.ok) {
+        toast(t.toast.accountDeleted, "success");
+        router.push("/");
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 

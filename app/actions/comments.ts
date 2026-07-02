@@ -71,12 +71,12 @@ export async function deleteComment(commentId: string): Promise<ActionResult> {
 
   const comment = await db.comment.findUnique({
     where: { id: commentId },
-    select: { id: true, ideaId: true, idea: { select: { authorId: true } } },
+    select: { id: true, ideaId: true, authorId: true, idea: { select: { authorId: true } } },
   });
   if (!comment) return fail(t.common.error);
 
-  // The idea's author or an admin may delete comments on that idea.
-  if (comment.idea.authorId !== user.id && !user.isAdmin) {
+  // The comment's own author, the idea's author, or an admin may delete it.
+  if (comment.authorId !== user.id && comment.idea.authorId !== user.id && !user.isAdmin) {
     return fail(t.common.error);
   }
 

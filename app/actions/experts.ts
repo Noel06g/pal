@@ -80,20 +80,32 @@ export async function selfRegisterExpert(formData: FormData): Promise<ActionResu
   if (cv && !cv.ok) return fail(cv.error);
   if (!cv) return fail("CV (PDF) është e detyrueshme.");
 
-  const expert = await db.expertProfile.create({
-    data: {
-      name: parsed.data.name,
-      areas: parsed.data.areas,
-      bio: parsed.data.bio,
-      reason: parsed.data.reason,
-      contact: parsed.data.contact,
-      contactEmail: normalizeEmail(parsed.data.contact) ?? normalizeEmail(user.email ?? "") ?? null,
-      status: "PENDING_REVIEW",
-      source: "SELF",
-      ownerUserId: user.id,
-    },
-  });
-  await storeCv(expert.id, cv);
+  let expert;
+  try {
+    expert = await db.expertProfile.create({
+      data: {
+        name: parsed.data.name,
+        areas: parsed.data.areas,
+        bio: parsed.data.bio,
+        reason: parsed.data.reason,
+        contact: parsed.data.contact,
+        contactEmail: normalizeEmail(parsed.data.contact) ?? normalizeEmail(user.email ?? "") ?? null,
+        status: "PENDING_REVIEW",
+        source: "SELF",
+        ownerUserId: user.id,
+      },
+    });
+  } catch {
+    // Unique (ownerUserId) race: a concurrent submit already created the profile.
+    return fail("Ke tashmë një profil eksperti.");
+  }
+  try {
+    await storeCv(expert.id, cv);
+  } catch {
+    // CV is mandatory here — roll back the half-created profile.
+    await db.expertProfile.delete({ where: { id: expert.id } }).catch(() => {});
+    return fail(t.common.error);
+  }
 
   revalidatePath("/admin");
   revalidatePath("/llogaria");
@@ -109,8 +121,10 @@ export async function searchExperts(
   const q = query.trim();
   if (q.length < 2) return ok({ results: [] });
 
+  // ONLY published profiles: names/bios of unconsented nominees and profiles
+  // still in review must never be exposed via the typeahead.
   const rows = await db.expertProfile.findMany({
-    where: { status: { not: "REJECTED" }, name: { contains: q, mode: "insensitive" } },
+    where: { status: "PUBLISHED", name: { contains: q, mode: "insensitive" } },
     orderBy: { createdAt: "desc" },
     take: 8,
     select: { id: true, name: true, areas: true, bio: true },
@@ -133,13 +147,19 @@ export async function proposeExistingExpert(formData: FormData): Promise<ActionR
   const { ideaId, expertId, suggestBio } = parsed.data;
 
   const [idea, expert] = await Promise.all([
-    db.idea.findUnique({ where: { id: ideaId }, select: { id: true, title: true, authorId: true } }),
+    db.idea.findUnique({
+      where: { id: ideaId },
+      select: { id: true, title: true, authorId: true, status: true },
+    }),
     db.expertProfile.findUnique({
       where: { id: expertId },
-      select: { id: true, name: true, contactEmail: true, ownerUserId: true },
+      select: { id: true, name: true, contactEmail: true, ownerUserId: true, status: true },
     }),
   ]);
   if (!idea || !expert) return fail(t.common.error);
+  if (idea.status === "ARCHIVED") return fail(t.ideas.archivedNote);
+  // Only published experts can be linked to ideas.
+  if (expert.status !== "PUBLISHED") return fail(t.common.error);
 
   const dup = await db.ideaExpert.findUnique({
     where: { ideaId_expertId: { ideaId, expertId } },
@@ -213,9 +233,21 @@ export async function proposeNewExpert(formData: FormData): Promise<ActionResult
 
   const idea = await db.idea.findUnique({
     where: { id: input.ideaId },
-    select: { id: true, title: true, authorId: true },
+    select: { id: true, title: true, authorId: true, status: true },
   });
   if (!idea) return fail(t.common.error);
+  if (idea.status === "ARCHIVED") return fail(t.ideas.archivedNote);
+
+  // Same dedup as the general nomination: don't create a second profile for
+  // a person who already exists on the platform.
+  const dupEmail = normalizeEmail(input.contact);
+  if (dupEmail) {
+    const dup = await db.expertProfile.findFirst({
+      where: { contactEmail: dupEmail, status: { not: "REJECTED" } },
+      select: { id: true },
+    });
+    if (dup) return fail("Ky ekspert ekziston tashmë në platformë.");
+  }
 
   const cv = await prepareCv(formData);
   if (cv && !cv.ok) return fail(cv.error);
@@ -237,7 +269,8 @@ export async function proposeNewExpert(formData: FormData): Promise<ActionResult
       confirmTokenExpires: in30Days(),
     },
   });
-  if (cv && cv.ok) await storeCv(expert.id, cv);
+  // CV is optional on nominations — a storage hiccup must not sink the proposal.
+  if (cv && cv.ok) await storeCv(expert.id, cv).catch(() => {});
 
   await db.ideaExpert.create({
     data: { ideaId: idea.id, expertId: expert.id, proposedById: user.id, status: "AWAITING_EXPERT" },
@@ -306,7 +339,7 @@ export async function proposeNewExpertGeneral(formData: FormData): Promise<Actio
       confirmTokenExpires: in30Days(),
     },
   });
-  if (cv && cv.ok) await storeCv(expert.id, cv);
+  if (cv && cv.ok) await storeCv(expert.id, cv).catch(() => {});
   if (email) sendNomineeConfirmEmail(email, input.name, confirmToken).catch(() => {});
 
   revalidatePath("/admin");
@@ -324,10 +357,13 @@ async function exchangeContacts(linkId: string): Promise<void> {
   });
   if (!link) return;
 
-  await db.ideaExpert.update({
-    where: { id: linkId },
+  // Idempotent transition: only the request that actually flips the status
+  // proceeds to share contacts — a concurrent double-approve exits here.
+  const flipped = await db.ideaExpert.updateMany({
+    where: { id: linkId, status: "AWAITING_EXPERT" },
     data: { status: "APPROVED", contactsSharedAt: new Date(), approveToken: null, approveTokenExpires: null },
   });
+  if (flipped.count === 0) return;
 
   const authorContact = link.idea.author.email ?? "";
   // → author receives the expert's contact
@@ -378,17 +414,28 @@ export async function confirmNominee(
   if (formData) {
     const cv = await prepareCv(formData);
     if (cv && !cv.ok) return fail(cv.error);
-    if (cv && cv.ok) await storeCv(expert.id, cv);
+    if (cv && cv.ok) {
+      try {
+        await storeCv(expert.id, cv);
+      } catch {
+        return fail(t.common.error);
+      }
+    }
   }
   const fresh = await db.expertProfile.findUnique({ where: { id: expert.id }, select: { cvStorageKey: true } });
   if (!fresh?.cvStorageKey) return fail("CV (PDF) është e detyrueshme për të vazhduar.");
 
-  // Optionally claim/link an account when the signed-in user's email matches.
+  // Optionally claim/link an account when the signed-in user's email matches
+  // AND the user doesn't already own another profile (ownerUserId is unique).
   const user = await getActiveUser();
-  const ownerUserId =
-    user && normalizeEmail(user.email ?? "") && normalizeEmail(user.email ?? "") === expert.contactEmail
-      ? user.id
-      : undefined;
+  let ownerUserId: string | undefined;
+  if (user && normalizeEmail(user.email ?? "") === expert.contactEmail && expert.contactEmail) {
+    const alreadyOwns = await db.expertProfile.findUnique({
+      where: { ownerUserId: user.id },
+      select: { id: true },
+    });
+    if (!alreadyOwns) ownerUserId = user.id;
+  }
 
   await db.expertProfile.update({
     where: { id: expert.id },
@@ -473,7 +520,16 @@ export async function claimProfile(expertId: string): Promise<ActionResult> {
   if (expert.ownerUserId) return fail("Ky profil është i lidhur tashmë me një llogari.");
   const mine = normalizeEmail(user.email ?? "");
   if (!mine || mine !== expert.contactEmail) return fail("Email-i nuk përputhet me këtë profil.");
-  await db.expertProfile.update({ where: { id: expertId }, data: { ownerUserId: user.id } });
+  const alreadyOwns = await db.expertProfile.findUnique({
+    where: { ownerUserId: user.id },
+    select: { id: true },
+  });
+  if (alreadyOwns) return fail("Ke tashmë një profil eksperti.");
+  try {
+    await db.expertProfile.update({ where: { id: expertId }, data: { ownerUserId: user.id } });
+  } catch {
+    return fail(t.common.error);
+  }
   revalidatePath("/llogaria");
   return ok();
 }
@@ -506,7 +562,14 @@ export async function ownerEditProfile(formData: FormData): Promise<ActionResult
       contactEmail: normalizeEmail(parsed.data.contact),
     },
   });
-  if (cv && cv.ok) await storeCv(mine.id, cv);
+  if (cv && cv.ok) {
+    try {
+      await storeCv(mine.id, cv);
+    } catch {
+      // Profile text was saved; surface the CV failure so the user retries.
+      return fail(t.common.error);
+    }
+  }
 
   revalidatePath("/llogaria");
   revalidatePath("/ekspertet");

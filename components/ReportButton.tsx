@@ -52,13 +52,18 @@ export function ReportButton({
     if (pending) return;
     setPending(true);
     const fd = new FormData(e.currentTarget);
-    const res = await submitReport(fd);
-    setPending(false);
-    if (res.ok) {
-      toast(t.toast.reported, "success");
-      setOpen(false);
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await submitReport(fd);
+      if (res.ok) {
+        toast(t.toast.reported, "success");
+        setOpen(false);
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 

@@ -28,11 +28,15 @@ export async function toggleSupport(
 
   let supported: boolean;
   if (existing) {
-    await db.support.delete({ where: { id: existing.id } });
+    // deleteMany is idempotent — a concurrent un-support can't throw P2025.
+    await db.support.deleteMany({ where: { ideaId, userId: user.id } });
     supported = false;
   } else {
-    // Unique constraint (ideaId,userId) guarantees one support per user.
-    await db.support.create({ data: { ideaId, userId: user.id } });
+    try {
+      await db.support.create({ data: { ideaId, userId: user.id } });
+    } catch {
+      // Unique (ideaId,userId) race: another request already supported — fine.
+    }
     supported = true;
   }
 

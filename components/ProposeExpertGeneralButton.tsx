@@ -36,15 +36,20 @@ export function ProposeExpertGeneralButton({ loggedIn, fieldKey }: { loggedIn: b
     const fd = new FormData(e.currentTarget);
     fd.delete("areas");
     for (const a of areas) fd.append("areas", a);
-    const res = await proposeNewExpertGeneral(fd);
-    setPending(false);
-    if (res.ok) {
-      toast(t.toast.expertNominated, "success");
-      setOpen(false);
-      setAreas(initialAreas);
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await proposeNewExpertGeneral(fd);
+      if (res.ok) {
+        toast(t.toast.expertNominated, "success");
+        setOpen(false);
+        setAreas(initialAreas);
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 

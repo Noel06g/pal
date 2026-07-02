@@ -5,6 +5,10 @@ import { db } from "@/lib/db";
 import { fieldName, fieldShort } from "@/lib/fields";
 import { t } from "@/lib/strings";
 
+// Always render fresh: profiles get published/edited/removed by admin actions
+// and must never be served from the static route cache.
+export const dynamic = "force-dynamic";
+
 async function getExpert(id: string) {
   return db.expertProfile.findUnique({
     where: { id },

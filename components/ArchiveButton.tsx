@@ -15,13 +15,18 @@ export function ArchiveButton({ ideaId }: { ideaId: string }) {
     if (pending) return;
     if (!window.confirm(t.idea.archiveConfirm)) return;
     setPending(true);
-    const res = await archiveIdea(ideaId);
-    setPending(false);
-    if (res.ok) {
-      toast(t.toast.archived, "success");
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await archiveIdea(ideaId);
+      if (res.ok) {
+        toast(t.toast.archived, "success");
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 

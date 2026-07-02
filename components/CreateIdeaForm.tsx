@@ -7,6 +7,11 @@ import { useToast } from "@/components/Toast";
 import { FIELDS, OTHER_FIELD, fieldSubs } from "@/lib/fields";
 import { t } from "@/lib/strings";
 
+// Keep in sync with next.config.mjs serverActions.bodySizeLimit ("12mb"):
+// leave headroom for the text fields + multipart overhead.
+const MAX_TOTAL_UPLOAD = 11 * 1024 * 1024;
+const MAX_FILE = 10 * 1024 * 1024;
+
 export function CreateIdeaForm() {
   const router = useRouter();
   const toast = useToast();
@@ -18,16 +23,31 @@ export function CreateIdeaForm() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (pending) return;
-    setPending(true);
     const fd = new FormData(e.currentTarget);
-    const res = await createIdea(fd);
-    setPending(false);
-    if (res.ok) {
-      toast(t.toast.ideaCreated, "success");
-      router.push(`/idete/${res.data?.id ?? ""}`);
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+
+    // Reject oversize uploads client-side: past the server's body limit the
+    // request dies before our action can produce a friendly error.
+    const files = fd.getAll("documents").filter((f): f is File => f instanceof File);
+    const total = files.reduce((sum, f) => sum + f.size, 0);
+    if (files.some((f) => f.size > MAX_FILE) || total > MAX_TOTAL_UPLOAD) {
+      toast(t.toast.fileTooBig, "error");
+      return;
+    }
+
+    setPending(true);
+    try {
+      const res = await createIdea(fd);
+      if (res.ok) {
+        toast(t.toast.ideaCreated, "success");
+        router.push(`/idete/${res.data?.id ?? ""}`);
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 
@@ -37,7 +57,7 @@ export function CreateIdeaForm() {
         <label className="label" htmlFor="title">
           {t.forms.ideaTitle}
         </label>
-        <input id="title" name="title" required maxLength={160} className="input" placeholder={t.forms.ideaTitlePh} />
+        <input id="title" name="title" required minLength={6} maxLength={160} className="input" placeholder={t.forms.ideaTitlePh} />
       </div>
 
       <div>
@@ -48,6 +68,7 @@ export function CreateIdeaForm() {
           id="summary"
           name="summary"
           required
+          minLength={30}
           rows={7}
           maxLength={6000}
           className="input resize-y"
@@ -87,7 +108,7 @@ export function CreateIdeaForm() {
             <label className="label" htmlFor="otherText">
               {t.forms.ideaOther}
             </label>
-            <input id="otherText" name="otherText" className="input" placeholder={t.forms.ideaOtherPh} />
+            <input id="otherText" name="otherText" required minLength={3} maxLength={300} className="input" placeholder={t.forms.ideaOtherPh} />
           </div>
         ) : (
           <div>

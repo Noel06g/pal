@@ -41,11 +41,21 @@ export async function startSignIn(formData: FormData): Promise<ActionResult> {
     create: { email, name },
   });
 
-  await signIn("resend", {
-    email,
-    redirect: false,
-    redirectTo: "/",
-  });
+  // Send the user back where they came from after the magic link, but only
+  // to an internal path ("//evil.com" would be a protocol-relative redirect).
+  const next = String(formData.get("next") ?? "");
+  const redirectTo = next.startsWith("/") && !next.startsWith("//") ? next : "/";
+
+  try {
+    await signIn("resend", {
+      email,
+      redirect: false,
+      redirectTo,
+    });
+  } catch {
+    // Email provider hiccup — surface a friendly error instead of a 500.
+    return fail(t.common.error);
+  }
 
   return ok();
 }

@@ -14,9 +14,10 @@ export function WhySection() {
 
   return (
     <section className="border-b border-border bg-card/60">
-      <div className="container-pal py-14">
+      <div className="container-pal py-16">
         <div className="mx-auto max-w-3xl">
-          <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.whyTitle}</h2>
+          <div className="accent-bar" aria-hidden />
+          <h2 className="text-balance text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.whyTitle}</h2>
           <div className="mt-5 space-y-4 leading-relaxed text-muted">
             {visible.map((p, i) => (
               <p key={i}>{p}</p>

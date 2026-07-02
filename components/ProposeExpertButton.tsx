@@ -52,9 +52,14 @@ export function ProposeExpertButton({
       return;
     }
     setSearching(true);
-    const res = await searchExperts(value);
-    setSearching(false);
-    if (res.ok) setResults(res.data?.results ?? []);
+    try {
+      const res = await searchExperts(value);
+      if (res.ok) setResults(res.data?.results ?? []);
+    } catch {
+      setResults([]);
+    } finally {
+      setSearching(false);
+    }
   }
 
   async function pick(expertId: string) {
@@ -63,14 +68,19 @@ export function ProposeExpertButton({
     const fd = new FormData();
     fd.set("ideaId", ideaId);
     fd.set("expertId", expertId);
-    const res = await proposeExistingExpert(fd);
-    setPending(false);
-    if (res.ok) {
-      toast(t.toast.expertNominated, "success");
-      close();
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await proposeExistingExpert(fd);
+      if (res.ok) {
+        toast(t.toast.expertNominated, "success");
+        close();
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 
@@ -86,14 +96,19 @@ export function ProposeExpertButton({
     fd.set("ideaId", ideaId);
     fd.delete("areas");
     for (const a of areas) fd.append("areas", a);
-    const res = await proposeNewExpert(fd);
-    setPending(false);
-    if (res.ok) {
-      toast(t.toast.expertNominated, "success");
-      close();
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await proposeNewExpert(fd);
+      if (res.ok) {
+        toast(t.toast.expertNominated, "success");
+        close();
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setPending(false);
     }
   }
 

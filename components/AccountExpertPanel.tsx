@@ -46,13 +46,18 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
   async function run(key: string, fn: () => Promise<{ ok: boolean; error?: string }>, okMsg: string) {
     if (busy) return;
     setBusy(key);
-    const res = await fn();
-    setBusy(null);
-    if (res.ok) {
-      toast(okMsg, "success");
-      router.refresh();
-    } else {
-      toast(res.error ?? t.common.error, "error");
+    try {
+      const res = await fn();
+      if (res.ok) {
+        toast(okMsg, "success");
+        router.refresh();
+      } else {
+        toast(res.error ?? t.common.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setBusy(null);
     }
   }
 
@@ -67,14 +72,19 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
     const fd = new FormData(e.currentTarget);
     fd.delete("areas");
     for (const a of areas) fd.append("areas", a);
-    const res = await ownerEditProfile(fd);
-    setBusy(null);
-    if (res.ok) {
-      toast(t.toast.profileSaved, "success");
-      setEditing(false);
-      router.refresh();
-    } else {
-      toast(res.error, "error");
+    try {
+      const res = await ownerEditProfile(fd);
+      if (res.ok) {
+        toast(t.toast.profileSaved, "success");
+        setEditing(false);
+        router.refresh();
+      } else {
+        toast(res.error, "error");
+      }
+    } catch {
+      toast(t.common.error, "error");
+    } finally {
+      setBusy(null);
     }
   }
 
@@ -191,7 +201,7 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
         <div className="flex items-center justify-between gap-4">
           <h3 className="text-base font-bold">{t.account.editProfile}</h3>
           <button type="button" onClick={() => setEditing((v) => !v)} className="btn-ghost text-sm">
-            {editing ? t.common.cancel : t.common.save}
+            {editing ? t.common.cancel : t.common.edit}
           </button>
         </div>
         {editing ? (

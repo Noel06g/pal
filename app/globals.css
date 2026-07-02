@@ -35,10 +35,10 @@
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-[10px] px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:ring-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-[10px] px-4 py-2.5 text-sm font-semibold transition-all focus-visible:ring-2 active:translate-y-px;
   }
   .btn-primary {
-    @apply btn bg-teal text-white hover:bg-teal-dk;
+    @apply btn bg-teal text-white shadow-sm hover:bg-teal-dk hover:shadow;
   }
   .btn-secondary {
     @apply btn border border-border bg-card text-ink hover:bg-teal-tint;
@@ -55,6 +55,16 @@
 
   .card {
     @apply rounded-[14px] border border-border bg-card shadow-card;
+  }
+
+  /* Interactive cards: gentle lift + teal edge on hover. */
+  .card-lift {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:border-teal/40 hover:shadow-[0_2px_4px_rgba(26,34,48,0.06),0_14px_36px_rgba(26,34,48,0.12)];
+  }
+
+  /* Small teal accent bar above section headings. */
+  .accent-bar {
+    @apply mb-4 h-1 w-10 rounded-full bg-teal;
   }
 
   .chip {

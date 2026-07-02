@@ -30,6 +30,7 @@ export default async function ExpertsPage({
     <div className="container-pal py-10">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
+          <div className="accent-bar" aria-hidden />
           <h1 className="text-3xl font-extrabold tracking-tight">{t.experts.title}</h1>
           <p className="mt-1 text-muted">{t.experts.sub}</p>
         </div>
@@ -81,7 +82,20 @@ export default async function ExpertsPage({
           ))}
         </div>
       ) : (
-        <div className="card p-10 text-center text-muted">{t.experts.empty}</div>
+        <div className="card flex flex-col items-center gap-3 p-12 text-center">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-tint text-teal-dk" aria-hidden>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.6" />
+              <path
+                d="M5 19.5c.8-3 3.5-5 7-5s6.2 2 7 5"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+          <p className="max-w-sm text-muted">{t.experts.empty}</p>
+        </div>
       )}
     </div>
   );
