@@ -149,7 +149,10 @@ export const OTHER_FIELD = { key: "other", name: "Tjetër" } as const;
 export type FieldKey = (typeof FIELDS)[number]["key"] | "other";
 
 /** All valid field keys including "other". */
-export const FIELD_KEYS: string[] = [...FIELDS.map((f) => f.key), OTHER_FIELD.key];
+export const FIELD_KEYS: string[] = [
+  ...FIELDS.map((f) => f.key),
+  OTHER_FIELD.key,
+];
 
 /** Look up a field's display name by key. Returns "Tjetër" for "other". */
 export function fieldName(key: string): string {

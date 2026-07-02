@@ -28,7 +28,8 @@ export const t = {
     heroTitle: "Të ndërtojmë të ardhmen së bashku",
     heroSub:
       "Platforma Shqiptare është një nismë e pavarur qytetare ku qytetarët propozojnë dhe vetëpropozohen si ekspertë të fushave të ndryshme, diskutojnë për ide e zgjidhje për problemet e vendit. Shqipëria i ka ekspertët, brenda dhe jashtë Shqipërisë. Shqiptarët i kanë idetë, i kanë edhe zgjidhjet! Le t'i bëjmë bashkë!",
-    heroTagline: "Vetëpropozohu ose propozo ekspertë. Diskuto ide. Ndërto zgjidhje për Shqipërinë që meritojmë të gjithë!",
+    heroTagline:
+      "Vetëpropozohu ose propozo ekspertë. Diskuto ide. Ndërto zgjidhje për Shqipërinë që meritojmë të gjithë!",
     heroCtaPrimary: "Propozo një ide",
     heroCtaSecondary: "Propozo një ekspert/e",
     statIdeas: "Ide të propozuara",
@@ -50,7 +51,8 @@ export const t = {
       },
     ],
     fieldsTitle: "14 fushat",
-    fieldsSub: "Çdo propozim i përket një fushe. Kliko një fushë për të parë ekspertët dhe idetë në lidhje me të.",
+    fieldsSub:
+      "Çdo propozim i përket një fushe. Kliko një fushë për të parë ekspertët dhe idetë në lidhje me të.",
     mostSupported: "Idetë më të mbështetura",
     viewAll: "Shiko të gjitha",
     expertsTeaser: "Ekspertët",
@@ -78,13 +80,15 @@ export const t = {
     filterButton: "Filtro sipas fushës",
     filterAll: "Të gjitha",
     sortNote: "Renditur sipas mbështetjes — të arkivuarat në fund.",
-    empty: "Nuk u gjet asnjë ide. Provo një filtër tjetër ose propozo një ide të re.",
+    empty:
+      "Nuk u gjet asnjë ide. Provo një filtër tjetër ose propozo një ide të re.",
     supports: "mbështetje",
     comments: "komente",
     by: "nga",
     statusActive: "AKTIVE",
     statusArchived: "ARKIVUAR",
-    archivedNote: "Kjo ide është arkivuar — një ekspert e mori përsipër. Vetëm për lexim.",
+    archivedNote:
+      "Kjo ide është arkivuar — një ekspert e mori përsipër. Vetëm për lexim.",
   },
 
   idea: {
@@ -139,8 +143,10 @@ export const t = {
     confirmReject: "Refuzo",
     confirmIntro:
       "Je propozuar si ekspert në Platformën Shqiptare. Nëse pranon, profili yt (emri, fusha dhe biografia) shqyrtohet nga administrata para se të publikohet. Kontakti dhe CV-ja mbeten private (vetëm administratorët e faqes).",
-    confirmAccepted: "Faleminderit! Pëlqimi yt u regjistrua. Profili do të publikohet pas shqyrtimit nga administrata.",
-    confirmRejected: "Propozimi u refuzua. Të dhënat e tua nuk do të publikohen.",
+    confirmAccepted:
+      "Faleminderit! Pëlqimi yt u regjistrua. Profili do të publikohet pas shqyrtimit nga administrata.",
+    confirmRejected:
+      "Propozimi u refuzua. Të dhënat e tua nuk do të publikohen.",
     confirmInvalid: "Kjo lidhje konfirmimi është e pavlefshme ose ka skaduar.",
     confirmAlready: "Ky propozim është trajtuar tashmë.",
     confirmCvNote:
@@ -208,12 +214,14 @@ export const t = {
     areasHint: "fusha të zgjedhura (maks. 3)",
     selfRegisterNote:
       "Profili yt shqyrtohet nga administrata para se të publikohet. Kontakti dhe CV-ja mbeten private (vetëm administratorët e faqes).",
-    typeaheadHint: "Kërko një ekspert ekzistues me emër, ose propozo një person të ri.",
+    typeaheadHint:
+      "Kërko një ekspert ekzistues me emër, ose propozo një person të ri.",
     searchExpertPh: "Kërko me emër…",
     noExpertFound: "Nuk u gjet asnjë ekspert. Propozo një person të ri.",
     proposeNewPerson: "Propozo një person të ri",
     backToSearch: "Kthehu te kërkimi",
-    nomContactHint: "Vetëm administratorët e faqes e shohin — për ta kontaktuar jashtë platformës.",
+    nomContactHint:
+      "Vetëm administratorët e faqes e shohin — për ta kontaktuar jashtë platformës.",
 
     // Report
     reportReason: "Arsyeja e raportimit",
@@ -236,7 +244,8 @@ export const t = {
     noIdeas: "Ende s'ke propozuar asnjë ide.",
     expertProfile: "Profili im si ekspert",
     linksAwaitingYou: "Ide që presin përgjigjen tënde",
-    linkConsentNote: "Duke pranuar, kontakti yt i jepet autorit të idesë dhe ti merr kontaktin e tij.",
+    linkConsentNote:
+      "Duke pranuar, kontakti yt i jepet autorit të idesë dhe ti merr kontaktin e tij.",
     approvedLinks: "Idetë e pranuara",
     awaitingAuthorConfirm: "Në pritje të konfirmimit të autorit",
     takeOver: "Po e marr përsipër",
@@ -279,7 +288,8 @@ export const t = {
     contact: "Kontakti",
     reason: "Arsyeja",
     mergeTitle: "Bashko dublikatët",
-    mergeNote: "Zgjidh profilin që mbetet dhe atë që bashkohet në të (lidhjet lëvizin, fushat kufizohen në 3).",
+    mergeNote:
+      "Zgjidh profilin që mbetet dhe atë që bashkohet në të (lidhjet lëvizin, fushat kufizohen në 3).",
     mergeKeep: "Profili që mbetet",
     mergeDrop: "Profili që bashkohet (fshihet)",
     mergeBtn: "Bashko",
@@ -299,7 +309,8 @@ export const t = {
       "Të dërguam një lidhje hyrjeje. Hape email-in dhe kliko lidhjen për të vazhduar.",
     verifying: "Po verifikohet…",
     error: "Diçka shkoi keq",
-    errorBody: "Lidhja mund të ketë skaduar ose është përdorur tashmë. Provo përsëri.",
+    errorBody:
+      "Lidhja mund të ketë skaduar ose është përdorur tashmë. Provo përsëri.",
     banned: "Kjo llogari është pezulluar.",
     errorVerification:
       "Lidhja e hyrjes ka skaduar ose është përdorur tashmë. Kërko një lidhje të re më poshtë.",
@@ -336,8 +347,10 @@ export const t = {
     commentDeleted: "Komenti u fshi.",
     archived: "Ideja u arkivua.",
     reported: "Faleminderit — raportimi u dërgua.",
-    expertSelf: "Vetëpropozimi u dërgua. Do të shqyrtohet nga administrata para se të publikohet.",
-    expertNominated: "Propozimi u dërgua. Do të shqyrtohet nga administrata para se të publikohet.",
+    expertSelf:
+      "Vetëpropozimi u dërgua. Do të shqyrtohet nga administrata para se të publikohet.",
+    expertNominated:
+      "Propozimi u dërgua. Do të shqyrtohet nga administrata para se të publikohet.",
     profileSaved: "Profili u ruajt.",
     profileClaimed: "Profili u pretendua.",
     linkAccepted: "Pranove propozimin.",

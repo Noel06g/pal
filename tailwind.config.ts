@@ -1,5 +1,18 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * Document-style design system ("printed monograph"):
+ * paper white canvas, ink text, warm hairline borders, underlined indigo
+ * links, a pure-blue square stamp as the only brand mark. No radii, no
+ * shadows, no webfonts. Chromatic color is reserved for illustration.
+ *
+ * Legacy token names (teal/paper/card/…) are kept and remapped so existing
+ * component classes pick up the new system without churn:
+ *   teal      → indigo link  (#555abf)
+ *   teal-dk   → stamp blue   (#0000ff)  — hover/active end of the link family
+ *   teal-tint → paper-warm wash
+ *   danger    → ember        (#eb5e28)
+ */
 const config: Config = {
   content: [
     "./app/**/*.{ts,tsx}",
@@ -9,37 +22,60 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#1A2230",
-        paper: "#F1F2EE",
+        ink: "#222222",
+        paper: "#FFFFFF",
         card: "#FFFFFF",
+        border: "#D8D4CF",
+        muted: "#555555",
         teal: {
-          DEFAULT: "#13615C",
-          dk: "#0E4D49",
-          tint: "#E6EFEC",
+          DEFAULT: "#555ABF",
+          dk: "#0000FF",
+          tint: "#F5F4F0",
         },
-        border: "#E1E2DD",
-        muted: "#5C6672",
+        stamp: "#0000FF",
         danger: {
-          DEFAULT: "#A33A3A",
-          tint: "#F4E8E8",
+          DEFAULT: "#EB5E28",
+          tint: "#FDEFE8",
         },
-        ok: "#2E7D52",
+        ok: "#222222",
         amber: "#9A6B16",
+        // Illustration-only palette (never for UI chrome).
+        cobalt: "#276BAA",
+        sky: "#2181C2",
+        navy: "#000080",
+        amberflow: "#FCD669",
+        tangerine: "#F79A59",
       },
       borderRadius: {
-        DEFAULT: "14px",
-        lg: "14px",
-        xl: "18px",
+        DEFAULT: "0px",
+        lg: "0px",
+        xl: "0px",
       },
       fontFamily: {
-        display: ["var(--font-archivo)", "system-ui", "sans-serif"],
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        // The system stack IS the brand voice — no webfonts.
+        display: [
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "'Segoe UI'",
+          "Roboto",
+          "sans-serif",
+        ],
+        sans: [
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "'Segoe UI'",
+          "Roboto",
+          "sans-serif",
+        ],
       },
       boxShadow: {
-        card: "0 1px 2px rgba(26,34,48,0.04), 0 8px 24px rgba(26,34,48,0.06)",
+        // Elevation is expressed with hairline borders, never shadows.
+        card: "none",
       },
       maxWidth: {
-        content: "1120px",
+        content: "1200px",
       },
     },
   },

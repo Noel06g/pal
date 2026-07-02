@@ -32,7 +32,9 @@ export function FieldFilter({
   const itemClass = (active: boolean) =>
     [
       "block rounded-md px-3 py-2 text-sm leading-snug",
-      active ? "bg-teal-tint font-semibold text-teal-dk" : "text-ink hover:bg-teal-tint",
+      active
+        ? "bg-teal-tint font-semibold text-ink"
+        : "text-ink hover:bg-teal-tint",
     ].join(" ");
 
   return (
@@ -56,7 +58,13 @@ export function FieldFilter({
           aria-hidden
           className={`transition-transform ${open ? "rotate-180" : ""}`}
         >
-          <path d="M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M5 8l5 5 5-5"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </button>
 
@@ -67,7 +75,11 @@ export function FieldFilter({
         </h2>
         <ul className="space-y-1">
           <li>
-            <Link href={filterHref(null)} onClick={() => setOpen(false)} className={itemClass(!activeField)}>
+            <Link
+              href={filterHref(null)}
+              onClick={() => setOpen(false)}
+              className={itemClass(!activeField)}
+            >
               {t.ideas.filterAll}
             </Link>
           </li>

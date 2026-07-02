@@ -17,7 +17,8 @@ export async function submitReport(formData: FormData): Promise<ActionResult> {
     commentId: formData.get("commentId") || undefined,
     reason: formData.get("reason"),
   });
-  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? t.common.error);
+  if (!parsed.success)
+    return fail(parsed.error.issues[0]?.message ?? t.common.error);
   const { ideaId, commentId, reason } = parsed.data;
 
   // The reported content must actually exist; snapshot its title so the

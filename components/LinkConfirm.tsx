@@ -44,8 +44,15 @@ export function LinkConfirm({ token }: { token: string }) {
   }
 
   if (outcome) {
-    const tone = outcome === "accepted" ? "bg-teal-tint text-teal-dk" : "bg-paper text-muted";
-    return <div className={`rounded-[10px] p-4 text-sm ${tone}`}>{message(outcome)}</div>;
+    const tone =
+      outcome === "accepted"
+        ? "bg-teal-tint text-teal-dk"
+        : "bg-paper text-muted";
+    return (
+      <div className={`rounded-[10px] p-4 text-sm ${tone}`}>
+        {message(outcome)}
+      </div>
+    );
   }
 
   return (

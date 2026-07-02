@@ -50,16 +50,36 @@ export function AuthForm({ next }: { next?: string }) {
         <label className="label" htmlFor="auth-name">
           {t.forms.authName}
         </label>
-        <input id="auth-name" name="name" required minLength={3} className="input" placeholder={t.forms.authNamePh} autoComplete="name" />
+        <input
+          id="auth-name"
+          name="name"
+          required
+          minLength={3}
+          className="input"
+          placeholder={t.forms.authNamePh}
+          autoComplete="name"
+        />
       </div>
       <div>
         <label className="label" htmlFor="auth-email">
           {t.forms.authEmail}
         </label>
-        <input id="auth-email" name="email" type="email" required className="input" placeholder="emri@example.al" autoComplete="email" />
+        <input
+          id="auth-email"
+          name="email"
+          type="email"
+          required
+          className="input"
+          placeholder="emri@example.al"
+          autoComplete="email"
+        />
       </div>
       <Turnstile />
-      <button type="submit" disabled={pending} className="btn-primary w-full disabled:opacity-60">
+      <button
+        type="submit"
+        disabled={pending}
+        className="btn-primary w-full disabled:opacity-60"
+      >
         {pending ? t.common.loading : t.forms.authSignIn}
       </button>
       <p className="hint text-center">{t.forms.authNote}</p>

@@ -31,7 +31,12 @@ export function ArchiveButton({ ideaId }: { ideaId: string }) {
   }
 
   return (
-    <button type="button" onClick={onClick} disabled={pending} className="btn-secondary w-full disabled:opacity-60">
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={pending}
+      className="btn-secondary w-full disabled:opacity-60"
+    >
       {t.idea.archive}
     </button>
   );

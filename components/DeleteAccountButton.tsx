@@ -32,7 +32,12 @@ export function DeleteAccountButton() {
   }
 
   return (
-    <button type="button" onClick={onClick} disabled={pending} className="btn-danger disabled:opacity-60">
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={pending}
+      className="btn-danger disabled:opacity-60"
+    >
       {pending ? t.common.loading : t.account.deleteBtn}
     </button>
   );

@@ -56,7 +56,13 @@ export function Modal({
             className="rounded-md p-1 text-muted hover:bg-paper hover:text-ink"
             aria-label={t.common.close}
           >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              aria-hidden
+            >
               <path
                 d="M5 5l10 10M15 5L5 15"
                 stroke="currentColor"

@@ -15,7 +15,10 @@ export default async function SignInPage({
   const user = await getCurrentUser();
   const { next: rawNext, error } = await searchParams;
   // Internal paths only — "//evil.com" is a protocol-relative external URL.
-  const next = rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : null;
+  const next =
+    rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//")
+      ? rawNext
+      : null;
 
   // If there's a `next` target and the user is logged in, send them there.
   if (user && next) redirect(next);
@@ -26,9 +29,12 @@ export default async function SignInPage({
     return (
       <div className="container-pal py-16">
         <div className="mx-auto max-w-md text-center">
-          <h1 className="text-3xl font-extrabold tracking-tight">{t.auth.alreadyIn}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t.auth.alreadyIn}
+          </h1>
           <p className="mt-2 text-muted">
-            {t.auth.alreadyInBody} <span className="font-semibold text-ink">{user.name}</span>.
+            {t.auth.alreadyInBody}{" "}
+            <span className="font-semibold text-ink">{user.name}</span>.
           </p>
           <div className="mt-6 flex justify-center gap-3">
             <Link href="/" className="btn-secondary">
@@ -52,7 +58,9 @@ export default async function SignInPage({
   return (
     <div className="container-pal py-16">
       <div className="mx-auto max-w-md">
-        <h1 className="text-center text-3xl font-extrabold tracking-tight">{t.nav.signIn}</h1>
+        <h1 className="text-center text-3xl font-bold tracking-tight">
+          {t.nav.signIn}
+        </h1>
         <p className="mt-2 text-center text-muted">
           Hyr ose regjistrohu te {t.site.name} me email.
         </p>

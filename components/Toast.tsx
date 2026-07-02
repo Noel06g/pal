@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  type ReactNode,
+} from "react";
 
 type ToastKind = "success" | "error" | "info";
 type Toast = { id: number; message: string; kind: ToastKind };
@@ -41,12 +47,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             key={tt.id}
             role="status"
             className={[
-              "pointer-events-auto w-full max-w-sm rounded-[12px] border px-4 py-3 text-sm font-medium shadow-card",
+              "pointer-events-auto w-full max-w-sm border bg-paper px-4 py-3 text-sm font-medium",
               tt.kind === "success"
-                ? "border-teal bg-teal-tint text-teal-dk"
+                ? "border-ink text-ink"
                 : tt.kind === "error"
-                  ? "border-danger bg-danger-tint text-danger"
-                  : "border-border bg-card text-ink",
+                  ? "border-danger text-danger"
+                  : "border-border text-ink",
             ].join(" ")}
           >
             {tt.message}

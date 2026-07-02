@@ -21,7 +21,10 @@ export default async function ExpertsPage({
 
   // PUBLIC directory: only PUBLISHED profiles; filter by ANY of an expert's areas.
   const experts = await db.expertProfile.findMany({
-    where: { status: "PUBLISHED", ...(activeField ? { areas: { has: activeField } } : {}) },
+    where: {
+      status: "PUBLISHED",
+      ...(activeField ? { areas: { has: activeField } } : {}),
+    },
     orderBy: { createdAt: "desc" },
     select: { id: true, name: true, areas: true, bio: true },
   });
@@ -30,12 +33,16 @@ export default async function ExpertsPage({
     <div className="container-pal py-10">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="accent-bar" aria-hidden />
-          <h1 className="text-3xl font-extrabold tracking-tight">{t.experts.title}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t.experts.title}
+          </h1>
           <p className="mt-1 text-muted">{t.experts.sub}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <ProposeExpertGeneralButton loggedIn={Boolean(user)} fieldKey={activeField ?? undefined} />
+          <ProposeExpertGeneralButton
+            loggedIn={Boolean(user)}
+            fieldKey={activeField ?? undefined}
+          />
           <SelfNominateButton
             loggedIn={Boolean(user)}
             defaultName={user?.name ?? undefined}
@@ -50,7 +57,9 @@ export default async function ExpertsPage({
           href="/ekspertet"
           className={[
             "rounded-full px-3 py-1.5 text-sm font-medium",
-            !activeField ? "bg-teal text-white" : "border border-border bg-card text-ink hover:bg-teal-tint",
+            !activeField
+              ? "bg-ink text-white"
+              : "border border-border bg-card text-ink hover:border-ink",
           ].join(" ")}
         >
           {t.experts.filterAll}
@@ -61,7 +70,9 @@ export default async function ExpertsPage({
             href={`/ekspertet?fusha=${f.key}`}
             className={[
               "rounded-full px-3 py-1.5 text-sm font-medium",
-              activeField === f.key ? "bg-teal text-white" : "border border-border bg-card text-ink hover:bg-teal-tint",
+              activeField === f.key
+                ? "bg-ink text-white"
+                : "border border-border bg-card text-ink hover:border-ink",
             ].join(" ")}
           >
             {f.name.split(",")[0]}
@@ -71,7 +82,10 @@ export default async function ExpertsPage({
 
       {activeField && (
         <p className="mb-4 text-sm text-muted">
-          Fusha: <span className="font-semibold text-ink">{fieldName(activeField)}</span>
+          Fusha:{" "}
+          <span className="font-semibold text-ink">
+            {fieldName(activeField)}
+          </span>
         </p>
       )}
 
@@ -83,9 +97,18 @@ export default async function ExpertsPage({
         </div>
       ) : (
         <div className="card flex flex-col items-center gap-3 p-12 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-tint text-teal-dk" aria-hidden>
+          <span
+            className="flex h-14 w-14 items-center justify-center bg-teal-tint text-ink"
+            aria-hidden
+          >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.6" />
+              <circle
+                cx="12"
+                cy="8"
+                r="3.5"
+                stroke="currentColor"
+                strokeWidth="1.6"
+              />
               <path
                 d="M5 19.5c.8-3 3.5-5 7-5s6.2 2 7 5"
                 stroke="currentColor"

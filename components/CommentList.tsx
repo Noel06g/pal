@@ -59,7 +59,9 @@ export function CommentList({
   }
 
   if (comments.length === 0) {
-    return <p className="text-sm text-muted">Ende s&apos;ka komente. Bëhu i pari!</p>;
+    return (
+      <p className="text-sm text-muted">Ende s&apos;ka komente. Bëhu i pari!</p>
+    );
   }
 
   return (
@@ -74,7 +76,9 @@ export function CommentList({
             )}
             <span className="ml-auto text-xs text-muted">{c.createdAt}</span>
           </div>
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">{c.body}</p>
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
+            {c.body}
+          </p>
           <div className="mt-3 flex items-center gap-4">
             {c.canDelete && (
               <button

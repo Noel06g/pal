@@ -19,13 +19,19 @@
   h4 {
     @apply font-display;
   }
-  /* Visible, consistent focus ring for keyboard users. */
+  /* The system is sharp-cornered everywhere — no exceptions. */
+  *,
+  *::before,
+  *::after {
+    border-radius: 0 !important;
+  }
+  /* Visible, consistent focus for keyboard users: a stamp-blue outline. */
   :focus-visible {
-    @apply outline-none ring-2 ring-teal ring-offset-2 ring-offset-paper;
-    border-radius: 6px;
+    outline: 2px solid #0000ff;
+    outline-offset: 2px;
   }
   ::selection {
-    background: #cfe3dd;
+    background: #e2e2f7;
   }
 }
 
@@ -34,45 +40,45 @@
     @apply mx-auto w-full max-w-content px-4 sm:px-6;
   }
 
+  /* Narrow reading measure — what makes prose read like a printed page. */
+  .prose-col {
+    @apply max-w-[560px];
+  }
+
+  /* Buttons are outlined, never filled at rest; hover inverts. */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-[10px] px-4 py-2.5 text-sm font-semibold transition-all focus-visible:ring-2 active:translate-y-px;
+    @apply inline-flex items-center justify-center gap-2 border px-4 py-2.5 text-sm font-semibold transition-colors;
   }
   .btn-primary {
-    @apply btn bg-teal text-white shadow-sm hover:bg-teal-dk hover:shadow;
+    @apply btn border-stamp bg-paper text-stamp hover:bg-stamp hover:text-white;
   }
   .btn-secondary {
-    @apply btn border border-border bg-card text-ink hover:bg-teal-tint;
+    @apply btn border-ink bg-paper text-ink hover:bg-ink hover:text-white;
   }
   .btn-ghost {
-    @apply btn text-ink hover:bg-teal-tint;
+    @apply btn border-transparent text-ink hover:underline;
   }
   .btn-danger {
-    @apply btn bg-danger text-white hover:opacity-90;
+    @apply btn border-danger bg-paper text-danger hover:bg-danger hover:text-white;
   }
   .btn-danger-soft {
-    @apply btn bg-danger-tint text-danger hover:opacity-90;
+    @apply btn border-danger/40 bg-paper text-danger hover:border-danger;
   }
 
+  /* Layer separation via 1px hairlines — never shadows. */
   .card {
-    @apply rounded-[14px] border border-border bg-card shadow-card;
+    @apply border border-border bg-card;
   }
-
-  /* Interactive cards: gentle lift + teal edge on hover. */
   .card-lift {
-    @apply transition-all duration-200 hover:-translate-y-0.5 hover:border-teal/40 hover:shadow-[0_2px_4px_rgba(26,34,48,0.06),0_14px_36px_rgba(26,34,48,0.12)];
-  }
-
-  /* Small teal accent bar above section headings. */
-  .accent-bar {
-    @apply mb-4 h-1 w-10 rounded-full bg-teal;
+    @apply transition-colors hover:border-ink;
   }
 
   .chip {
-    @apply inline-flex items-center gap-1 rounded-full border border-border bg-teal-tint px-2.5 py-1 text-xs font-semibold text-teal-dk;
+    @apply inline-flex items-center gap-1 border border-border bg-paper px-2.5 py-1 text-xs font-medium text-ink;
   }
 
   .input {
-    @apply w-full rounded-[10px] border border-border bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-muted focus-visible:border-teal;
+    @apply w-full border border-border bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted focus-visible:border-ink;
   }
   .label {
     @apply mb-1.5 block text-sm font-semibold text-ink;
@@ -81,20 +87,21 @@
     @apply mt-1 text-xs text-muted;
   }
 
+  /* Status badges: monochrome, bordered, no fills. */
   .badge-ok {
-    @apply inline-flex items-center rounded-full bg-teal-tint px-2 py-0.5 text-xs font-semibold text-teal-dk;
+    @apply inline-flex items-center border border-ink/30 px-2 py-0.5 text-xs font-semibold text-ink;
   }
   .badge-amber {
-    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold;
-    background: #f6efdd;
-    color: #9a6b16;
+    @apply inline-flex items-center border border-border px-2 py-0.5 text-xs font-semibold text-amber;
   }
   .badge-muted {
-    @apply inline-flex items-center rounded-full bg-paper px-2 py-0.5 text-xs font-semibold text-muted;
+    @apply inline-flex items-center border border-border px-2 py-0.5 text-xs font-semibold text-muted;
   }
 
+  /* The workhorse interactive style: always-underlined indigo links that
+     shift toward stamp blue on hover. */
   .link-underline {
-    @apply text-teal underline decoration-from-font underline-offset-2 hover:text-teal-dk;
+    @apply text-teal underline decoration-1 underline-offset-2 hover:text-teal-dk;
   }
 }
 

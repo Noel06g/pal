@@ -66,8 +66,9 @@ export default async function IdeasPage({
     <div className="container-pal py-10">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="accent-bar" aria-hidden />
-          <h1 className="text-3xl font-extrabold tracking-tight">{t.ideas.listTitle}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t.ideas.listTitle}
+          </h1>
           <p className="mt-1 text-muted">{t.ideas.listSub}</p>
         </div>
         <Link href="/idete/krijo" className="btn-primary">
@@ -90,7 +91,11 @@ export default async function IdeasPage({
               {activeField && (
                 <span className="chip">
                   {fieldName(activeField)}
-                  <Link href={filterHref(null)} aria-label="Hiq filtrin" className="ml-1 font-bold">
+                  <Link
+                    href={filterHref(null)}
+                    aria-label="Hiq filtrin"
+                    className="ml-1 font-bold"
+                  >
                     ×
                   </Link>
                 </span>
@@ -106,7 +111,10 @@ export default async function IdeasPage({
             </div>
           ) : (
             <div className="card flex flex-col items-center gap-3 p-12 text-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-tint text-teal-dk" aria-hidden>
+              <span
+                className="flex h-14 w-14 items-center justify-center bg-teal-tint text-ink"
+                aria-hidden
+              >
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M12 3a6 6 0 0 0-3.5 10.9c.7.5 1 1.3 1 2.1h5c0-.8.3-1.6 1-2.1A6 6 0 0 0 12 3Z"
@@ -114,7 +122,12 @@ export default async function IdeasPage({
                     strokeWidth="1.6"
                     strokeLinejoin="round"
                   />
-                  <path d="M10 19h4M10.5 21.5h3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  <path
+                    d="M10 19h4M10.5 21.5h3"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
                 </svg>
               </span>
               <p className="max-w-sm text-muted">{t.ideas.empty}</p>

@@ -34,10 +34,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const expert = await getExpert(id);
-  return { title: expert && expert.status === "PUBLISHED" ? expert.name : t.experts.title };
+  return {
+    title:
+      expert && expert.status === "PUBLISHED" ? expert.name : t.experts.title,
+  };
 }
 
-export default async function ExpertProfilePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ExpertProfilePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const expert = await getExpert(id);
   // Only PUBLISHED profiles are public. Contact/CV/status are never rendered here.
@@ -57,18 +64,27 @@ export default async function ExpertProfilePage({ params }: { params: Promise<{ 
             </span>
           ))}
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight">{expert.name}</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{expert.name}</h1>
 
         <section className="mt-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">Biografia</h2>
-          <p className="mt-2 whitespace-pre-line leading-relaxed text-ink">{expert.bio}</p>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
+            Biografia
+          </h2>
+          <p className="mt-2 whitespace-pre-line leading-relaxed text-ink">
+            {expert.bio}
+          </p>
         </section>
 
         <section className="mt-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">Fushat</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
+            Fushat
+          </h2>
           <ul className="mt-2 flex flex-wrap gap-2">
             {expert.areas.map((a) => (
-              <li key={a} className="rounded-[10px] border border-border bg-card px-3 py-1.5 text-sm">
+              <li
+                key={a}
+                className="rounded-[10px] border border-border bg-card px-3 py-1.5 text-sm"
+              >
                 {fieldName(a)}
               </li>
             ))}
@@ -76,7 +92,9 @@ export default async function ExpertProfilePage({ params }: { params: Promise<{ 
         </section>
 
         <section className="mt-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">{t.experts.engagedIdeas}</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
+            {t.experts.engagedIdeas}
+          </h2>
           {expert.ideaLinks.length > 0 ? (
             <ul className="mt-2 space-y-2">
               {expert.ideaLinks.map((l) => (
@@ -92,11 +110,15 @@ export default async function ExpertProfilePage({ params }: { params: Promise<{ 
               ))}
             </ul>
           ) : (
-            <p className="mt-2 text-sm text-muted">{t.experts.noEngagedIdeas}</p>
+            <p className="mt-2 text-sm text-muted">
+              {t.experts.noEngagedIdeas}
+            </p>
           )}
         </section>
 
-        <p className="mt-8 border-t border-border pt-4 text-xs text-muted">{t.experts.privateNote}</p>
+        <p className="mt-8 border-t border-border pt-4 text-xs text-muted">
+          {t.experts.privateNote}
+        </p>
       </div>
     </div>
   );

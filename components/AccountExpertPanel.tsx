@@ -4,7 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AreaPicker } from "@/components/AreaPicker";
-import { ownerEditProfile, respondToLink, markTakeover, claimProfile } from "@/app/actions/experts";
+import {
+  ownerEditProfile,
+  respondToLink,
+  markTakeover,
+  claimProfile,
+} from "@/app/actions/experts";
 import { useToast } from "@/components/Toast";
 import { fieldShort } from "@/lib/fields";
 import { t } from "@/lib/strings";
@@ -36,14 +41,24 @@ const statusLabel: Record<string, string> = {
   REJECTED: "Refuzuar",
 };
 
-export function AccountExpertPanel({ profile, claimable }: { profile: Profile; claimable: Claimable }) {
+export function AccountExpertPanel({
+  profile,
+  claimable,
+}: {
+  profile: Profile;
+  claimable: Claimable;
+}) {
   const router = useRouter();
   const toast = useToast();
   const [busy, setBusy] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
   const [areas, setAreas] = useState<string[]>(profile?.areas ?? []);
 
-  async function run(key: string, fn: () => Promise<{ ok: boolean; error?: string }>, okMsg: string) {
+  async function run(
+    key: string,
+    fn: () => Promise<{ ok: boolean; error?: string }>,
+    okMsg: string,
+  ) {
     if (busy) return;
     setBusy(key);
     try {
@@ -95,7 +110,10 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
         <h2 className="mb-4 text-xl font-bold">{t.account.claimTitle}</h2>
         <ul className="space-y-3">
           {claimable.map((c) => (
-            <li key={c.id} className="card flex items-center justify-between gap-4 p-4">
+            <li
+              key={c.id}
+              className="card flex items-center justify-between gap-4 p-4"
+            >
               <div>
                 <div className="font-semibold text-ink">{c.name}</div>
                 <div className="mt-1 flex flex-wrap gap-1.5">
@@ -108,7 +126,13 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
               </div>
               <button
                 type="button"
-                onClick={() => run(`claim-${c.id}`, () => claimProfile(c.id), t.toast.profileClaimed)}
+                onClick={() =>
+                  run(
+                    `claim-${c.id}`,
+                    () => claimProfile(c.id),
+                    t.toast.profileClaimed,
+                  )
+                }
                 disabled={busy === `claim-${c.id}`}
                 className="btn-primary text-sm disabled:opacity-60"
               >
@@ -121,7 +145,9 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
     );
   }
 
-  const pending = profile.ideaLinks.filter((l) => l.status === "AWAITING_EXPERT");
+  const pending = profile.ideaLinks.filter(
+    (l) => l.status === "AWAITING_EXPERT",
+  );
   const approved = profile.ideaLinks.filter((l) => l.status === "APPROVED");
 
   return (
@@ -134,17 +160,31 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
       {/* Idea-links awaiting my approval */}
       {pending.length > 0 && (
         <div className="card mb-4 p-5">
-          <h3 className="mb-3 text-base font-bold">{t.account.linksAwaitingYou}</h3>
+          <h3 className="mb-3 text-base font-bold">
+            {t.account.linksAwaitingYou}
+          </h3>
           <ul className="space-y-3">
             {pending.map((l) => (
-              <li key={l.id} className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 last:border-0 last:pb-0">
-                <Link href={`/idete/${l.idea.id}`} className="font-medium text-teal hover:underline">
+              <li
+                key={l.id}
+                className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 last:border-0 last:pb-0"
+              >
+                <Link
+                  href={`/idete/${l.idea.id}`}
+                  className="font-medium text-teal hover:underline"
+                >
                   {l.idea.title}
                 </Link>
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={() => run(`ok-${l.id}`, () => respondToLink(l.id, "prano"), t.toast.linkAccepted)}
+                    onClick={() =>
+                      run(
+                        `ok-${l.id}`,
+                        () => respondToLink(l.id, "prano"),
+                        t.toast.linkAccepted,
+                      )
+                    }
                     disabled={busy === `ok-${l.id}`}
                     className="btn-primary text-xs disabled:opacity-60"
                   >
@@ -152,7 +192,13 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
                   </button>
                   <button
                     type="button"
-                    onClick={() => run(`no-${l.id}`, () => respondToLink(l.id, "refuzo"), t.toast.linkRejected)}
+                    onClick={() =>
+                      run(
+                        `no-${l.id}`,
+                        () => respondToLink(l.id, "refuzo"),
+                        t.toast.linkRejected,
+                      )
+                    }
                     disabled={busy === `no-${l.id}`}
                     className="btn-danger-soft text-xs disabled:opacity-60"
                   >
@@ -169,21 +215,37 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
       {/* Approved links — take over */}
       {approved.length > 0 && (
         <div className="card mb-4 p-5">
-          <h3 className="mb-3 text-base font-bold">{t.account.approvedLinks}</h3>
+          <h3 className="mb-3 text-base font-bold">
+            {t.account.approvedLinks}
+          </h3>
           <ul className="space-y-3">
             {approved.map((l) => (
-              <li key={l.id} className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 last:border-0 last:pb-0">
-                <Link href={`/idete/${l.idea.id}`} className="font-medium text-teal hover:underline">
+              <li
+                key={l.id}
+                className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 last:border-0 last:pb-0"
+              >
+                <Link
+                  href={`/idete/${l.idea.id}`}
+                  className="font-medium text-teal hover:underline"
+                >
                   {l.idea.title}
                 </Link>
                 {l.authorConfirmed ? (
                   <span className="badge-muted">{t.idea.takenOver}</span>
                 ) : l.takenOn ? (
-                  <span className="text-xs text-muted">{t.account.awaitingAuthorConfirm}</span>
+                  <span className="text-xs text-muted">
+                    {t.account.awaitingAuthorConfirm}
+                  </span>
                 ) : (
                   <button
                     type="button"
-                    onClick={() => run(`take-${l.id}`, () => markTakeover(l.id), t.toast.takeoverMarked)}
+                    onClick={() =>
+                      run(
+                        `take-${l.id}`,
+                        () => markTakeover(l.id),
+                        t.toast.takeoverMarked,
+                      )
+                    }
                     disabled={busy === `take-${l.id}`}
                     className="btn-secondary text-xs disabled:opacity-60"
                   >
@@ -200,7 +262,11 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
       <div className="card p-5">
         <div className="flex items-center justify-between gap-4">
           <h3 className="text-base font-bold">{t.account.editProfile}</h3>
-          <button type="button" onClick={() => setEditing((v) => !v)} className="btn-ghost text-sm">
+          <button
+            type="button"
+            onClick={() => setEditing((v) => !v)}
+            className="btn-ghost text-sm"
+          >
             {editing ? t.common.cancel : t.common.edit}
           </button>
         </div>
@@ -210,7 +276,13 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
               <label className="label" htmlFor="ep-name">
                 {t.forms.expName}
               </label>
-              <input id="ep-name" name="name" required defaultValue={profile.name} className="input" />
+              <input
+                id="ep-name"
+                name="name"
+                required
+                defaultValue={profile.name}
+                className="input"
+              />
             </div>
             <div>
               <span className="label">{t.forms.expAreas}</span>
@@ -220,22 +292,47 @@ export function AccountExpertPanel({ profile, claimable }: { profile: Profile; c
               <label className="label" htmlFor="ep-bio">
                 {t.forms.expBio}
               </label>
-              <textarea id="ep-bio" name="bio" required rows={3} defaultValue={profile.bio} className="input resize-y" />
+              <textarea
+                id="ep-bio"
+                name="bio"
+                required
+                rows={3}
+                defaultValue={profile.bio}
+                className="input resize-y"
+              />
             </div>
             <div>
               <label className="label" htmlFor="ep-contact">
                 {t.forms.expContact}
               </label>
-              <input id="ep-contact" name="contact" required defaultValue={profile.contact} className="input" />
+              <input
+                id="ep-contact"
+                name="contact"
+                required
+                defaultValue={profile.contact}
+                className="input"
+              />
             </div>
             <div>
               <label className="label" htmlFor="ep-cv">
                 {t.forms.expCvReplace}
               </label>
-              <input id="ep-cv" name="cv" type="file" accept="application/pdf" className="input" />
-              {profile.cvFileName && <p className="hint">CV: {profile.cvFileName}</p>}
+              <input
+                id="ep-cv"
+                name="cv"
+                type="file"
+                accept="application/pdf"
+                className="input"
+              />
+              {profile.cvFileName && (
+                <p className="hint">CV: {profile.cvFileName}</p>
+              )}
             </div>
-            <button type="submit" disabled={busy === "edit"} className="btn-primary disabled:opacity-60">
+            <button
+              type="submit"
+              disabled={busy === "edit"}
+              className="btn-primary disabled:opacity-60"
+            >
               {busy === "edit" ? t.common.loading : t.common.save}
             </button>
           </form>

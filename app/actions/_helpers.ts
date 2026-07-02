@@ -2,8 +2,7 @@ import "server-only";
 import { headers } from "next/headers";
 
 export type ActionResult<T = undefined> =
-  | { ok: true; data?: T }
-  | { ok: false; error: string };
+  { ok: true; data?: T } | { ok: false; error: string };
 
 export function ok<T>(data?: T): ActionResult<T> {
   return { ok: true, data };

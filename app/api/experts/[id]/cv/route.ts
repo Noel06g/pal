@@ -17,9 +17,15 @@ export async function GET(
   const { id } = await params;
   const expert = await db.expertProfile.findUnique({
     where: { id },
-    select: { cvStorageKey: true, cvFileName: true, cvContentType: true, cvSize: true },
+    select: {
+      cvStorageKey: true,
+      cvFileName: true,
+      cvContentType: true,
+      cvSize: true,
+    },
   });
-  if (!expert?.cvStorageKey) return new NextResponse("Not found", { status: 404 });
+  if (!expert?.cvStorageKey)
+    return new NextResponse("Not found", { status: 404 });
 
   try {
     const obj = await getObjectStream(expert.cvStorageKey);

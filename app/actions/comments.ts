@@ -20,7 +20,9 @@ export async function addComment(formData: FormData): Promise<ActionResult> {
     ideaId: formData.get("ideaId"),
     body: formData.get("body"),
     stance: formData.get("stance"),
-    isSolution: formData.get("isSolution") === "on" || formData.get("isSolution") === "true",
+    isSolution:
+      formData.get("isSolution") === "on" ||
+      formData.get("isSolution") === "true",
   });
   if (!parsed.success) {
     return fail(parsed.error.issues[0]?.message ?? t.common.error);
@@ -71,12 +73,21 @@ export async function deleteComment(commentId: string): Promise<ActionResult> {
 
   const comment = await db.comment.findUnique({
     where: { id: commentId },
-    select: { id: true, ideaId: true, authorId: true, idea: { select: { authorId: true } } },
+    select: {
+      id: true,
+      ideaId: true,
+      authorId: true,
+      idea: { select: { authorId: true } },
+    },
   });
   if (!comment) return fail(t.common.error);
 
   // The comment's own author, the idea's author, or an admin may delete it.
-  if (comment.authorId !== user.id && comment.idea.authorId !== user.id && !user.isAdmin) {
+  if (
+    comment.authorId !== user.id &&
+    comment.idea.authorId !== user.id &&
+    !user.isAdmin
+  ) {
     return fail(t.common.error);
   }
 

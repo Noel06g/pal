@@ -23,7 +23,11 @@ export function ReportButton({
 
   const trigger =
     variant === "button" ? (
-      <button type="button" onClick={() => setOpen(true)} className="btn-secondary w-full">
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="btn-secondary w-full"
+      >
         {t.idea.report}
       </button>
     ) : (
@@ -40,7 +44,11 @@ export function ReportButton({
     return (
       <a
         href="/hyr"
-        className={variant === "button" ? "btn-secondary w-full" : "text-xs font-semibold text-muted hover:text-danger"}
+        className={
+          variant === "button"
+            ? "btn-secondary w-full"
+            : "text-xs font-semibold text-muted hover:text-danger"
+        }
       >
         {t.idea.report}
       </a>
@@ -73,7 +81,9 @@ export function ReportButton({
       <Modal open={open} onClose={() => setOpen(false)} title={t.idea.report}>
         <form onSubmit={onSubmit} className="space-y-4">
           {ideaId && <input type="hidden" name="ideaId" value={ideaId} />}
-          {commentId && <input type="hidden" name="commentId" value={commentId} />}
+          {commentId && (
+            <input type="hidden" name="commentId" value={commentId} />
+          )}
           <div>
             <label className="label" htmlFor="report-reason">
               {t.forms.reportReason}
@@ -89,10 +99,18 @@ export function ReportButton({
             />
           </div>
           <div className="flex justify-end gap-2">
-            <button type="button" onClick={() => setOpen(false)} className="btn-ghost">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="btn-ghost"
+            >
               {t.common.cancel}
             </button>
-            <button type="submit" disabled={pending} className="btn-danger disabled:opacity-60">
+            <button
+              type="submit"
+              disabled={pending}
+              className="btn-danger disabled:opacity-60"
+            >
               {t.forms.reportSubmit}
             </button>
           </div>

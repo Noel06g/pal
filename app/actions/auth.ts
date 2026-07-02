@@ -25,7 +25,8 @@ export async function startSignIn(formData: FormData): Promise<ActionResult> {
     email: formData.get("email"),
     name: formData.get("name"),
   });
-  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? t.common.error);
+  if (!parsed.success)
+    return fail(parsed.error.issues[0]?.message ?? t.common.error);
   const { email, name } = parsed.data;
 
   const existing = await db.user.findUnique({
@@ -44,7 +45,8 @@ export async function startSignIn(formData: FormData): Promise<ActionResult> {
   // Send the user back where they came from after the magic link, but only
   // to an internal path ("//evil.com" would be a protocol-relative redirect).
   const next = String(formData.get("next") ?? "");
-  const redirectTo = next.startsWith("/") && !next.startsWith("//") ? next : "/";
+  const redirectTo =
+    next.startsWith("/") && !next.startsWith("//") ? next : "/";
 
   try {
     await signIn("resend", {

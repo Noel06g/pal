@@ -2,7 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { markAllNotificationsRead, markNotificationRead } from "@/app/actions/notifications";
+import {
+  markAllNotificationsRead,
+  markNotificationRead,
+} from "@/app/actions/notifications";
 import { t } from "@/lib/strings";
 
 type Notif = {
@@ -27,7 +30,8 @@ export function NotificationsBell({
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     };
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
@@ -35,7 +39,9 @@ export function NotificationsBell({
 
   async function handleOpenItem(n: Notif) {
     if (!n.read) {
-      setItems((prev) => prev.map((x) => (x.id === n.id ? { ...x, read: true } : x)));
+      setItems((prev) =>
+        prev.map((x) => (x.id === n.id ? { ...x, read: true } : x)),
+      );
       setCount((c) => Math.max(0, c - 1));
       await markNotificationRead(n.id).catch(() => {});
     }
@@ -73,7 +79,7 @@ export function NotificationsBell({
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-80 max-w-[90vw] overflow-hidden rounded-[12px] border border-border bg-card shadow-card">
+        <div className="absolute right-0 z-50 mt-2 w-80 max-w-[90vw] overflow-hidden border border-ink bg-card">
           <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
             <span className="text-sm font-bold">{t.notifications.title}</span>
             {count > 0 && (
@@ -109,7 +115,11 @@ export function NotificationsBell({
               return (
                 <li key={n.id} className="border-b border-border last:border-0">
                   {n.link ? (
-                    <Link href={n.link} onClick={() => handleOpenItem(n)} className="block">
+                    <Link
+                      href={n.link}
+                      onClick={() => handleOpenItem(n)}
+                      className="block"
+                    >
                       {content}
                     </Link>
                   ) : (

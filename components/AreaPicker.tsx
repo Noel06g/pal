@@ -34,8 +34,8 @@ export function AreaPicker({
               className={[
                 "rounded-full border px-3 py-1.5 text-xs font-medium transition",
                 active
-                  ? "border-teal bg-teal text-white"
-                  : "border-border bg-card text-ink hover:bg-teal-tint",
+                  ? "border-ink bg-ink text-white"
+                  : "border-border bg-card text-ink hover:border-ink",
                 disabled ? "cursor-not-allowed opacity-40" : "",
               ].join(" ")}
             >

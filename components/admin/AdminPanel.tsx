@@ -64,12 +64,13 @@ type EditRow = { id: string; expertName: string; summary: string };
 
 type Tab = "reports" | "ideas" | "accounts" | "experts" | "edits" | "merge";
 
-const statusBadge: Record<ExpertRow["status"], { label: string; cls: string }> = {
-  AWAITING_NOMINEE: { label: "Pret pëlqimin", cls: "badge-amber" },
-  PENDING_REVIEW: { label: "Në shqyrtim", cls: "badge-amber" },
-  PUBLISHED: { label: "Publik", cls: "badge-ok" },
-  REJECTED: { label: "Refuzuar", cls: "badge-muted" },
-};
+const statusBadge: Record<ExpertRow["status"], { label: string; cls: string }> =
+  {
+    AWAITING_NOMINEE: { label: "Pret pëlqimin", cls: "badge-amber" },
+    PENDING_REVIEW: { label: "Në shqyrtim", cls: "badge-amber" },
+    PUBLISHED: { label: "Publik", cls: "badge-ok" },
+    REJECTED: { label: "Refuzuar", cls: "badge-muted" },
+  };
 
 export function AdminPanel({
   reports,
@@ -89,7 +90,11 @@ export function AdminPanel({
   const toast = useToast();
   const [busy, setBusy] = useState<string | null>(null);
 
-  async function run(key: string, fn: () => Promise<{ ok: boolean; error?: string }>, confirmMsg?: string) {
+  async function run(
+    key: string,
+    fn: () => Promise<{ ok: boolean; error?: string }>,
+    confirmMsg?: string,
+  ) {
     if (busy) return;
     if (confirmMsg && !window.confirm(confirmMsg)) return;
     setBusy(key);
@@ -108,8 +113,12 @@ export function AdminPanel({
     }
   }
 
-  const pendingExperts = experts.filter((e) => e.status === "AWAITING_NOMINEE" || e.status === "PENDING_REVIEW");
-  const otherExperts = experts.filter((e) => e.status === "PUBLISHED" || e.status === "REJECTED");
+  const pendingExperts = experts.filter(
+    (e) => e.status === "AWAITING_NOMINEE" || e.status === "PENDING_REVIEW",
+  );
+  const otherExperts = experts.filter(
+    (e) => e.status === "PUBLISHED" || e.status === "REJECTED",
+  );
   const openReports = reports.filter((r) => !r.resolved).length;
 
   const tabs: { key: Tab; label: string; badge?: number }[] = [
@@ -123,7 +132,10 @@ export function AdminPanel({
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap gap-2 border-b border-border" role="tablist">
+      <div
+        className="mb-6 flex flex-wrap gap-2 border-b border-border"
+        role="tablist"
+      >
         {tabs.map((tb) => (
           <button
             key={tb.key}
@@ -132,12 +144,16 @@ export function AdminPanel({
             onClick={() => setTab(tb.key)}
             className={[
               "-mb-px border-b-2 px-4 py-2.5 text-sm font-semibold",
-              tab === tb.key ? "border-teal text-teal-dk" : "border-transparent text-muted hover:text-ink",
+              tab === tb.key
+                ? "border-teal text-teal-dk"
+                : "border-transparent text-muted hover:text-ink",
             ].join(" ")}
           >
             {tb.label}
             {tb.badge ? (
-              <span className="ml-2 rounded-full bg-danger px-1.5 py-0.5 text-[10px] font-bold text-white">{tb.badge}</span>
+              <span className="ml-2 rounded-full bg-danger px-1.5 py-0.5 text-[10px] font-bold text-white">
+                {tb.badge}
+              </span>
             ) : null}
           </button>
         ))}
@@ -146,9 +162,14 @@ export function AdminPanel({
       {/* REPORTS */}
       {tab === "reports" && (
         <div className="space-y-3">
-          {reports.length === 0 && <p className="text-sm text-muted">S&apos;ka raportime.</p>}
+          {reports.length === 0 && (
+            <p className="text-sm text-muted">S&apos;ka raportime.</p>
+          )}
           {reports.map((r) => (
-            <div key={r.id} className={`card p-4 ${r.resolved ? "opacity-60" : ""}`}>
+            <div
+              key={r.id}
+              className={`card p-4 ${r.resolved ? "opacity-60" : ""}`}
+            >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
@@ -162,19 +183,31 @@ export function AdminPanel({
                         {r.ideaTitle}
                       </a>
                     ) : (
-                      <span className="font-semibold text-ink">{r.ideaTitle}</span>
+                      <span className="font-semibold text-ink">
+                        {r.ideaTitle}
+                      </span>
                     )}
-                    {r.resolved && <span className="badge-muted">{t.admin.resolved}</span>}
+                    {r.resolved && (
+                      <span className="badge-muted">{t.admin.resolved}</span>
+                    )}
                   </div>
                   <p className="mt-1 text-sm text-muted">{r.reason}</p>
                   <p className="mt-2 text-xs text-muted">
-                    {t.admin.reportReporter}: <span className="font-medium">{r.reporterEmail}</span> · {r.createdAt}
+                    {t.admin.reportReporter}:{" "}
+                    <span className="font-medium">{r.reporterEmail}</span> ·{" "}
+                    {r.createdAt}
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
                   {r.ideaId && (
                     <button
-                      onClick={() => run(`rep-del-${r.id}`, () => adminDeleteReportedIdea(r.id), "Fshi idenë e raportuar?")}
+                      onClick={() =>
+                        run(
+                          `rep-del-${r.id}`,
+                          () => adminDeleteReportedIdea(r.id),
+                          "Fshi idenë e raportuar?",
+                        )
+                      }
                       disabled={busy === `rep-del-${r.id}`}
                       className="btn-danger-soft text-xs"
                     >
@@ -184,7 +217,11 @@ export function AdminPanel({
                   {r.commentId && (
                     <button
                       onClick={() =>
-                        run(`rep-delc-${r.id}`, () => adminDeleteReportedComment(r.id), "Fshi komentin e raportuar?")
+                        run(
+                          `rep-delc-${r.id}`,
+                          () => adminDeleteReportedComment(r.id),
+                          "Fshi komentin e raportuar?",
+                        )
                       }
                       disabled={busy === `rep-delc-${r.id}`}
                       className="btn-danger-soft text-xs"
@@ -194,7 +231,9 @@ export function AdminPanel({
                   )}
                   {!r.resolved && (
                     <button
-                      onClick={() => run(`rep-res-${r.id}`, () => adminResolveReport(r.id))}
+                      onClick={() =>
+                        run(`rep-res-${r.id}`, () => adminResolveReport(r.id))
+                      }
                       disabled={busy === `rep-res-${r.id}`}
                       className="btn-secondary text-xs"
                     >
@@ -210,15 +249,22 @@ export function AdminPanel({
 
       {/* IDEAS */}
       {tab === "ideas" && (
-        <Table head={["Titulli", "Fusha", "Autori", "Statusi", "Mbështetje", ""]}>
+        <Table
+          head={["Titulli", "Fusha", "Autori", "Statusi", "Mbështetje", ""]}
+        >
           {ideas.map((i) => (
             <tr key={i.id} className="border-t border-border">
               <td className="px-3 py-2.5">
-                <a href={`/idete/${i.id}`} className="font-medium text-teal hover:underline">
+                <a
+                  href={`/idete/${i.id}`}
+                  className="font-medium text-teal hover:underline"
+                >
                   {i.title}
                 </a>
               </td>
-              <td className="px-3 py-2.5 text-sm text-muted">{fieldShort(i.fieldKey)}</td>
+              <td className="px-3 py-2.5 text-sm text-muted">
+                {fieldShort(i.fieldKey)}
+              </td>
               <td className="px-3 py-2.5 text-sm">{i.authorName}</td>
               <td className="px-3 py-2.5 text-sm">
                 {i.status === "ARCHIVED" ? (
@@ -230,7 +276,13 @@ export function AdminPanel({
               <td className="px-3 py-2.5 text-sm">{i.supportCount}</td>
               <td className="px-3 py-2.5 text-right">
                 <button
-                  onClick={() => run(`idea-del-${i.id}`, () => adminDeleteIdea(i.id), "Fshi këtë ide?")}
+                  onClick={() =>
+                    run(
+                      `idea-del-${i.id}`,
+                      () => adminDeleteIdea(i.id),
+                      "Fshi këtë ide?",
+                    )
+                  }
                   disabled={busy === `idea-del-${i.id}`}
                   className="btn-danger-soft text-xs"
                 >
@@ -257,14 +309,22 @@ export function AdminPanel({
               <td className="px-3 py-2.5 text-right">
                 <div className="flex justify-end gap-2">
                   <button
-                    onClick={() => run(`ban-${u.id}`, () => adminSetBan(u.id, !u.isBanned))}
+                    onClick={() =>
+                      run(`ban-${u.id}`, () => adminSetBan(u.id, !u.isBanned))
+                    }
                     disabled={busy === `ban-${u.id}`}
                     className="btn-secondary text-xs"
                   >
                     {u.isBanned ? t.admin.unban : t.admin.ban}
                   </button>
                   <button
-                    onClick={() => run(`udel-${u.id}`, () => adminDeleteUser(u.id), "Fshi këtë llogari përfundimisht?")}
+                    onClick={() =>
+                      run(
+                        `udel-${u.id}`,
+                        () => adminDeleteUser(u.id),
+                        "Fshi këtë llogari përfundimisht?",
+                      )
+                    }
                     disabled={busy === `udel-${u.id}`}
                     className="btn-danger-soft text-xs"
                   >
@@ -284,7 +344,9 @@ export function AdminPanel({
             <h3 className="mb-2 text-sm font-bold uppercase tracking-wide text-muted">
               {t.admin.pending} ({pendingExperts.length})
             </h3>
-            {pendingExperts.length === 0 && <p className="text-sm text-muted">{t.admin.noPrivate}</p>}
+            {pendingExperts.length === 0 && (
+              <p className="text-sm text-muted">{t.admin.noPrivate}</p>
+            )}
             <div className="space-y-3">
               {pendingExperts.map((e) => (
                 <ExpertAdminCard key={e.id} e={e} busy={busy} run={run} />
@@ -292,7 +354,9 @@ export function AdminPanel({
             </div>
           </section>
           <section>
-            <h3 className="mb-2 text-sm font-bold uppercase tracking-wide text-muted">{t.admin.confirmed} & të tjerë</h3>
+            <h3 className="mb-2 text-sm font-bold uppercase tracking-wide text-muted">
+              {t.admin.confirmed} & të tjerë
+            </h3>
             <div className="space-y-3">
               {otherExperts.map((e) => (
                 <ExpertAdminCard key={e.id} e={e} busy={busy} run={run} />
@@ -305,7 +369,9 @@ export function AdminPanel({
       {/* EDIT QUEUE */}
       {tab === "edits" && (
         <div className="space-y-3">
-          {edits.length === 0 && <p className="text-sm text-muted">{t.admin.noPrivate}</p>}
+          {edits.length === 0 && (
+            <p className="text-sm text-muted">{t.admin.noPrivate}</p>
+          )}
           {edits.map((ed) => (
             <div key={ed.id} className="card p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -315,14 +381,18 @@ export function AdminPanel({
                 </div>
                 <div className="flex shrink-0 gap-2">
                   <button
-                    onClick={() => run(`ed-ok-${ed.id}`, () => adminApproveEdit(ed.id))}
+                    onClick={() =>
+                      run(`ed-ok-${ed.id}`, () => adminApproveEdit(ed.id))
+                    }
                     disabled={busy === `ed-ok-${ed.id}`}
                     className="btn-primary text-xs"
                   >
                     {t.admin.approve}
                   </button>
                   <button
-                    onClick={() => run(`ed-no-${ed.id}`, () => adminRejectEdit(ed.id))}
+                    onClick={() =>
+                      run(`ed-no-${ed.id}`, () => adminRejectEdit(ed.id))
+                    }
                     disabled={busy === `ed-no-${ed.id}`}
                     className="btn-secondary text-xs"
                   >
@@ -341,7 +411,13 @@ export function AdminPanel({
   );
 }
 
-function Table({ head, children }: { head: string[]; children: React.ReactNode }) {
+function Table({
+  head,
+  children,
+}: {
+  head: string[];
+  children: React.ReactNode;
+}) {
   return (
     <div className="card overflow-x-auto">
       <table className="w-full min-w-[640px] text-left">
@@ -367,12 +443,17 @@ function ExpertAdminCard({
 }: {
   e: ExpertRow;
   busy: string | null;
-  run: (k: string, fn: () => Promise<{ ok: boolean; error?: string }>, c?: string) => void;
+  run: (
+    k: string,
+    fn: () => Promise<{ ok: boolean; error?: string }>,
+    c?: string,
+  ) => void;
 }) {
   const sb = statusBadge[e.status];
   // A nominated person must consent first — "Mirato" appears only after that.
   const canApprove = e.status === "PENDING_REVIEW";
-  const canReview = e.status === "AWAITING_NOMINEE" || e.status === "PENDING_REVIEW";
+  const canReview =
+    e.status === "AWAITING_NOMINEE" || e.status === "PENDING_REVIEW";
   return (
     <div className="card p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -384,7 +465,9 @@ function ExpertAdminCard({
                 {fieldShort(a)}
               </span>
             ))}
-            <span className="badge-muted">{e.source === "SELF" ? "Vetëpropozim" : "Propozim"}</span>
+            <span className="badge-muted">
+              {e.source === "SELF" ? "Vetëpropozim" : "Propozim"}
+            </span>
             {e.hasAccount && <span className="badge-muted">Llogari</span>}
             <span className={sb.cls}>{sb.label}</span>
           </div>
@@ -394,13 +477,21 @@ function ExpertAdminCard({
           <dl className="mt-3 grid gap-1 rounded-[10px] bg-paper p-3 text-xs">
             <Row k={t.admin.contact} v={e.contact} />
             <Row k={t.admin.reason} v={e.reason} />
-            {e.proposerName && <Row k={t.admin.proposer} v={`${e.proposerName} · ${e.proposerContact ?? ""}`} />}
+            {e.proposerName && (
+              <Row
+                k={t.admin.proposer}
+                v={`${e.proposerName} · ${e.proposerContact ?? ""}`}
+              />
+            )}
             <Row k="Fushat" v={e.areas.map((a) => fieldName(a)).join(", ")} />
             {e.cvFileName && (
               <div className="flex gap-2">
                 <dt className="font-semibold text-ink">CV:</dt>
                 <dd>
-                  <a href={`/api/experts/${e.id}/cv`} className="link-underline">
+                  <a
+                    href={`/api/experts/${e.id}/cv`}
+                    className="link-underline"
+                  >
                     {t.admin.downloadCv} ({e.cvFileName})
                   </a>
                 </dd>
@@ -411,7 +502,9 @@ function ExpertAdminCard({
         <div className="flex shrink-0 flex-col gap-2">
           {canApprove && (
             <button
-              onClick={() => run(`exp-ok-${e.id}`, () => adminApproveExpert(e.id))}
+              onClick={() =>
+                run(`exp-ok-${e.id}`, () => adminApproveExpert(e.id))
+              }
               disabled={busy === `exp-ok-${e.id}`}
               className="btn-primary text-xs"
             >
@@ -420,7 +513,9 @@ function ExpertAdminCard({
           )}
           {canReview && (
             <button
-              onClick={() => run(`exp-no-${e.id}`, () => adminRejectExpert(e.id))}
+              onClick={() =>
+                run(`exp-no-${e.id}`, () => adminRejectExpert(e.id))
+              }
               disabled={busy === `exp-no-${e.id}`}
               className="btn-secondary text-xs"
             >
@@ -428,7 +523,13 @@ function ExpertAdminCard({
             </button>
           )}
           <button
-            onClick={() => run(`exp-del-${e.id}`, () => adminDeleteExpert(e.id), "Fshi këtë ekspert?")}
+            onClick={() =>
+              run(
+                `exp-del-${e.id}`,
+                () => adminDeleteExpert(e.id),
+                "Fshi këtë ekspert?",
+              )
+            }
             disabled={busy === `exp-del-${e.id}`}
             className="btn-danger-soft text-xs"
           >
@@ -447,11 +548,18 @@ function MergeTool({
 }: {
   experts: ExpertRow[];
   busy: string | null;
-  run: (k: string, fn: () => Promise<{ ok: boolean; error?: string }>, c?: string) => void;
+  run: (
+    k: string,
+    fn: () => Promise<{ ok: boolean; error?: string }>,
+    c?: string,
+  ) => void;
 }) {
   const [keepId, setKeepId] = useState("");
   const [dropId, setDropId] = useState("");
-  const options = experts.map((e) => ({ id: e.id, label: `${e.name} — ${e.areas.map(fieldShort).join(", ")}` }));
+  const options = experts.map((e) => ({
+    id: e.id,
+    label: `${e.name} — ${e.areas.map(fieldShort).join(", ")}`,
+  }));
 
   return (
     <div className="card max-w-xl p-6">
@@ -462,7 +570,12 @@ function MergeTool({
           <label className="label" htmlFor="merge-keep">
             {t.admin.mergeKeep}
           </label>
-          <select id="merge-keep" value={keepId} onChange={(e) => setKeepId(e.target.value)} className="input">
+          <select
+            id="merge-keep"
+            value={keepId}
+            onChange={(e) => setKeepId(e.target.value)}
+            className="input"
+          >
             <option value="">—</option>
             {options.map((o) => (
               <option key={o.id} value={o.id}>
@@ -475,7 +588,12 @@ function MergeTool({
           <label className="label" htmlFor="merge-drop">
             {t.admin.mergeDrop}
           </label>
-          <select id="merge-drop" value={dropId} onChange={(e) => setDropId(e.target.value)} className="input">
+          <select
+            id="merge-drop"
+            value={dropId}
+            onChange={(e) => setDropId(e.target.value)}
+            className="input"
+          >
             <option value="">—</option>
             {options
               .filter((o) => o.id !== keepId)
@@ -489,7 +607,13 @@ function MergeTool({
         <button
           type="button"
           disabled={!keepId || !dropId || busy === "merge"}
-          onClick={() => run("merge", () => adminMergeExperts(keepId, dropId), t.admin.mergeConfirm)}
+          onClick={() =>
+            run(
+              "merge",
+              () => adminMergeExperts(keepId, dropId),
+              t.admin.mergeConfirm,
+            )
+          }
           className="btn-primary disabled:opacity-60"
         >
           {t.admin.mergeBtn}

@@ -13,28 +13,25 @@ export function WhySection() {
   const hasMore = paragraphs.length > VISIBLE;
 
   return (
-    <section className="border-b border-border bg-card/60">
-      <div className="container-pal py-16">
-        <div className="mx-auto max-w-3xl">
-          <div className="accent-bar" aria-hidden />
-          <h2 className="text-balance text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.whyTitle}</h2>
-          <div className="mt-5 space-y-4 leading-relaxed text-muted">
-            {visible.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-          </div>
-          {hasMore && (
-            <button
-              type="button"
-              onClick={() => setExpanded((v) => !v)}
-              aria-expanded={expanded}
-              className="mt-3 text-sm font-semibold text-teal-dk hover:underline"
-            >
-              {expanded ? t.home.whyLess : t.home.whyMore}
-            </button>
-          )}
-        </div>
+    <section className="container-pal py-20 sm:py-28">
+      <h2 className="text-balance text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+        {t.home.whyTitle}
+      </h2>
+      <div className="prose-col mt-6 space-y-4 text-lg leading-relaxed text-ink">
+        {visible.map((p, i) => (
+          <p key={i}>{p}</p>
+        ))}
       </div>
+      {hasMore && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          aria-expanded={expanded}
+          className="link-underline mt-4 text-base font-medium"
+        >
+          {expanded ? t.home.whyLess : t.home.whyMore}
+        </button>
+      )}
     </section>
   );
 }

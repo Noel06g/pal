@@ -24,7 +24,9 @@ export async function adminDeleteIdea(ideaId: string): Promise<ActionResult> {
   return ok();
 }
 
-export async function adminDeleteComment(commentId: string): Promise<ActionResult> {
+export async function adminDeleteComment(
+  commentId: string,
+): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
   await db.comment.delete({ where: { id: commentId } }).catch(() => {});
@@ -32,7 +34,9 @@ export async function adminDeleteComment(commentId: string): Promise<ActionResul
   return ok();
 }
 
-export async function adminResolveReport(reportId: string): Promise<ActionResult> {
+export async function adminResolveReport(
+  reportId: string,
+): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
   await db.report.update({ where: { id: reportId }, data: { resolved: true } });
@@ -41,7 +45,9 @@ export async function adminResolveReport(reportId: string): Promise<ActionResult
 }
 
 /** Delete the comment referenced by a report (comment moderation path). */
-export async function adminDeleteReportedComment(reportId: string): Promise<ActionResult> {
+export async function adminDeleteReportedComment(
+  reportId: string,
+): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
   const report = await db.report.findUnique({
@@ -49,7 +55,9 @@ export async function adminDeleteReportedComment(reportId: string): Promise<Acti
     select: { commentId: true },
   });
   if (report?.commentId) {
-    await db.comment.delete({ where: { id: report.commentId } }).catch(() => {});
+    await db.comment
+      .delete({ where: { id: report.commentId } })
+      .catch(() => {});
   }
   await db.report.update({ where: { id: reportId }, data: { resolved: true } });
   revalidatePath("/admin");
@@ -57,7 +65,9 @@ export async function adminDeleteReportedComment(reportId: string): Promise<Acti
 }
 
 /** Delete the idea referenced by a report (the moderation penalty path). */
-export async function adminDeleteReportedIdea(reportId: string): Promise<ActionResult> {
+export async function adminDeleteReportedIdea(
+  reportId: string,
+): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
   const report = await db.report.findUnique({
@@ -77,7 +87,10 @@ export async function adminDeleteReportedIdea(reportId: string): Promise<ActionR
   return ok();
 }
 
-export async function adminSetBan(userId: string, banned: boolean): Promise<ActionResult> {
+export async function adminSetBan(
+  userId: string,
+  banned: boolean,
+): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
   if (userId === admin.id) return fail("Nuk mund të pezullosh veten.");
@@ -89,7 +102,8 @@ export async function adminSetBan(userId: string, banned: boolean): Promise<Acti
 export async function adminDeleteUser(userId: string): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
-  if (userId === admin.id) return fail("Nuk mund të fshish llogarinë tënde nga këtu.");
+  if (userId === admin.id)
+    return fail("Nuk mund të fshish llogarinë tënde nga këtu.");
 
   const docs = await db.document.findMany({
     where: { idea: { authorId: userId } },
@@ -104,8 +118,11 @@ export async function adminDeleteUser(userId: string): Promise<ActionResult> {
     select: { id: true, cvStorageKey: true },
   });
   if (profile) {
-    if (profile.cvStorageKey) await deleteObject(profile.cvStorageKey).catch(() => {});
-    await db.expertProfile.delete({ where: { id: profile.id } }).catch(() => {});
+    if (profile.cvStorageKey)
+      await deleteObject(profile.cvStorageKey).catch(() => {});
+    await db.expertProfile
+      .delete({ where: { id: profile.id } })
+      .catch(() => {});
   }
 
   await db.user.delete({ where: { id: userId } }).catch(() => {});
@@ -114,7 +131,9 @@ export async function adminDeleteUser(userId: string): Promise<ActionResult> {
   return ok();
 }
 
-export async function adminApproveExpert(expertId: string): Promise<ActionResult> {
+export async function adminApproveExpert(
+  expertId: string,
+): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
   const current = await db.expertProfile.findUnique({
@@ -125,12 +144,22 @@ export async function adminApproveExpert(expertId: string): Promise<ActionResult
   // A nominated person must consent (accept the email invite) BEFORE the
   // profile can ever be published.
   if (current.status === "AWAITING_NOMINEE") {
-    return fail("I propozuari s'ka dhënë ende pëlqimin — nuk mund të publikohet.");
+    return fail(
+      "I propozuari s'ka dhënë ende pëlqimin — nuk mund të publikohet.",
+    );
   }
   const expert = await db.expertProfile.update({
     where: { id: expertId },
-    data: { status: "PUBLISHED", confirmToken: null, confirmTokenExpires: null },
-    select: { name: true, contactEmail: true, owner: { select: { email: true } } },
+    data: {
+      status: "PUBLISHED",
+      confirmToken: null,
+      confirmTokenExpires: null,
+    },
+    select: {
+      name: true,
+      contactEmail: true,
+      owner: { select: { email: true } },
+    },
   });
   const to = expert.owner?.email ?? expert.contactEmail;
   if (to) sendProfileDecisionEmail(to, expert.name, true).catch(() => {});
@@ -139,13 +168,19 @@ export async function adminApproveExpert(expertId: string): Promise<ActionResult
   return ok();
 }
 
-export async function adminRejectExpert(expertId: string): Promise<ActionResult> {
+export async function adminRejectExpert(
+  expertId: string,
+): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
   const expert = await db.expertProfile.update({
     where: { id: expertId },
     data: { status: "REJECTED", confirmToken: null, confirmTokenExpires: null },
-    select: { name: true, contactEmail: true, owner: { select: { email: true } } },
+    select: {
+      name: true,
+      contactEmail: true,
+      owner: { select: { email: true } },
+    },
   });
   // Kill any still-pending idea links (and their email tokens) so a rejected
   // expert can no longer accept an invite and trigger a contact exchange.
@@ -160,14 +195,17 @@ export async function adminRejectExpert(expertId: string): Promise<ActionResult>
   return ok();
 }
 
-export async function adminDeleteExpert(expertId: string): Promise<ActionResult> {
+export async function adminDeleteExpert(
+  expertId: string,
+): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
   const expert = await db.expertProfile.findUnique({
     where: { id: expertId },
     select: { cvStorageKey: true },
   });
-  if (expert?.cvStorageKey) await deleteObject(expert.cvStorageKey).catch(() => {});
+  if (expert?.cvStorageKey)
+    await deleteObject(expert.cvStorageKey).catch(() => {});
   await db.expertProfile.delete({ where: { id: expertId } }).catch(() => {});
   revalidatePath("/admin");
   revalidatePath("/ekspertet");
@@ -189,7 +227,10 @@ export async function adminApproveEdit(editId: string): Promise<ActionResult> {
   }
   if (typeof changes.bio === "string") data.bio = changes.bio;
   await db.expertProfile.update({ where: { id: edit.expertId }, data });
-  await db.expertEdit.update({ where: { id: editId }, data: { status: "APPROVED" } });
+  await db.expertEdit.update({
+    where: { id: editId },
+    data: { status: "APPROVED" },
+  });
   revalidatePath("/admin");
   revalidatePath("/ekspertet");
   return ok();
@@ -198,20 +239,32 @@ export async function adminApproveEdit(editId: string): Promise<ActionResult> {
 export async function adminRejectEdit(editId: string): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
-  await db.expertEdit.update({ where: { id: editId }, data: { status: "REJECTED" } });
+  await db.expertEdit.update({
+    where: { id: editId },
+    data: { status: "REJECTED" },
+  });
   revalidatePath("/admin");
   return ok();
 }
 
 /** Merge two duplicate profiles into `keepId`; move links/edits, cap areas at 3, delete the other. */
-export async function adminMergeExperts(keepId: string, dropId: string): Promise<ActionResult> {
+export async function adminMergeExperts(
+  keepId: string,
+  dropId: string,
+): Promise<ActionResult> {
   const admin = await requireAdmin();
   if (!admin) return fail("forbidden");
   if (keepId === dropId) return fail("Zgjidh dy profile të ndryshme.");
   const [keep, drop] = await Promise.all([
     db.expertProfile.findUnique({
       where: { id: keepId },
-      select: { id: true, areas: true, ownerUserId: true, contactEmail: true, cvStorageKey: true },
+      select: {
+        id: true,
+        areas: true,
+        ownerUserId: true,
+        contactEmail: true,
+        cvStorageKey: true,
+      },
     }),
     db.expertProfile.findUnique({
       where: { id: dropId },
@@ -229,21 +282,34 @@ export async function adminMergeExperts(keepId: string, dropId: string): Promise
   ]);
   if (!keep || !drop) return fail("not found");
 
-  const dropLinks = await db.ideaExpert.findMany({ where: { expertId: dropId } });
+  const dropLinks = await db.ideaExpert.findMany({
+    where: { expertId: dropId },
+  });
   for (const l of dropLinks) {
     const clash = await db.ideaExpert.findUnique({
       where: { ideaId_expertId: { ideaId: l.ideaId, expertId: keepId } },
     });
     if (clash) await db.ideaExpert.delete({ where: { id: l.id } });
-    else await db.ideaExpert.update({ where: { id: l.id }, data: { expertId: keepId } });
+    else
+      await db.ideaExpert.update({
+        where: { id: l.id },
+        data: { expertId: keepId },
+      });
   }
-  await db.expertEdit.updateMany({ where: { expertId: dropId }, data: { expertId: keepId } });
+  await db.expertEdit.updateMany({
+    where: { expertId: dropId },
+    data: { expertId: keepId },
+  });
 
   // Carry over what `keep` lacks: account ownership, contact email, CV.
-  const transferOwner = !keep.ownerUserId && drop.ownerUserId ? drop.ownerUserId : null;
+  const transferOwner =
+    !keep.ownerUserId && drop.ownerUserId ? drop.ownerUserId : null;
   const transferCv = !keep.cvStorageKey && drop.cvStorageKey;
 
-  const merged = Array.from(new Set([...keep.areas, ...drop.areas])).slice(0, 3);
+  const merged = Array.from(new Set([...keep.areas, ...drop.areas])).slice(
+    0,
+    3,
+  );
   // Atomic: delete `drop` first (frees its unique ownerUserId), then apply
   // the merged fields to `keep` — or neither.
   await db.$transaction([
@@ -253,7 +319,9 @@ export async function adminMergeExperts(keepId: string, dropId: string): Promise
       data: {
         areas: merged,
         ...(transferOwner ? { ownerUserId: transferOwner } : {}),
-        ...(!keep.contactEmail && drop.contactEmail ? { contactEmail: drop.contactEmail } : {}),
+        ...(!keep.contactEmail && drop.contactEmail
+          ? { contactEmail: drop.contactEmail }
+          : {}),
         ...(transferCv
           ? {
               cvStorageKey: drop.cvStorageKey,
@@ -267,7 +335,8 @@ export async function adminMergeExperts(keepId: string, dropId: string): Promise
   ]);
 
   // Only remove the dropped CV from storage if it was NOT transferred.
-  if (drop.cvStorageKey && !transferCv) await deleteObject(drop.cvStorageKey).catch(() => {});
+  if (drop.cvStorageKey && !transferCv)
+    await deleteObject(drop.cvStorageKey).catch(() => {});
 
   revalidatePath("/admin");
   revalidatePath("/ekspertet");

@@ -98,7 +98,12 @@ export function Turnstile() {
   return (
     <div className="my-3">
       <div ref={ref} />
-      <input ref={inputRef} type="hidden" name="turnstileToken" defaultValue="" />
+      <input
+        ref={inputRef}
+        type="hidden"
+        name="turnstileToken"
+        defaultValue=""
+      />
       {!siteKey && (
         <p className="hint text-danger">
           Mungon NEXT_PUBLIC_TURNSTILE_SITE_KEY.

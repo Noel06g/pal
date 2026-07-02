@@ -41,7 +41,10 @@ export function SupportButton({
       if (res.ok && res.data) {
         setSupported(res.data.supported);
         setCount(res.data.count);
-        toast(res.data.supported ? t.toast.supported : t.toast.unsupported, "success");
+        toast(
+          res.data.supported ? t.toast.supported : t.toast.unsupported,
+          "success",
+        );
         router.refresh();
       } else if (!res.ok) {
         toast(res.error, "error");
@@ -64,7 +67,13 @@ export function SupportButton({
         supported ? "btn-primary" : "btn-secondary",
       ].join(" ")}
     >
-      <svg width="16" height="16" viewBox="0 0 14 14" fill={supported ? "currentColor" : "none"} aria-hidden>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 14 14"
+        fill={supported ? "currentColor" : "none"}
+        aria-hidden
+      >
         <path
           d="M7 12s-5-3.2-5-6.5A2.5 2.5 0 0 1 7 4a2.5 2.5 0 0 1 5 1.5C12 8.8 7 12 7 12Z"
           stroke="currentColor"

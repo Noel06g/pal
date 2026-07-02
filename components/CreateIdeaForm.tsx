@@ -18,7 +18,8 @@ export function CreateIdeaForm() {
   const [fieldKey, setFieldKey] = useState("");
   const [pending, setPending] = useState(false);
 
-  const subs = fieldKey && fieldKey !== OTHER_FIELD.key ? fieldSubs(fieldKey) : [];
+  const subs =
+    fieldKey && fieldKey !== OTHER_FIELD.key ? fieldSubs(fieldKey) : [];
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -27,7 +28,9 @@ export function CreateIdeaForm() {
 
     // Reject oversize uploads client-side: past the server's body limit the
     // request dies before our action can produce a friendly error.
-    const files = fd.getAll("documents").filter((f): f is File => f instanceof File);
+    const files = fd
+      .getAll("documents")
+      .filter((f): f is File => f instanceof File);
     const total = files.reduce((sum, f) => sum + f.size, 0);
     if (files.some((f) => f.size > MAX_FILE) || total > MAX_TOTAL_UPLOAD) {
       toast(t.toast.fileTooBig, "error");
@@ -57,7 +60,15 @@ export function CreateIdeaForm() {
         <label className="label" htmlFor="title">
           {t.forms.ideaTitle}
         </label>
-        <input id="title" name="title" required minLength={6} maxLength={160} className="input" placeholder={t.forms.ideaTitlePh} />
+        <input
+          id="title"
+          name="title"
+          required
+          minLength={6}
+          maxLength={160}
+          className="input"
+          placeholder={t.forms.ideaTitlePh}
+        />
       </div>
 
       <div>
@@ -108,14 +119,27 @@ export function CreateIdeaForm() {
             <label className="label" htmlFor="otherText">
               {t.forms.ideaOther}
             </label>
-            <input id="otherText" name="otherText" required minLength={3} maxLength={300} className="input" placeholder={t.forms.ideaOtherPh} />
+            <input
+              id="otherText"
+              name="otherText"
+              required
+              minLength={3}
+              maxLength={300}
+              className="input"
+              placeholder={t.forms.ideaOtherPh}
+            />
           </div>
         ) : (
           <div>
             <label className="label" htmlFor="subfield">
               {t.forms.ideaSubfield}
             </label>
-            <select id="subfield" name="subfield" className="input" defaultValue="">
+            <select
+              id="subfield"
+              name="subfield"
+              className="input"
+              defaultValue=""
+            >
               <option value="">{t.forms.chooseSubfield}</option>
               {subs.map((s) => (
                 <option key={s} value={s}>
@@ -142,7 +166,11 @@ export function CreateIdeaForm() {
         <p className="hint">PDF, maks. 10 MB. Dokumentet janë publike.</p>
       </div>
 
-      <button type="submit" disabled={pending} className="btn-primary w-full disabled:opacity-60">
+      <button
+        type="submit"
+        disabled={pending}
+        className="btn-primary w-full disabled:opacity-60"
+      >
         {pending ? t.common.loading : t.forms.ideaSubmit}
       </button>
     </form>

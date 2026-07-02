@@ -5,10 +5,16 @@ import { requireAdmin } from "@/lib/session";
 import { AdminPanel } from "@/components/admin/AdminPanel";
 import { t } from "@/lib/strings";
 
-export const metadata: Metadata = { title: t.admin.title, robots: { index: false } };
+export const metadata: Metadata = {
+  title: t.admin.title,
+  robots: { index: false },
+};
 
 function fmt(d: Date) {
-  return new Intl.DateTimeFormat("sq-AL", { dateStyle: "short", timeStyle: "short" }).format(d);
+  return new Intl.DateTimeFormat("sq-AL", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(d);
 }
 
 export default async function AdminPage() {
@@ -17,7 +23,9 @@ export default async function AdminPage() {
   if (!admin) redirect("/");
 
   const [reports, ideas, users, experts, edits] = await Promise.all([
-    db.report.findMany({ orderBy: [{ resolved: "asc" }, { createdAt: "desc" }] }),
+    db.report.findMany({
+      orderBy: [{ resolved: "asc" }, { createdAt: "desc" }],
+    }),
     db.idea.findMany({
       orderBy: { createdAt: "desc" },
       include: {
@@ -29,7 +37,9 @@ export default async function AdminPage() {
       orderBy: { createdAt: "desc" },
       include: { _count: { select: { ideas: true } } },
     }),
-    db.expertProfile.findMany({ orderBy: [{ status: "asc" }, { createdAt: "desc" }] }),
+    db.expertProfile.findMany({
+      orderBy: [{ status: "asc" }, { createdAt: "desc" }],
+    }),
     db.expertEdit.findMany({
       where: { status: "PENDING" },
       orderBy: { createdAt: "desc" },
@@ -39,7 +49,9 @@ export default async function AdminPage() {
 
   return (
     <div className="container-pal py-10">
-      <h1 className="mb-6 text-3xl font-extrabold tracking-tight">{t.admin.title}</h1>
+      <h1 className="mb-6 text-3xl font-bold tracking-tight">
+        {t.admin.title}
+      </h1>
       <AdminPanel
         reports={reports.map((r) => ({
           id: r.id,
@@ -96,6 +108,7 @@ function editSummary(changes: unknown): string {
   const parts: string[] = [];
   if (typeof c.name === "string") parts.push(`Emri → ${c.name}`);
   if (Array.isArray(c.areas)) parts.push(`Fushat → ${c.areas.join(", ")}`);
-  if (typeof c.bio === "string") parts.push(`Bio → ${c.bio.slice(0, 120)}${c.bio.length > 120 ? "…" : ""}`);
+  if (typeof c.bio === "string")
+    parts.push(`Bio → ${c.bio.slice(0, 120)}${c.bio.length > 120 ? "…" : ""}`);
   return parts.join(" · ") || "Ndryshim i propozuar";
 }

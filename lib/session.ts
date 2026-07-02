@@ -21,7 +21,13 @@ export async function requireAdmin() {
   if (!user) return null;
   const fresh = await db.user.findUnique({
     where: { id: user.id },
-    select: { id: true, email: true, name: true, isAdmin: true, isBanned: true },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      isAdmin: true,
+      isBanned: true,
+    },
   });
   if (!fresh || !fresh.isAdmin || fresh.isBanned) return null;
   return fresh;

@@ -4,7 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Modal } from "@/components/Modal";
 import { AreaPicker } from "@/components/AreaPicker";
-import { searchExperts, proposeExistingExpert, proposeNewExpert } from "@/app/actions/experts";
+import {
+  searchExperts,
+  proposeExistingExpert,
+  proposeNewExpert,
+} from "@/app/actions/experts";
 import { useToast } from "@/components/Toast";
 import { fieldShort } from "@/lib/fields";
 import { t } from "@/lib/strings";
@@ -28,7 +32,9 @@ export function ProposeExpertButton({
   const [results, setResults] = useState<Result[]>([]);
   const [searching, setSearching] = useState(false);
   const [pending, setPending] = useState(false);
-  const [areas, setAreas] = useState<string[]>(fieldKey && fieldKey !== "other" ? [fieldKey] : []);
+  const [areas, setAreas] = useState<string[]>(
+    fieldKey && fieldKey !== "other" ? [fieldKey] : [],
+  );
 
   if (!loggedIn) {
     return (
@@ -114,7 +120,11 @@ export function ProposeExpertButton({
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className="btn-secondary w-full">
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="btn-secondary w-full"
+      >
         {t.idea.proposeExpert}
       </button>
       <Modal open={open} onClose={close} title={t.idea.proposeExpert}>
@@ -128,7 +138,9 @@ export function ProposeExpertButton({
               placeholder={t.forms.searchExpertPh}
               className="input"
             />
-            {searching && <p className="text-sm text-muted">{t.common.loading}</p>}
+            {searching && (
+              <p className="text-sm text-muted">{t.common.loading}</p>
+            )}
             {results.length > 0 && (
               <ul className="space-y-2">
                 {results.map((r) => (
@@ -157,14 +169,20 @@ export function ProposeExpertButton({
               <p className="text-sm text-muted">{t.forms.noExpertFound}</p>
             )}
             <div className="border-t border-border pt-3">
-              <button type="button" className="btn-primary w-full" onClick={() => setMode("new")}>
+              <button
+                type="button"
+                className="btn-primary w-full"
+                onClick={() => setMode("new")}
+              >
                 {t.forms.proposeNewPerson}
               </button>
             </div>
           </div>
         ) : (
           <form onSubmit={submitNew} className="space-y-4">
-            <p className="rounded-[10px] bg-teal-tint/50 p-3 text-xs text-teal-dk">{t.forms.nominateNote}</p>
+            <p className="rounded-[10px] bg-teal-tint/50 p-3 text-xs text-teal-dk">
+              {t.forms.nominateNote}
+            </p>
             <div>
               <span className="label">{t.forms.expAreas}</span>
               <AreaPicker value={areas} onChange={setAreas} />
@@ -179,19 +197,37 @@ export function ProposeExpertButton({
               <label className="label" htmlFor="nm-bio">
                 {t.forms.nomBio}
               </label>
-              <textarea id="nm-bio" name="bio" required rows={3} className="input resize-y" />
+              <textarea
+                id="nm-bio"
+                name="bio"
+                required
+                rows={3}
+                className="input resize-y"
+              />
             </div>
             <div>
               <label className="label" htmlFor="nm-reason">
                 {t.forms.nomReason}
               </label>
-              <textarea id="nm-reason" name="reason" required rows={2} className="input resize-y" />
+              <textarea
+                id="nm-reason"
+                name="reason"
+                required
+                rows={2}
+                className="input resize-y"
+              />
             </div>
             <div>
               <label className="label" htmlFor="nm-contact">
                 {t.forms.nomContact}
               </label>
-              <input id="nm-contact" name="contact" required className="input" placeholder="Email ose telefon i propozuari" />
+              <input
+                id="nm-contact"
+                name="contact"
+                required
+                className="input"
+                placeholder="Email ose telefon i propozuari"
+              />
               <p className="hint">{t.forms.nomContactHint}</p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -199,26 +235,50 @@ export function ProposeExpertButton({
                 <label className="label" htmlFor="nm-pname">
                   {t.forms.nomProposerName}
                 </label>
-                <input id="nm-pname" name="proposerName" required className="input" />
+                <input
+                  id="nm-pname"
+                  name="proposerName"
+                  required
+                  className="input"
+                />
               </div>
               <div>
                 <label className="label" htmlFor="nm-pcontact">
                   {t.forms.nomProposerContact}
                 </label>
-                <input id="nm-pcontact" name="proposerContact" required className="input" />
+                <input
+                  id="nm-pcontact"
+                  name="proposerContact"
+                  required
+                  className="input"
+                />
               </div>
             </div>
             <div>
               <label className="label" htmlFor="nm-cv">
                 {t.forms.nomCv}
               </label>
-              <input id="nm-cv" name="cv" type="file" accept="application/pdf" className="input" />
+              <input
+                id="nm-cv"
+                name="cv"
+                type="file"
+                accept="application/pdf"
+                className="input"
+              />
             </div>
             <div className="flex justify-between gap-2">
-              <button type="button" onClick={() => setMode("search")} className="btn-ghost">
+              <button
+                type="button"
+                onClick={() => setMode("search")}
+                className="btn-ghost"
+              >
                 ← {t.forms.backToSearch}
               </button>
-              <button type="submit" disabled={pending} className="btn-primary disabled:opacity-60">
+              <button
+                type="submit"
+                disabled={pending}
+                className="btn-primary disabled:opacity-60"
+              >
                 {pending ? t.common.loading : t.forms.nominateSubmit}
               </button>
             </div>

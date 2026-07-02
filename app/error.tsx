@@ -16,7 +16,9 @@ export default function Error({
 
   return (
     <div className="container-pal py-24 text-center">
-      <h1 className="text-2xl font-extrabold tracking-tight">{t.common.errorTitle}</h1>
+      <h1 className="text-2xl font-bold tracking-tight">
+        {t.common.errorTitle}
+      </h1>
       <p className="mt-2 text-muted">{t.common.errorBody}</p>
       <button type="button" onClick={reset} className="btn-primary mt-6">
         {t.common.retry}

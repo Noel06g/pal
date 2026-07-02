@@ -7,7 +7,10 @@ const VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
  * registration/sign-in flow; idea and comment writes are protected by
  * login + per-user rate limits instead.
  */
-export async function verifyTurnstile(token: string | undefined, ip?: string): Promise<boolean> {
+export async function verifyTurnstile(
+  token: string | undefined,
+  ip?: string,
+): Promise<boolean> {
   if (!token) return false;
   const body = new URLSearchParams();
   body.set("secret", env.TURNSTILE_SECRET_KEY);

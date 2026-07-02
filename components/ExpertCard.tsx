@@ -12,7 +12,10 @@ export type ExpertCardData = {
 /** Public expert card — clickable to the profile. ONLY name, areas and bio are ever public. */
 export function ExpertCard({ expert }: { expert: ExpertCardData }) {
   return (
-    <Link href={`/ekspertet/${expert.id}`} className="card card-lift flex h-full flex-col p-5">
+    <Link
+      href={`/ekspertet/${expert.id}`}
+      className="card card-lift flex h-full flex-col p-5"
+    >
       <div className="mb-3 flex flex-wrap gap-1.5">
         {expert.areas.map((a) => (
           <span key={a} className="chip">
@@ -21,8 +24,12 @@ export function ExpertCard({ expert }: { expert: ExpertCardData }) {
         ))}
       </div>
       <h3 className="text-lg font-bold text-ink">{expert.name}</h3>
-      <p className="mt-2 line-clamp-4 flex-1 text-sm leading-relaxed text-muted">{expert.bio}</p>
-      <p className="mt-4 border-t border-border pt-3 text-xs text-muted">{t.experts.privateNote}</p>
+      <p className="mt-2 line-clamp-4 flex-1 text-sm leading-relaxed text-muted">
+        {expert.bio}
+      </p>
+      <p className="mt-4 border-t border-border pt-3 text-xs text-muted">
+        {t.experts.privateNote}
+      </p>
     </Link>
   );
 }

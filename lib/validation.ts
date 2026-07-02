@@ -11,12 +11,16 @@ export const ideaSchema = z
       .trim()
       .min(30, "Përmbledhja duhet të jetë më e detajuar.")
       .max(6000),
-    fieldKey: z.string().refine((k) => FIELD_KEYS.includes(k), "Fushë e pavlefshme."),
+    fieldKey: z
+      .string()
+      .refine((k) => FIELD_KEYS.includes(k), "Fushë e pavlefshme."),
     subfield: z.string().trim().max(120).optional().or(z.literal("")),
     otherText: z.string().trim().max(300).optional().or(z.literal("")),
   })
   .refine(
-    (d) => d.fieldKey !== OTHER_FIELD.key || (d.otherText && d.otherText.length >= 3),
+    (d) =>
+      d.fieldKey !== OTHER_FIELD.key ||
+      (d.otherText && d.otherText.length >= 3),
     { message: "Shpjego fushën kur zgjedh «Tjetër».", path: ["otherText"] },
   )
   // A subfield must belong to the chosen field (never free text).
@@ -43,7 +47,11 @@ const areasField = z
 export const selfRegisterSchema = z.object({
   name: z.string().trim().min(3, "Vendos emër e mbiemër.").max(120),
   areas: areasField,
-  bio: z.string().trim().min(20, "Biografia duhet të jetë më e plotë.").max(3000),
+  bio: z
+    .string()
+    .trim()
+    .min(20, "Biografia duhet të jetë më e plotë.")
+    .max(3000),
   reason: z.string().trim().min(5, "Shkruaj arsyen.").max(2000),
   contact: z.string().trim().min(5, "Vendos një kontakt.").max(200),
 });
@@ -61,7 +69,9 @@ export const nominateNewSchema = z.object({
 });
 
 /** Propose a brand-new person from the experts directory (not tied to an idea). */
-export const nominateNewGeneralSchema = nominateNewSchema.omit({ ideaId: true });
+export const nominateNewGeneralSchema = nominateNewSchema.omit({
+  ideaId: true,
+});
 
 /** Link an existing expert to an idea (optionally suggest a bio edit -> admin queue). */
 export const proposeExistingSchema = z.object({
@@ -74,7 +84,11 @@ export const proposeExistingSchema = z.object({
 export const expertEditSchema = z.object({
   name: z.string().trim().min(3, "Vendos emër e mbiemër.").max(120),
   areas: areasField,
-  bio: z.string().trim().min(20, "Biografia duhet të jetë më e plotë.").max(3000),
+  bio: z
+    .string()
+    .trim()
+    .min(20, "Biografia duhet të jetë më e plotë.")
+    .max(3000),
   contact: z.string().trim().min(5, "Vendos një kontakt.").max(200),
 });
 

@@ -6,7 +6,13 @@ import { addComment } from "@/app/actions/comments";
 import { useToast } from "@/components/Toast";
 import { t } from "@/lib/strings";
 
-export function CommentForm({ ideaId, loggedIn }: { ideaId: string; loggedIn: boolean }) {
+export function CommentForm({
+  ideaId,
+  loggedIn,
+}: {
+  ideaId: string;
+  loggedIn: boolean;
+}) {
   const router = useRouter();
   const toast = useToast();
   const [pending, setPending] = useState(false);
@@ -83,12 +89,20 @@ export function CommentForm({ ideaId, loggedIn }: { ideaId: string; loggedIn: bo
           </div>
         </fieldset>
         <label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium">
-          <input type="checkbox" name="isSolution" className="h-4 w-4 accent-teal" />
+          <input
+            type="checkbox"
+            name="isSolution"
+            className="h-4 w-4 accent-teal"
+          />
           {t.forms.commentIsSolution}
         </label>
       </div>
 
-      <button type="submit" disabled={pending} className="btn-primary disabled:opacity-60">
+      <button
+        type="submit"
+        disabled={pending}
+        className="btn-primary disabled:opacity-60"
+      >
         {pending ? t.common.loading : t.forms.commentSubmit}
       </button>
     </form>

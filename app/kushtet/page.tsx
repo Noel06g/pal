@@ -8,11 +8,12 @@ export default function TermsPage() {
   return (
     <div className="container-pal py-12">
       <div className="mx-auto max-w-2xl">
-        <div className="accent-bar" aria-hidden />
-        <h1 className="text-balance text-4xl font-black tracking-tight">Kushtet e përdorimit</h1>
+        <h1 className="text-balance text-4xl font-bold tracking-tight">
+          Kushtet e përdorimit
+        </h1>
         <p className="mt-3 leading-relaxed text-muted">
-          Duke përdorur {t.site.name}, pranon rregullat e komunitetit më poshtë. {t.site.name} është një
-          nismë e pavarur qytetare.
+          Duke përdorur {t.site.name}, pranon rregullat e komunitetit më poshtë.{" "}
+          {t.site.name} është një nismë e pavarur qytetare.
         </p>
 
         <section className="mt-10">
@@ -29,16 +30,21 @@ export default function TermsPage() {
 
         <section className="mt-10">
           <div className="card border-danger/30 bg-danger-tint/40 p-5">
-            <h2 className="text-lg font-bold text-danger">{t.about.penaltyTitle}</h2>
-            <p className="mt-2 text-sm leading-relaxed text-ink">{t.about.penalty}</p>
+            <h2 className="text-lg font-bold text-danger">
+              {t.about.penaltyTitle}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-ink">
+              {t.about.penalty}
+            </p>
           </div>
         </section>
 
         <section className="mt-10">
           <h2 className="text-xl font-bold">Përmbajtja dhe përgjegjësia</h2>
           <p className="mt-3 leading-relaxed text-muted">
-            Çdo përdorues është përgjegjës për përmbajtjen që publikon. {t.site.name} nuk përfaqëson asnjë
-            parti politike apo institucion dhe nuk garanton zbatimin e ideve. Të gjitha tekstet trajtohen si
+            Çdo përdorues është përgjegjës për përmbajtjen që publikon.{" "}
+            {t.site.name} nuk përfaqëson asnjë parti politike apo institucion
+            dhe nuk garanton zbatimin e ideve. Të gjitha tekstet trajtohen si
             tekst i thjeshtë.
           </p>
         </section>

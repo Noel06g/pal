@@ -33,8 +33,11 @@ export async function deleteAccount(): Promise<ActionResult> {
     select: { id: true, cvStorageKey: true },
   });
   if (profile) {
-    if (profile.cvStorageKey) await deleteObject(profile.cvStorageKey).catch(() => {});
-    await db.expertProfile.delete({ where: { id: profile.id } }).catch(() => {});
+    if (profile.cvStorageKey)
+      await deleteObject(profile.cvStorageKey).catch(() => {});
+    await db.expertProfile
+      .delete({ where: { id: profile.id } })
+      .catch(() => {});
   }
 
   await db.user.delete({ where: { id: user.id } });

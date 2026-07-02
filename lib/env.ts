@@ -55,6 +55,7 @@ export const env = createEnv({
   },
   // Allow `next build` / `next lint` to run without a full env.
   skipValidation:
-    !!process.env.SKIP_ENV_VALIDATION || process.env.npm_lifecycle_event === "lint",
+    !!process.env.SKIP_ENV_VALIDATION ||
+    process.env.npm_lifecycle_event === "lint",
   emptyStringAsUndefined: true,
 });

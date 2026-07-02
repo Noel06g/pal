@@ -19,7 +19,10 @@ function truncate(s: string, n: number) {
 
 export function IdeaCard({ idea }: { idea: IdeaCardData }) {
   return (
-    <Link href={`/idete/${idea.id}`} className="card card-lift flex h-full flex-col p-5">
+    <Link
+      href={`/idete/${idea.id}`}
+      className="card card-lift flex h-full flex-col p-5"
+    >
       <div className="mb-3 flex items-center gap-2">
         <span className="chip">{fieldShort(idea.fieldKey)}</span>
         {idea.archived ? (
@@ -34,11 +37,18 @@ export function IdeaCard({ idea }: { idea: IdeaCardData }) {
       </p>
       <div className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs text-muted">
         <span>
-          {t.ideas.by} <span className="font-medium text-ink">{idea.authorName}</span>
+          {t.ideas.by}{" "}
+          <span className="font-medium text-ink">{idea.authorName}</span>
         </span>
         <span className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1 font-semibold text-teal-dk">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden
+            >
               <path
                 d="M7 12s-5-3.2-5-6.5A2.5 2.5 0 0 1 7 4a2.5 2.5 0 0 1 5 1.5C12 8.8 7 12 7 12Z"
                 stroke="currentColor"
@@ -49,7 +59,13 @@ export function IdeaCard({ idea }: { idea: IdeaCardData }) {
             {idea.supportCount}
           </span>
           <span className="inline-flex items-center gap-1">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden
+            >
               <path
                 d="M2 3.5h10v6H6l-2.5 2v-2H2v-6Z"
                 stroke="currentColor"

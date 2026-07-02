@@ -17,10 +17,18 @@ const message = (o: Outcome) =>
         ? t.experts.confirmAlready
         : t.experts.confirmInvalid;
 
-export function NomineeConfirm({ token, initialAccept }: { token: string; initialAccept?: boolean }) {
+export function NomineeConfirm({
+  token,
+  initialAccept,
+}: {
+  token: string;
+  initialAccept?: boolean;
+}) {
   const router = useRouter();
   const toast = useToast();
-  const [mode, setMode] = useState<"choice" | "accept" | "done">(initialAccept ? "accept" : "choice");
+  const [mode, setMode] = useState<"choice" | "accept" | "done">(
+    initialAccept ? "accept" : "choice",
+  );
   const [outcome, setOutcome] = useState<Outcome>("invalid");
   const [pending, setPending] = useState(false);
 
@@ -64,7 +72,11 @@ export function NomineeConfirm({ token, initialAccept }: { token: string; initia
   }
 
   if (mode === "done") {
-    return <div className="rounded-[10px] bg-teal-tint p-4 text-sm text-teal-dk">{message(outcome)}</div>;
+    return (
+      <div className="rounded-[10px] bg-teal-tint p-4 text-sm text-teal-dk">
+        {message(outcome)}
+      </div>
+    );
   }
 
   if (mode === "accept") {
@@ -75,13 +87,27 @@ export function NomineeConfirm({ token, initialAccept }: { token: string; initia
           <label className="label" htmlFor="cv">
             {t.forms.expCvRequired}
           </label>
-          <input id="cv" name="cv" type="file" accept="application/pdf" className="input" />
+          <input
+            id="cv"
+            name="cv"
+            type="file"
+            accept="application/pdf"
+            className="input"
+          />
         </div>
         <div className="flex gap-2">
-          <button type="button" onClick={() => setMode("choice")} className="btn-ghost">
+          <button
+            type="button"
+            onClick={() => setMode("choice")}
+            className="btn-ghost"
+          >
             {t.common.cancel}
           </button>
-          <button type="submit" disabled={pending} className="btn-primary disabled:opacity-60">
+          <button
+            type="submit"
+            disabled={pending}
+            className="btn-primary disabled:opacity-60"
+          >
             {pending ? t.common.loading : t.experts.confirmAccept}
           </button>
         </div>
@@ -91,10 +117,19 @@ export function NomineeConfirm({ token, initialAccept }: { token: string; initia
 
   return (
     <div className="flex gap-3">
-      <button type="button" onClick={() => setMode("accept")} className="btn-primary">
+      <button
+        type="button"
+        onClick={() => setMode("accept")}
+        className="btn-primary"
+      >
         {t.experts.confirmAccept}
       </button>
-      <button type="button" onClick={reject} disabled={pending} className="btn-danger-soft disabled:opacity-60">
+      <button
+        type="button"
+        onClick={reject}
+        disabled={pending}
+        className="btn-danger-soft disabled:opacity-60"
+      >
         {t.experts.confirmReject}
       </button>
     </div>

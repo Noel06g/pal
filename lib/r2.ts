@@ -41,7 +41,11 @@ export function validatePdf(file: {
   return { ok: true };
 }
 
-export async function putObject(key: string, body: Buffer, contentType: string) {
+export async function putObject(
+  key: string,
+  body: Buffer,
+  contentType: string,
+) {
   await r2.send(
     new PutObjectCommand({
       Bucket: env.S3_BUCKET,
@@ -64,7 +68,11 @@ export async function deleteObject(key: string) {
 }
 
 /** Build a storage key namespaced by category. */
-export function buildKey(category: "idea-docs" | "expert-cv", id: string, fileName: string) {
+export function buildKey(
+  category: "idea-docs" | "expert-cv",
+  id: string,
+  fileName: string,
+) {
   const safe = fileName.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-80);
   return `${category}/${id}/${crypto.randomUUID()}-${safe}`;
 }

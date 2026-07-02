@@ -10,7 +10,9 @@ import { OTHER_FIELD } from "@/lib/fields";
 import { t } from "@/lib/strings";
 import { ok, fail, type ActionResult } from "./_helpers";
 
-export async function createIdea(formData: FormData): Promise<ActionResult<{ id: string }>> {
+export async function createIdea(
+  formData: FormData,
+): Promise<ActionResult<{ id: string }>> {
   const user = await getActiveUser();
   if (!user) return fail(t.common.loginRequired);
 
@@ -35,7 +37,9 @@ export async function createIdea(formData: FormData): Promise<ActionResult<{ id:
     const bytes = Buffer.from(await file.arrayBuffer());
     const check = validatePdf({ type: file.type, size: file.size, bytes });
     if (!check.ok) {
-      return fail(check.reason === "size" ? t.toast.fileTooBig : t.toast.fileNotPdf);
+      return fail(
+        check.reason === "size" ? t.toast.fileTooBig : t.toast.fileNotPdf,
+      );
     }
     prepared.push({ name: file.name, type: file.type, bytes });
   }
@@ -47,7 +51,12 @@ export async function createIdea(formData: FormData): Promise<ActionResult<{ id:
   // Upload to R2 FIRST, then create the idea + documents atomically — a
   // failed upload can no longer leave a half-created idea behind.
   const ideaId = crypto.randomUUID();
-  const uploaded: Array<{ name: string; type: string; key: string; size: number }> = [];
+  const uploaded: Array<{
+    name: string;
+    type: string;
+    key: string;
+    size: number;
+  }> = [];
   try {
     for (const f of prepared) {
       const key = buildKey("idea-docs", ideaId, f.name);
@@ -68,8 +77,11 @@ export async function createIdea(formData: FormData): Promise<ActionResult<{ id:
           summary: input.summary,
           fieldKey: input.fieldKey,
           subfield:
-            input.fieldKey !== OTHER_FIELD.key && input.subfield ? input.subfield : null,
-          otherText: input.fieldKey === OTHER_FIELD.key ? input.otherText : null,
+            input.fieldKey !== OTHER_FIELD.key && input.subfield
+              ? input.subfield
+              : null,
+          otherText:
+            input.fieldKey === OTHER_FIELD.key ? input.otherText : null,
           authorId: user.id,
         },
       }),
