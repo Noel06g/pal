@@ -59,9 +59,12 @@ export const t = {
     whyTitle: "Pse Platforma Shqiptare?",
     why: [
       "Kjo platformë bazohet në një bindje të thjeshtë: Shqipërisë nuk i mungojnë njerëzit e aftë, por mekanizmat që i bëjnë ata të dukshëm, i lidhin me njëri-tjetrin dhe u japin mundësinë të kontribuojnë për të mirën publike. Akademikë, studiues, profesionistë, sipërmarrës, inxhinierë, mjekë, juristë, ekonomistë, pedagogë, artistë, ekspertë të teknologjisë dhe shumë të tjerë përbëjnë një kapital të jashtëzakonshëm njerëzor që meriton të dëgjohet dhe të angazhohet.",
+      "E lidhur me aktualitetin politik të vendit, kjo platformë do të shërbejë edhe si një bazë e rëndësishme e identifikimit të ekspertëve dhe kontribuesve për një qeveri teknike apolitike.",
       "Përmes Platformës Shqiptare, çdo qytetar mund të propozojë ekspertë që i vlerëson për integritetin, profesionalizmin dhe kontributin e tyre, si edhe të paraqesë problematika, ide dhe zgjidhje për çështje që ndikojnë në zhvillimin e vendit. Këto ide diskutohen dhe pasurohen me kontributin e ekspertëve, duke nxitur dialog, bashkëpunim dhe zgjidhje të bazuara në njohuri, përvojë dhe evidencë.",
       "Nëse njeh një ekspert ose eksperte nga Shqipëria apo diaspora që mund të japë një kontribut të vlefshëm për një qeverisje më të mirë, politika publike më efektive dhe zhvillimin e vendit, propozoje në Platformën Shqiptare. Ne do ta kontaktojmë dhe do ta ftojmë të bëhet pjesë e këtij rrjeti kombëtar të ekspertizës.",
     ],
+    whyMore: "Lexo më shumë",
+    whyLess: "Lexo më pak",
   },
 
   ideas: {

@@ -1,4 +1,5 @@
 import { Hero } from "@/components/Hero";
+import { WhySection } from "@/components/WhySection";
 import { t } from "@/lib/strings";
 
 export default function HomePage() {
@@ -7,18 +8,7 @@ export default function HomePage() {
       <Hero />
 
       {/* Pse Platforma Shqiptare? */}
-      <section className="border-b border-border bg-card/60">
-        <div className="container-pal py-14">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.home.whyTitle}</h2>
-            <div className="mt-5 space-y-4 leading-relaxed text-muted">
-              {t.home.why.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <WhySection />
 
       {/* Propozo idenë dhe zgjidhjen tënde */}
       <section className="container-pal py-14">
