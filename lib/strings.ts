@@ -38,8 +38,7 @@ export const t = {
     howTitle: "Propozo idenë dhe zgjidhjen tënde",
     how: [
       {
-        // Step 1 carries no title — the section heading above it IS the title.
-        title: "",
+        title: "Propozo një ide",
         body: "Përshkruaj problemin dhe zgjidhjen që propozon, zgjedh një fushë dhe, nëse do, ngarko dokumente mbështetëse.",
       },
       {
