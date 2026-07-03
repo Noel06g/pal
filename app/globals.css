@@ -25,13 +25,13 @@
   *::after {
     border-radius: 0 !important;
   }
-  /* Visible, consistent focus for keyboard users: a stamp-blue outline. */
+  /* Visible, consistent focus for keyboard users: a stamp-red outline. */
   :focus-visible {
-    outline: 2px solid #0000ff;
+    outline: 2px solid #871d1d;
     outline-offset: 2px;
   }
   ::selection {
-    background: #e2e2f7;
+    background: #f2d8d3;
   }
 }
 

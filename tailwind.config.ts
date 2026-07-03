@@ -1,16 +1,16 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Document-style design system ("printed monograph"):
- * paper white canvas, ink text, warm hairline borders, underlined indigo
- * links, a pure-blue square stamp as the only brand mark. No radii, no
+ * Document-style design system ("printed monograph"), Albanian palette:
+ * cream paper canvas, ink text, warm hairline borders, underlined deep-red
+ * links, a flag-red square stamp as the only brand mark. No radii, no
  * shadows, no webfonts. Chromatic color is reserved for illustration.
  *
  * Legacy token names (teal/paper/card/…) are kept and remapped so existing
  * component classes pick up the new system without churn:
- *   teal      → indigo link  (#555abf)
- *   teal-dk   → stamp blue   (#0000ff)  — hover/active end of the link family
- *   teal-tint → paper-warm wash
+ *   teal      → brand red (#871d1d, sampled from the logo)
+ *   teal-dk   → darker red (#5e1112) — hover/active end of the link family
+ *   teal-tint → warm red wash
  *   danger    → ember        (#eb5e28)
  */
 const config: Config = {
@@ -22,29 +22,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#222222",
-        paper: "#FFFFFF",
-        card: "#FFFFFF",
-        border: "#D8D4CF",
-        muted: "#555555",
+        ink: "#1C1917",
+        paper: "#F4EFE6",
+        card: "#FBF8F1",
+        border: "#DCD5C6",
+        muted: "#6B6459",
         teal: {
-          DEFAULT: "#555ABF",
-          dk: "#0000FF",
-          tint: "#F5F4F0",
+          DEFAULT: "#871D1D",
+          dk: "#5E1112",
+          tint: "#F3E4DD",
         },
-        stamp: "#0000FF",
+        stamp: "#871D1D",
         danger: {
           DEFAULT: "#EB5E28",
           tint: "#FDEFE8",
         },
-        ok: "#222222",
+        ok: "#1C1917",
         amber: "#9A6B16",
-        // Illustration-only palette (never for UI chrome).
-        cobalt: "#276BAA",
-        sky: "#2181C2",
-        navy: "#000080",
-        amberflow: "#FCD669",
-        tangerine: "#F79A59",
       },
       borderRadius: {
         DEFAULT: "0px",

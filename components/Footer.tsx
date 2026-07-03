@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { t } from "@/lib/strings";
 
 export function Footer() {
@@ -7,17 +8,13 @@ export function Footer() {
       <div className="container-pal py-12">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-sm">
-            <div className="flex items-center gap-3">
-              <span
-                className="flex h-8 w-8 shrink-0 items-center justify-center bg-stamp text-[12px] font-bold tracking-wide text-white"
-                aria-hidden
-              >
-                PS
-              </span>
-              <span className="text-base font-semibold tracking-tight text-ink">
-                {t.site.name}
-              </span>
-            </div>
+            <Image
+              src="/logo.png"
+              alt={t.site.name}
+              width={371}
+              height={160}
+              className="h-11 w-auto"
+            />
             <p className="mt-3 text-sm text-muted">{t.site.footerNote}</p>
           </div>
           <nav

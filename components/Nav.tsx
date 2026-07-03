@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { NotificationsBell } from "@/components/NotificationsBell";
 import { doSignOut } from "@/app/actions/auth";
@@ -21,18 +22,6 @@ const links = [
   { href: "/ekspertet", label: t.nav.experts },
   { href: "/idete", label: t.nav.ideas },
 ];
-
-/** The only brand graphic on the site: a pure-blue square stamp. */
-function Stamp() {
-  return (
-    <span
-      className="flex h-8 w-8 shrink-0 items-center justify-center bg-stamp text-[12px] font-bold tracking-wide text-white"
-      aria-hidden
-    >
-      PS
-    </span>
-  );
-}
 
 export function Nav({
   user,
@@ -70,11 +59,15 @@ export function Nav({
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-paper">
       <div className="container-pal flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="flex shrink-0 items-center gap-3">
-          <Stamp />
-          <span className="hidden text-base font-semibold leading-none tracking-tight text-ink sm:inline">
-            {t.site.name}
-          </span>
+        <Link href="/" className="flex shrink-0 items-center">
+          <Image
+            src="/logo.png"
+            alt={t.site.name}
+            width={371}
+            height={160}
+            priority
+            className="h-10 w-auto"
+          />
         </Link>
 
         {/* Desktop nav — underlined document links. */}

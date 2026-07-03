@@ -15,26 +15,26 @@ function layout(opts: {
   const { heading, body, cta } = opts;
   return `<!doctype html>
 <html lang="sq">
-  <body style="margin:0;background:#F5F4F0;font-family:-apple-system,'Segoe UI',Arial,Helvetica,sans-serif;color:#222222;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F5F4F0;padding:32px 16px;">
+  <body style="margin:0;background:#F4EFE6;font-family:-apple-system,'Segoe UI',Arial,Helvetica,sans-serif;color:#1C1917;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4EFE6;padding:32px 16px;">
       <tr><td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#FFFFFF;border:1px solid #D8D4CF;overflow:hidden;">
-          <tr><td style="padding:24px 28px;border-bottom:1px solid #D8D4CF;">
-            <span style="font-weight:700;font-size:20px;letter-spacing:-0.5px;color:#0000FF;">${BRAND}</span>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#FBF8F1;border:1px solid #DCD5C6;overflow:hidden;">
+          <tr><td style="padding:24px 28px;border-bottom:1px solid #DCD5C6;">
+            <span style="font-weight:700;font-size:20px;letter-spacing:-0.5px;color:#871D1D;">${BRAND}</span>
           </td></tr>
           <tr><td style="padding:28px;">
-            <h1 style="margin:0 0 12px;font-size:20px;line-height:1.3;color:#222222;">${heading}</h1>
-            <div style="font-size:15px;line-height:1.6;color:#222222;">${body}</div>
+            <h1 style="margin:0 0 12px;font-size:20px;line-height:1.3;color:#1C1917;">${heading}</h1>
+            <div style="font-size:15px;line-height:1.6;color:#1C1917;">${body}</div>
             ${
               cta
                 ? `<div style="margin:24px 0 8px;">
-                     <a href="${cta.href}" style="display:inline-block;background:#0000FF;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;">${cta.label}</a>
+                     <a href="${cta.href}" style="display:inline-block;background:#871D1D;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;">${cta.label}</a>
                    </div>
-                   <p style="font-size:12px;color:#555555;margin:12px 0 0;word-break:break-all;">Ose kopjo këtë lidhje: ${cta.href}</p>`
+                   <p style="font-size:12px;color:#6B6459;margin:12px 0 0;word-break:break-all;">Ose kopjo këtë lidhje: ${cta.href}</p>`
                 : ""
             }
           </td></tr>
-          <tr><td style="padding:18px 28px;border-top:1px solid #D8D4CF;font-size:12px;color:#555555;">
+          <tr><td style="padding:18px 28px;border-top:1px solid #DCD5C6;font-size:12px;color:#6B6459;">
             ${BRAND} — Nismë e pavarur qytetare.
           </td></tr>
         </table>
@@ -85,7 +85,7 @@ function twoButtons(
   rejectLabel = "Refuzo",
 ) {
   return `<div>
-    <a href="${acceptHref}" style="display:inline-block;background:#0000FF;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;margin-right:8px;">${acceptLabel}</a>
+    <a href="${acceptHref}" style="display:inline-block;background:#871D1D;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 22px;margin-right:8px;">${acceptLabel}</a>
     <a href="${rejectHref}" style="display:inline-block;background:#ffffff;border:1px solid #EB5E28;color:#EB5E28;text-decoration:none;font-weight:600;font-size:15px;padding:11px 21px;">${rejectLabel}</a>
   </div>`;
 }
@@ -105,7 +105,7 @@ export async function sendIdeaInviteEmail(
            <p style="margin:0 0 12px;">Je propozuar si ekspert për idenë «<strong>${escapeHtml(ideaTitle)}</strong>» në ${BRAND}.</p>
            <p style="margin:0 0 16px;">Duke pranuar, kontakti yt i jepet autorit të idesë dhe ti merr kontaktin e tij, që të bisedoni jashtë platformës.</p>
            ${twoButtons(acceptHref, rejectHref)}
-           <p style="font-size:12px;color:#555555;margin:16px 0 0;">Nëse nuk e ke pritur këtë email, thjesht injoroje ose kliko “Refuzo”.</p>`,
+           <p style="font-size:12px;color:#6B6459;margin:16px 0 0;">Nëse nuk e ke pritur këtë email, thjesht injoroje ose kliko “Refuzo”.</p>`,
   });
   await send(to, `Je propozuar si ekspert për «${ideaTitle}»`, html);
 }
@@ -124,7 +124,7 @@ export async function sendNomineeConfirmEmail(
            <p style="margin:0 0 12px;">Dikush të ka propozuar si ekspert në ${BRAND}.</p>
            <p style="margin:0 0 16px;">Nëse <strong>pranon</strong>, emri, fushat dhe biografia jote bëhen publike pas shqyrtimit nga administrata. Kontakti dhe CV-ja mbeten <strong>private</strong> (vetëm administratorët e faqes). Në faqen e konfirmimit mund të ngarkosh CV-në dhe të krijosh një llogari.</p>
            ${twoButtons(acceptHref, rejectHref)}
-           <p style="font-size:12px;color:#555555;margin:16px 0 0;">Nëse nuk e ke pritur këtë email, thjesht injoroje ose kliko “Refuzo”.</p>`,
+           <p style="font-size:12px;color:#6B6459;margin:16px 0 0;">Nëse nuk e ke pritur këtë email, thjesht injoroje ose kliko “Refuzo”.</p>`,
   });
   await send(to, `Je propozuar si ekspert në ${BRAND}`, html);
 }
