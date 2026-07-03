@@ -53,14 +53,14 @@ export default async function ExpertsPage({
       </div>
 
       {/* Area filter */}
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="stagger-in mb-6 flex flex-wrap gap-2">
         <Link
           href="/ekspertet"
           className={[
-            "rounded-full px-3 py-1.5 text-sm font-medium",
+            "rounded-full border px-3 py-1.5 text-sm font-medium transition-all hover:scale-105",
             !activeField
-              ? "bg-ink text-white"
-              : "border border-border bg-card text-ink hover:border-ink",
+              ? "border-ink bg-ink text-white"
+              : "border-border bg-card text-ink hover:border-ink",
           ].join(" ")}
         >
           {t.experts.filterAll}
@@ -72,11 +72,16 @@ export default async function ExpertsPage({
             <Link
               key={f.key}
               href={`/ekspertet?fusha=${f.key}`}
-              className="rounded-full border px-3 py-1.5 text-sm font-medium transition-colors"
+              className="tint rounded-full border px-3 py-1.5 text-sm font-medium transition-all hover:scale-105"
               style={
                 active
                   ? { backgroundColor: c.fg, borderColor: c.fg, color: "#fff" }
-                  : { borderColor: c.border, color: c.fg, backgroundColor: c.bg }
+                  : ({
+                      borderColor: c.border,
+                      color: c.fg,
+                      "--tint-bg": c.bg,
+                      "--tint-bg-hover": c.bgHover,
+                    } as React.CSSProperties)
               }
             >
               {f.name.split(",")[0]}

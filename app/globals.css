@@ -45,9 +45,9 @@
     @apply max-w-[560px];
   }
 
-  /* Buttons are outlined, never filled at rest; hover inverts. */
+  /* Buttons are outlined, never filled at rest; hover inverts and lifts slightly. */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 border px-4 py-2.5 text-sm font-semibold transition-colors;
+    @apply inline-flex items-center justify-center gap-2 border px-4 py-2.5 text-sm font-semibold transition-all hover:scale-[1.03] active:scale-[0.98];
   }
   .btn-primary {
     @apply btn border-stamp bg-paper text-stamp hover:bg-stamp hover:text-white;
@@ -70,11 +70,25 @@
     @apply border border-border bg-card;
   }
   .card-lift {
-    @apply transition-all duration-200 hover:-translate-y-0.5 hover:border-ink;
+    @apply transition-all duration-200 hover:-translate-y-1 hover:scale-[1.015] hover:border-ink;
   }
 
   .chip {
-    @apply inline-flex items-center gap-1 border border-border bg-paper px-2.5 py-1 text-xs font-medium text-ink;
+    @apply inline-flex items-center gap-1 border border-border bg-paper px-2.5 py-1 text-xs font-medium text-ink transition-colors;
+  }
+
+  /* Field-tinted surface: colors set per-instance via CSS custom properties
+     so one rule serves cards, pills and filter rows alike. */
+  .tint {
+    background-color: var(--tint-bg, transparent);
+    border-color: var(--tint-border, #dcd5c6);
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease;
+  }
+  .tint:hover {
+    background-color: var(--tint-bg-hover, var(--tint-bg, transparent));
   }
 
   .input {

@@ -58,7 +58,7 @@ export default async function ExpertProfilePage({
         ← {t.experts.title}
       </Link>
 
-      <div className="mt-4 max-w-3xl">
+      <div className="animate-fade-up mt-4 max-w-3xl">
         <div className="mb-3 flex flex-wrap gap-1.5">
           {expert.areas.map((a) => (
             <FieldChip key={a} fieldKey={a} />

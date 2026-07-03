@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FIELDS, OTHER_FIELD, fieldName } from "@/lib/fields";
+import { fieldColor } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
 
 /**
@@ -31,10 +32,8 @@ export function FieldFilter({
 
   const itemClass = (active: boolean) =>
     [
-      "block rounded-md px-3 py-2 text-sm leading-snug",
-      active
-        ? "bg-teal-tint font-semibold text-ink"
-        : "text-ink hover:bg-teal-tint",
+      "tint block border-l-4 border-transparent px-3 py-2 text-sm leading-snug transition-all",
+      active ? "font-semibold text-ink" : "text-ink",
     ].join(" ");
 
   return (
@@ -73,32 +72,44 @@ export function FieldFilter({
         <h2 className="mb-3 hidden text-sm font-bold uppercase tracking-wide text-muted lg:block">
           {t.ideas.filterTitle}
         </h2>
-        <ul className="space-y-1">
+        <ul className="stagger-in space-y-1">
           <li>
             <Link
               href={filterHref(null)}
               onClick={() => setOpen(false)}
-              className={itemClass(!activeField)}
+              className="block border-l-4 border-transparent px-3 py-2 text-sm leading-snug text-ink transition-all hover:bg-teal-tint"
             >
               {t.ideas.filterAll}
             </Link>
           </li>
-          {FIELDS.map((f) => (
-            <li key={f.key}>
-              <Link
-                href={filterHref(f.key)}
-                onClick={() => setOpen(false)}
-                className={itemClass(activeField === f.key)}
-              >
-                {f.n}. {f.name}
-              </Link>
-            </li>
-          ))}
+          {FIELDS.map((f) => {
+            const c = fieldColor(f.key);
+            const active = activeField === f.key;
+            return (
+              <li key={f.key}>
+                <Link
+                  href={filterHref(f.key)}
+                  onClick={() => setOpen(false)}
+                  className={itemClass(active)}
+                  style={
+                    {
+                      borderLeftColor: active ? c.fg : "transparent",
+                      color: c.fg,
+                      "--tint-bg": active ? c.bgHover : c.bg,
+                      "--tint-bg-hover": c.bgHover,
+                    } as React.CSSProperties
+                  }
+                >
+                  {f.n}. {f.name}
+                </Link>
+              </li>
+            );
+          })}
           <li>
             <Link
               href={filterHref(OTHER_FIELD.key)}
               onClick={() => setOpen(false)}
-              className={itemClass(activeField === OTHER_FIELD.key)}
+              className="block border-l-4 border-transparent px-3 py-2 text-sm leading-snug text-ink transition-all hover:bg-teal-tint"
             >
               {OTHER_FIELD.name}
             </Link>

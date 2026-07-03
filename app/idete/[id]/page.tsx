@@ -118,7 +118,7 @@ export default async function IdeaDetailPage({
 
       <div className="mt-4 grid gap-8 lg:grid-cols-[1fr_300px]">
         {/* Main column */}
-        <article>
+        <article className="animate-fade-up">
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <FieldChip fieldKey={idea.fieldKey} full />
             {isArchived ? (
@@ -218,7 +218,10 @@ export default async function IdeaDetailPage({
         </article>
 
         {/* Sidebar */}
-        <aside className="space-y-5 lg:sticky lg:top-20 lg:self-start">
+        <aside
+          className="animate-fade-up space-y-5 lg:sticky lg:top-20 lg:self-start"
+          style={{ animationDelay: "120ms" }}
+        >
           <div className="card space-y-3 p-5">
             <div className="text-center">
               <div className="text-3xl font-bold text-teal">

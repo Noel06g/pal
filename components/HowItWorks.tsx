@@ -78,8 +78,8 @@ function StepArrow({
   markerId: string;
 }) {
   return (
-    <div className="hidden sm:block" style={{ marginTop: 25 }} aria-hidden>
-      <svg viewBox="0 0 64 28" width="68" height="30" fill="none">
+    <div className="hidden sm:block" style={{ marginTop: 39 }} aria-hidden>
+      <svg viewBox="0 0 64 28" width="76" height="34" fill="none">
         <defs>
           <marker
             id={markerId}
@@ -182,8 +182,8 @@ export function HowItWorks() {
               ].join(" ")}
               style={{ transitionDelay: `${i * 220}ms` }}
             >
-              <span className="flex h-20 w-20 shrink-0 items-center justify-center border border-ink text-ink">
-                <Icon className="h-10 w-10" />
+              <span className="flex h-28 w-28 shrink-0 items-center justify-center border border-ink text-ink">
+                <Icon className="h-14 w-14" />
               </span>
               <div>
                 <h3 className="text-lg font-semibold text-ink">

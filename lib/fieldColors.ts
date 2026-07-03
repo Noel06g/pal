@@ -26,10 +26,10 @@ const COLORS: Record<string, FieldColor> = Object.fromEntries(
     return [
       f.key,
       {
-        fg: `hsl(${h} 55% 30%)`,
-        border: `hsl(${h} 45% 40% / 45%)`,
-        bg: `hsl(${h} 45% 40% / 8%)`,
-        bgHover: `hsl(${h} 45% 40% / 16%)`,
+        fg: `hsl(${h} 58% 28%)`,
+        border: `hsl(${h} 50% 42% / 50%)`,
+        bg: `hsl(${h} 55% 45% / 16%)`,
+        bgHover: `hsl(${h} 55% 45% / 30%)`,
       } satisfies FieldColor,
     ];
   }),

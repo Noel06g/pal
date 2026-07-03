@@ -23,8 +23,14 @@ export function IdeaCard({ idea }: { idea: IdeaCardData }) {
   return (
     <Link
       href={`/idete/${idea.id}`}
-      className="card card-lift flex h-full flex-col border-l-4 p-5"
-      style={{ borderLeftColor: color.fg }}
+      className="card card-lift tint flex h-full flex-col border-l-4 p-5"
+      style={
+        {
+          borderLeftColor: color.fg,
+          "--tint-bg": color.bg,
+          "--tint-bg-hover": color.bgHover,
+        } as React.CSSProperties
+      }
     >
       <div className="mb-3 flex items-center gap-2">
         <FieldChip fieldKey={idea.fieldKey} />
