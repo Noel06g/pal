@@ -1,7 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { FIELDS } from "@/lib/fields";
+import { fieldColor } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
+
+// Three well-spread hues from the field palette — always visible, no
+// dependency on live data.
+const STEP_COLORS = [
+  fieldColor(FIELDS[0]!.key),
+  fieldColor(FIELDS[6]!.key),
+  fieldColor(FIELDS[12]!.key),
+];
 
 function IdeaIcon({ className }: { className?: string }) {
   return (
@@ -172,6 +182,7 @@ export function HowItWorks() {
     >
       {steps.map((step, i) => {
         const Icon = ICONS[i]!;
+        const color = STEP_COLORS[i]!;
         return (
           <div className="contents" key={i}>
             <div
@@ -182,7 +193,14 @@ export function HowItWorks() {
               ].join(" ")}
               style={{ transitionDelay: `${i * 220}ms` }}
             >
-              <span className="flex h-28 w-28 shrink-0 items-center justify-center border border-ink text-ink">
+              <span
+                className="flex h-28 w-28 shrink-0 items-center justify-center border"
+                style={{
+                  borderColor: color.fg,
+                  backgroundColor: color.bg,
+                  color: color.fg,
+                }}
+              >
                 <Icon className="h-14 w-14" />
               </span>
               <div>

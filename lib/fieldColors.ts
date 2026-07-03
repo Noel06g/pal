@@ -46,3 +46,16 @@ const FALLBACK: FieldColor = {
 export function fieldColor(key: string): FieldColor {
   return COLORS[key] ?? FALLBACK;
 }
+
+/**
+ * A soft multi-hue gradient sweeping across the whole field palette, for
+ * decorative section backgrounds — content-independent, always visible.
+ */
+export function paletteGradient(alpha = 10): string {
+  const stops = FIELDS.map((f, i) => {
+    const h = hueFor(i, FIELDS.length);
+    const pct = (i / (FIELDS.length - 1)) * 100;
+    return `hsl(${h} 60% 50% / ${alpha}%) ${pct.toFixed(1)}%`;
+  });
+  return `linear-gradient(90deg, ${stops.join(", ")})`;
+}

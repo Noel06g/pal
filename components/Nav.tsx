@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { NotificationsBell } from "@/components/NotificationsBell";
 import { doSignOut } from "@/app/actions/auth";
+import { paletteGradient } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
 
 type NavUser = { name: string; isAdmin: boolean } | null;
@@ -58,6 +59,11 @@ export function Nav({
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-paper">
+      <div
+        className="h-[3px] w-full"
+        style={{ backgroundImage: paletteGradient(85) }}
+        aria-hidden
+      />
       <div className="container-pal flex h-16 items-center justify-between gap-4">
         <Link href="/" className="flex shrink-0 items-center">
           <Image
