@@ -1,16 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FIELDS } from "@/lib/fields";
-import { fieldColor } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
 
-// Three well-spread hues from the field palette — always visible, no
-// dependency on live data.
+// Three shades of the brand red — stays on the single-color identity
+// instead of pulling in unrelated hues.
 const STEP_COLORS = [
-  fieldColor(FIELDS[0]!.key),
-  fieldColor(FIELDS[6]!.key),
-  fieldColor(FIELDS[12]!.key),
+  { fg: "#B71C1C", bg: "rgba(183,28,28,0.08)" },
+  { fg: "#D32F2F", bg: "rgba(211,47,47,0.08)" },
+  { fg: "#F44336", bg: "rgba(244,67,54,0.10)" },
 ];
 
 function IdeaIcon({ className }: { className?: string }) {
@@ -100,12 +98,12 @@ function StepArrow({
             markerHeight="4.5"
             orient="auto-start-reverse"
           >
-            <path d="M0 0L10 5L0 10z" fill="#871D1D" />
+            <path d="M0 0L10 5L0 10z" fill="#B71C1C" />
           </marker>
         </defs>
         <path
           d="M2 22C18 22 22 6 60 6"
-          stroke="#871D1D"
+          stroke="#B71C1C"
           strokeWidth="2"
           strokeLinecap="round"
           markerEnd={`url(#${markerId})`}

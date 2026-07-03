@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
 import { HeroIllustration } from "@/components/HeroIllustration";
-import { paletteGradient } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
+
+// Soft red glow in the corners, fading into the page — not a rainbow wash.
+const HERO_BACKGROUND =
+  "radial-gradient(900px 500px at 88% 8%, rgba(183,28,28,0.10), transparent 60%), " +
+  "radial-gradient(700px 420px at 4% 100%, rgba(211,47,47,0.06), transparent 60%)";
 
 export type HeroStats = { ideas: number; experts: number } | null;
 
@@ -24,7 +28,7 @@ export function Hero({ stats }: { stats?: HeroStats }) {
     <section className="relative overflow-hidden">
       <div
         className="absolute inset-0 -z-10"
-        style={{ backgroundImage: paletteGradient(9) }}
+        style={{ backgroundImage: HERO_BACKGROUND }}
         aria-hidden
       />
       <div className="container-pal py-16 sm:py-24">

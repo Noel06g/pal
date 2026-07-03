@@ -23,16 +23,16 @@ export function HeroIllustration({
     >
       <defs>
         <linearGradient id="blk1" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#A32A2A" />
-          <stop offset="1" stopColor="#871D1D" />
+          <stop offset="0" stopColor="#F44336" />
+          <stop offset="1" stopColor="#B71C1C" />
         </linearGradient>
         <linearGradient id="blk2" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#871D1D" />
-          <stop offset="1" stopColor="#4E0E0E" />
+          <stop offset="0" stopColor="#B71C1C" />
+          <stop offset="1" stopColor="#520D0D" />
         </linearGradient>
         <linearGradient id="blk3" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#A32A2A" />
-          <stop offset="1" stopColor="#5E1112" />
+          <stop offset="0" stopColor="#F44336" />
+          <stop offset="1" stopColor="#771212" />
         </linearGradient>
         <marker
           id="tipAmber"
@@ -43,7 +43,7 @@ export function HeroIllustration({
           markerHeight="5"
           orient="auto-start-reverse"
         >
-          <path d="M0 0L10 5L0 10z" fill="#1C1917" />
+          <path d="M0 0L10 5L0 10z" fill="#111111" />
         </marker>
         <marker
           id="tipTangerine"
@@ -54,7 +54,7 @@ export function HeroIllustration({
           markerHeight="5"
           orient="auto-start-reverse"
         >
-          <path d="M0 0L10 5L0 10z" fill="#C8102E" />
+          <path d="M0 0L10 5L0 10z" fill="#D32F2F" />
         </marker>
       </defs>
 
@@ -71,14 +71,14 @@ export function HeroIllustration({
       {/* Flowing arrows sweeping lower-left → upper-right */}
       <path
         d="M20 330 C 90 320, 120 260, 150 210 S 230 110, 305 76"
-        stroke="#1C1917"
+        stroke="#111111"
         strokeWidth="7"
         strokeLinecap="round"
         markerEnd="url(#tipAmber)"
       />
       <path
         d="M60 344 C 150 336, 190 280, 216 236 S 280 150, 336 118"
-        stroke="#C8102E"
+        stroke="#D32F2F"
         strokeWidth="5"
         strokeLinecap="round"
         markerEnd="url(#tipTangerine)"

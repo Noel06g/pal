@@ -36,8 +36,8 @@ const COLORS: Record<string, FieldColor> = Object.fromEntries(
 );
 
 const FALLBACK: FieldColor = {
-  fg: "#6B6459",
-  border: "#DCD5C6",
+  fg: "#6B6B6B",
+  border: "#EAEAEA",
   bg: "transparent",
   bgHover: "transparent",
 };

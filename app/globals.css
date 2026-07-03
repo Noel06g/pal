@@ -27,11 +27,11 @@
   }
   /* Visible, consistent focus for keyboard users: a stamp-red outline. */
   :focus-visible {
-    outline: 2px solid #871d1d;
+    outline: 2px solid #b71c1c;
     outline-offset: 2px;
   }
   ::selection {
-    background: #f2d8d3;
+    background: #f6dfdf;
   }
 }
 

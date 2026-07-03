@@ -1,17 +1,18 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Document-style design system ("printed monograph"), Albanian palette:
- * cream paper canvas, ink text, warm hairline borders, underlined deep-red
- * links, a flag-red square stamp as the only brand mark. No radii, no
- * shadows, no webfonts. Chromatic color is reserved for illustration.
+ * Document-style design system ("printed monograph"), crimson palette:
+ * clean off-white canvas, near-black text, neutral-gray hairline borders,
+ * underlined crimson links, a red square stamp as the only brand mark.
+ * No radii, no shadows, no webfonts. Chromatic color is reserved for
+ * illustration.
  *
  * Legacy token names (teal/paper/card/…) are kept and remapped so existing
  * component classes pick up the new system without churn:
- *   teal      → brand red (#871d1d, sampled from the logo)
- *   teal-dk   → darker red (#5e1112) — hover/active end of the link family
+ *   teal      → primary crimson (#b71c1c)
+ *   teal-dk   → secondary red (#d32f2f) — hover/active end of the link family
  *   teal-tint → warm red wash
- *   danger    → ember        (#eb5e28)
+ *   danger    → accent highlight red (#f44336)
  */
 const config: Config = {
   content: [
@@ -22,22 +23,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#1C1917",
-        paper: "#F4EFE6",
-        card: "#FBF8F1",
-        border: "#DCD5C6",
-        muted: "#6B6459",
+        ink: "#111111",
+        paper: "#F8F8F8",
+        card: "#FFFFFF",
+        border: "#EAEAEA",
+        muted: "#6B6B6B",
         teal: {
-          DEFAULT: "#871D1D",
-          dk: "#5E1112",
-          tint: "#F3E4DD",
+          DEFAULT: "#B71C1C",
+          dk: "#D32F2F",
+          tint: "#F6DFDF",
         },
-        stamp: "#871D1D",
+        stamp: "#B71C1C",
         danger: {
-          DEFAULT: "#EB5E28",
-          tint: "#FDEFE8",
+          DEFAULT: "#F44336",
+          tint: "#FDE8E6",
         },
-        ok: "#1C1917",
+        ok: "#111111",
         amber: "#9A6B16",
       },
       borderRadius: {

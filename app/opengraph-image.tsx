@@ -25,8 +25,8 @@ export default async function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "88px",
-          background: "#F4EFE6",
-          color: "#1C1917",
+          background: "#F8F8F8",
+          color: "#111111",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -36,19 +36,19 @@ export default async function OpengraphImage() {
             marginTop: 56,
             fontSize: 46,
             fontWeight: 600,
-            color: "#1C1917",
+            color: "#111111",
           }}
         >
           {t.site.tagline}
         </div>
-        <div style={{ marginTop: 20, fontSize: 30, color: "#6B6459" }}>
+        <div style={{ marginTop: 20, fontSize: 30, color: "#6B6B6B" }}>
           {t.site.footerNote}
         </div>
         <div
           style={{
             marginTop: 64,
             fontSize: 26,
-            color: "#871D1D",
+            color: "#B71C1C",
             textDecoration: "underline",
           }}
         >
