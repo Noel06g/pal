@@ -10,7 +10,7 @@ import { ProposeExpertButton } from "@/components/ProposeExpertButton";
 import { ConfirmTakeoverButton } from "@/components/ConfirmTakeoverButton";
 import { CommentList, type CommentData } from "@/components/CommentList";
 import { CommentForm } from "@/components/CommentForm";
-import { fieldName } from "@/lib/fields";
+import { FieldChip } from "@/components/FieldChip";
 import { t } from "@/lib/strings";
 
 function fmtDate(d: Date) {
@@ -120,7 +120,7 @@ export default async function IdeaDetailPage({
         {/* Main column */}
         <article>
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <span className="chip">{fieldName(idea.fieldKey)}</span>
+            <FieldChip fieldKey={idea.fieldKey} full />
             {isArchived ? (
               <span className="badge-muted">{t.ideas.statusArchived}</span>
             ) : (

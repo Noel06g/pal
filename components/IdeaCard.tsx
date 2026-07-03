@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { fieldShort } from "@/lib/fields";
+import { FieldChip } from "@/components/FieldChip";
+import { fieldColor } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
 
 export type IdeaCardData = {
@@ -18,13 +19,15 @@ function truncate(s: string, n: number) {
 }
 
 export function IdeaCard({ idea }: { idea: IdeaCardData }) {
+  const color = fieldColor(idea.fieldKey);
   return (
     <Link
       href={`/idete/${idea.id}`}
-      className="card card-lift flex h-full flex-col p-5"
+      className="card card-lift flex h-full flex-col border-l-4 p-5"
+      style={{ borderLeftColor: color.fg }}
     >
       <div className="mb-3 flex items-center gap-2">
-        <span className="chip">{fieldShort(idea.fieldKey)}</span>
+        <FieldChip fieldKey={idea.fieldKey} />
         {idea.archived ? (
           <span className="badge-muted">{t.ideas.statusArchived}</span>
         ) : (

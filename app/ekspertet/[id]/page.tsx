@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
-import { fieldName, fieldShort } from "@/lib/fields";
+import { FieldChip } from "@/components/FieldChip";
+import { fieldName } from "@/lib/fields";
+import { fieldColor } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
 
 // Always render fresh: profiles get published/edited/removed by admin actions
@@ -59,9 +61,7 @@ export default async function ExpertProfilePage({
       <div className="mt-4 max-w-3xl">
         <div className="mb-3 flex flex-wrap gap-1.5">
           {expert.areas.map((a) => (
-            <span key={a} className="chip">
-              {fieldShort(a)}
-            </span>
+            <FieldChip key={a} fieldKey={a} />
           ))}
         </div>
         <h1 className="text-3xl font-bold tracking-tight">{expert.name}</h1>
@@ -83,7 +83,8 @@ export default async function ExpertProfilePage({
             {expert.areas.map((a) => (
               <li
                 key={a}
-                className="rounded-[10px] border border-border bg-card px-3 py-1.5 text-sm"
+                className="border border-border border-l-4 bg-card px-3 py-1.5 text-sm"
+                style={{ borderLeftColor: fieldColor(a).fg }}
               >
                 {fieldName(a)}
               </li>
@@ -103,7 +104,7 @@ export default async function ExpertProfilePage({
                     href={`/idete/${l.idea.id}`}
                     className="flex items-center gap-2 rounded-[10px] border border-border bg-card px-3 py-2.5 text-sm hover:border-teal/40"
                   >
-                    <span className="chip">{fieldShort(l.idea.fieldKey)}</span>
+                    <FieldChip fieldKey={l.idea.fieldKey} />
                     <span className="font-medium text-ink">{l.idea.title}</span>
                   </Link>
                 </li>

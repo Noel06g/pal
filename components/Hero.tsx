@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AnimatedNumber } from "@/components/AnimatedNumber";
 import { HeroIllustration } from "@/components/HeroIllustration";
 import { t } from "@/lib/strings";
 
@@ -8,7 +9,9 @@ function Stat({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col">
       <dt className="order-2 text-sm text-muted">{label}</dt>
-      <dd className="order-1 text-2xl font-bold text-ink">{value}</dd>
+      <dd className="order-1 text-2xl font-bold text-stamp">
+        <AnimatedNumber value={value} />
+      </dd>
     </div>
   );
 }
@@ -19,7 +22,7 @@ export function Hero({ stats }: { stats?: HeroStats }) {
   return (
     <section className="container-pal py-16 sm:py-24">
       <div className="grid items-start gap-12 lg:grid-cols-[1fr_360px]">
-        <div>
+        <div className="animate-fade-up">
           <p className="text-sm text-muted">{t.site.footerNote}</p>
           <h1 className="mt-4 max-w-3xl text-balance text-4xl font-bold leading-[1.2] tracking-tight text-ink sm:text-5xl">
             {t.home.heroTitle}
@@ -53,7 +56,10 @@ export function Hero({ stats }: { stats?: HeroStats }) {
         </div>
 
         {/* The one moment of color the system permits. */}
-        <HeroIllustration className="mx-auto hidden w-full max-w-[360px] lg:block" />
+        <HeroIllustration
+          className="animate-fade-up mx-auto hidden w-full max-w-[360px] lg:block"
+          style={{ animationDelay: "150ms" }}
+        />
       </div>
     </section>
   );

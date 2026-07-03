@@ -5,6 +5,7 @@ import { IdeaCard, type IdeaCardData } from "@/components/IdeaCard";
 import { IdeasSearch } from "@/components/IdeasSearch";
 import { FieldFilter } from "@/components/FieldFilter";
 import { fieldName, isValidFieldKey } from "@/lib/fields";
+import { fieldColor } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
 import type { Prisma } from "@prisma/client";
 
@@ -89,7 +90,14 @@ export default async function IdeasPage({
             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted">
               <span>{t.ideas.sortNote}</span>
               {activeField && (
-                <span className="chip">
+                <span
+                  className="chip"
+                  style={{
+                    borderColor: fieldColor(activeField).border,
+                    color: fieldColor(activeField).fg,
+                    backgroundColor: fieldColor(activeField).bg,
+                  }}
+                >
                   {fieldName(activeField)}
                   <Link
                     href={filterHref(null)}
@@ -104,7 +112,7 @@ export default async function IdeasPage({
           </div>
 
           {cards.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="stagger-in grid gap-4 sm:grid-cols-2">
               {cards.map((idea) => (
                 <IdeaCard key={idea.id} idea={idea} />
               ))}

@@ -4,13 +4,20 @@
  * with two flowing arrows weaving upward through them (citizens & experts
  * moving ideas forward). Pure content, not UI chrome.
  */
-export function HeroIllustration({ className }: { className?: string }) {
+export function HeroIllustration({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   return (
     <svg
       viewBox="0 0 360 360"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      style={style}
       role="img"
       aria-label="Ilustrim: ide që lëvizin përpara"
     >

@@ -6,6 +6,7 @@ import { ExpertCard } from "@/components/ExpertCard";
 import { SelfNominateButton } from "@/components/SelfNominateForm";
 import { ProposeExpertGeneralButton } from "@/components/ProposeExpertGeneralButton";
 import { FIELDS, fieldName, isValidFieldKey } from "@/lib/fields";
+import { fieldColor } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
 
 export const metadata: Metadata = { title: t.experts.title };
@@ -64,20 +65,24 @@ export default async function ExpertsPage({
         >
           {t.experts.filterAll}
         </Link>
-        {FIELDS.map((f) => (
-          <Link
-            key={f.key}
-            href={`/ekspertet?fusha=${f.key}`}
-            className={[
-              "rounded-full px-3 py-1.5 text-sm font-medium",
-              activeField === f.key
-                ? "bg-ink text-white"
-                : "border border-border bg-card text-ink hover:border-ink",
-            ].join(" ")}
-          >
-            {f.name.split(",")[0]}
-          </Link>
-        ))}
+        {FIELDS.map((f) => {
+          const c = fieldColor(f.key);
+          const active = activeField === f.key;
+          return (
+            <Link
+              key={f.key}
+              href={`/ekspertet?fusha=${f.key}`}
+              className="rounded-full border px-3 py-1.5 text-sm font-medium transition-colors"
+              style={
+                active
+                  ? { backgroundColor: c.fg, borderColor: c.fg, color: "#fff" }
+                  : { borderColor: c.border, color: c.fg, backgroundColor: c.bg }
+              }
+            >
+              {f.name.split(",")[0]}
+            </Link>
+          );
+        })}
       </div>
 
       {activeField && (
@@ -90,7 +95,7 @@ export default async function ExpertsPage({
       )}
 
       {experts.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="stagger-in grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {experts.map((e) => (
             <ExpertCard key={e.id} expert={e} />
           ))}

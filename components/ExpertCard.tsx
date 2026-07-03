@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { fieldShort } from "@/lib/fields";
+import { FieldChip } from "@/components/FieldChip";
+import { fieldColor } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
 
 export type ExpertCardData = {
@@ -11,16 +12,16 @@ export type ExpertCardData = {
 
 /** Public expert card — clickable to the profile. ONLY name, areas and bio are ever public. */
 export function ExpertCard({ expert }: { expert: ExpertCardData }) {
+  const color = fieldColor(expert.areas[0] ?? "");
   return (
     <Link
       href={`/ekspertet/${expert.id}`}
-      className="card card-lift flex h-full flex-col p-5"
+      className="card card-lift flex h-full flex-col border-l-4 p-5"
+      style={{ borderLeftColor: color.fg }}
     >
       <div className="mb-3 flex flex-wrap gap-1.5">
         {expert.areas.map((a) => (
-          <span key={a} className="chip">
-            {fieldShort(a)}
-          </span>
+          <FieldChip key={a} fieldKey={a} />
         ))}
       </div>
       <h3 className="text-lg font-bold text-ink">{expert.name}</h3>

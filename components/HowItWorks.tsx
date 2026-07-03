@@ -78,8 +78,8 @@ function StepArrow({
   markerId: string;
 }) {
   return (
-    <div className="hidden sm:mt-5 sm:block" aria-hidden>
-      <svg viewBox="0 0 64 28" width="56" height="24" fill="none">
+    <div className="hidden sm:block" style={{ marginTop: 25 }} aria-hidden>
+      <svg viewBox="0 0 64 28" width="68" height="30" fill="none">
         <defs>
           <marker
             id={markerId}
@@ -116,26 +116,52 @@ function StepArrow({
  * hand-drawn arrows in the stamp red. Icons and arrows stagger into view
  * as the section scrolls into the viewport.
  */
+// Time for the last icon/arrow to finish revealing, plus a pause before
+// the whole sequence resets and replays.
+const REVEAL_MS = 2 * 220 + 900;
+const HOLD_MS = 2200;
+const RESET_MS = 500;
+
 export function HowItWorks() {
   const steps = t.home.how;
   const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
   const [visible, setVisible] = useState(false);
 
+  // Track whether the section is on screen; the reveal loop only runs
+  // while it is, so it doesn't animate forever off-screen.
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
-      },
+      ([entry]) => setInView(!!entry?.isIntersecting),
       { threshold: 0.25 },
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  // Loop the stagger: reveal, hold, briefly reset, repeat.
+  useEffect(() => {
+    if (!inView) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return;
+    }
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout>;
+    const cycle = (show: boolean) => {
+      setVisible(show);
+      timeoutId = setTimeout(() => {
+        if (!cancelled) cycle(!show);
+      }, show ? REVEAL_MS + HOLD_MS : RESET_MS);
+    };
+    cycle(true);
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
+  }, [inView]);
 
   return (
     <div
@@ -156,8 +182,8 @@ export function HowItWorks() {
               ].join(" ")}
               style={{ transitionDelay: `${i * 220}ms` }}
             >
-              <span className="flex h-16 w-16 shrink-0 items-center justify-center border border-ink text-ink">
-                <Icon className="h-8 w-8" />
+              <span className="flex h-20 w-20 shrink-0 items-center justify-center border border-ink text-ink">
+                <Icon className="h-10 w-10" />
               </span>
               <div>
                 <h3 className="text-lg font-semibold text-ink">
