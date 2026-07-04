@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { FieldChip } from "@/components/FieldChip";
+import { FloatingBlobs } from "@/components/FloatingBlobs";
 import { fieldName } from "@/lib/fields";
 import { fieldColor } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
@@ -53,7 +54,15 @@ export default async function ExpertProfilePage({
   if (!expert || expert.status !== "PUBLISHED") notFound();
 
   return (
-    <div className="container-pal py-10">
+    <div className="relative overflow-hidden">
+      <FloatingBlobs
+        opacity={0.07}
+        blobs={[
+          { color: "#2F8F7A", top: "-10%", left: "78%", size: 260, anim: "animate-blob-a" },
+          { color: "#D32F2F", top: "70%", left: "-4%", size: 240, anim: "animate-blob-b" },
+        ]}
+      />
+      <div className="container-pal relative py-10">
       <Link href="/ekspertet" className="text-sm text-muted hover:text-teal">
         ← {t.experts.title}
       </Link>
@@ -120,6 +129,7 @@ export default async function ExpertProfilePage({
         <p className="mt-8 border-t border-border pt-4 text-xs text-muted">
           {t.experts.privateNote}
         </p>
+      </div>
       </div>
     </div>
   );

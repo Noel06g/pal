@@ -5,8 +5,8 @@ import { getCurrentUser } from "@/lib/session";
 import { ExpertCard } from "@/components/ExpertCard";
 import { SelfNominateButton } from "@/components/SelfNominateForm";
 import { ProposeExpertGeneralButton } from "@/components/ProposeExpertGeneralButton";
+import { FloatingBlobs } from "@/components/FloatingBlobs";
 import { FIELDS, fieldName, isValidFieldKey } from "@/lib/fields";
-import { fieldColor } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
 
 export const metadata: Metadata = { title: t.experts.title };
@@ -31,7 +31,15 @@ export default async function ExpertsPage({
   });
 
   return (
-    <div className="container-pal py-10">
+    <div className="relative overflow-hidden">
+      <FloatingBlobs
+        opacity={0.08}
+        blobs={[
+          { color: "#2F8F7A", top: "-12%", left: "82%", size: 300, anim: "animate-blob-a" },
+          { color: "#D32F2F", top: "65%", left: "-6%", size: 280, anim: "animate-blob-b" },
+        ]}
+      />
+      <div className="container-pal relative py-10">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
@@ -66,23 +74,17 @@ export default async function ExpertsPage({
           {t.experts.filterAll}
         </Link>
         {FIELDS.map((f) => {
-          const c = fieldColor(f.key);
           const active = activeField === f.key;
           return (
             <Link
               key={f.key}
               href={`/ekspertet?fusha=${f.key}`}
-              className="tint rounded-full border px-3 py-1.5 text-sm font-medium transition-all hover:scale-105"
-              style={
+              className={[
+                "rounded-full border px-3 py-1.5 text-sm font-medium transition-all hover:scale-105",
                 active
-                  ? { backgroundColor: c.fg, borderColor: c.fg, color: "#fff" }
-                  : ({
-                      borderColor: c.border,
-                      color: c.fg,
-                      "--tint-bg": c.bg,
-                      "--tint-bg-hover": c.bgHover,
-                    } as React.CSSProperties)
-              }
+                  ? "border-ink bg-ink text-white"
+                  : "border-border bg-card text-ink hover:border-ink",
+              ].join(" ")}
             >
               {f.name.split(",")[0]}
             </Link>
@@ -130,6 +132,7 @@ export default async function ExpertsPage({
           <p className="max-w-sm text-muted">{t.experts.empty}</p>
         </div>
       )}
+      </div>
     </div>
   );
 }

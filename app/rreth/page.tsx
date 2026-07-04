@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
+import { FloatingBlobs } from "@/components/FloatingBlobs";
 import { t } from "@/lib/strings";
 
 export const metadata: Metadata = { title: t.about.title };
 
 export default function AboutPage() {
   return (
-    <div className="container-pal py-12">
+    <div className="relative overflow-hidden">
+      <FloatingBlobs
+        opacity={0.07}
+        blobs={[
+          { color: "#B71C1C", top: "-10%", left: "75%", size: 260, anim: "animate-blob-a" },
+          { color: "#2F8F7A", top: "60%", left: "-6%", size: 240, anim: "animate-blob-b" },
+        ]}
+      />
+      <div className="container-pal relative py-12">
       <div className="mx-auto max-w-2xl">
         <h1 className="text-balance text-4xl font-bold tracking-tight">
           {t.about.title}
@@ -57,6 +66,7 @@ export default function AboutPage() {
             </p>
           </div>
         </section>
+      </div>
       </div>
     </div>
   );

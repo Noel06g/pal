@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { IdeaCard, type IdeaCardData } from "@/components/IdeaCard";
 import { IdeasSearch } from "@/components/IdeasSearch";
 import { FieldFilter } from "@/components/FieldFilter";
+import { FloatingBlobs } from "@/components/FloatingBlobs";
 import { fieldName, isValidFieldKey } from "@/lib/fields";
 import { fieldColor } from "@/lib/fieldColors";
 import { t } from "@/lib/strings";
@@ -64,7 +65,15 @@ export default async function IdeasPage({
   };
 
   return (
-    <div className="container-pal py-10">
+    <div className="relative overflow-hidden">
+      <FloatingBlobs
+        opacity={0.08}
+        blobs={[
+          { color: "#B71C1C", top: "-10%", left: "85%", size: 300, anim: "animate-blob-a" },
+          { color: "#E8A33D", top: "70%", left: "-5%", size: 260, anim: "animate-blob-b" },
+        ]}
+      />
+      <div className="container-pal relative py-10">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
@@ -145,6 +154,7 @@ export default async function IdeasPage({
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );

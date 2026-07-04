@@ -11,6 +11,7 @@ import { ConfirmTakeoverButton } from "@/components/ConfirmTakeoverButton";
 import { CommentList, type CommentData } from "@/components/CommentList";
 import { CommentForm } from "@/components/CommentForm";
 import { FieldChip } from "@/components/FieldChip";
+import { FloatingBlobs } from "@/components/FloatingBlobs";
 import { t } from "@/lib/strings";
 
 function fmtDate(d: Date) {
@@ -111,7 +112,15 @@ export default async function IdeaDetailPage({
   }));
 
   return (
-    <div className="container-pal py-10">
+    <div className="relative overflow-hidden">
+      <FloatingBlobs
+        opacity={0.07}
+        blobs={[
+          { color: "#B71C1C", top: "-10%", left: "80%", size: 280, anim: "animate-blob-a" },
+          { color: "#E8A33D", top: "75%", left: "-4%", size: 240, anim: "animate-blob-b" },
+        ]}
+      />
+      <div className="container-pal relative py-10">
       <Link href="/idete" className="text-sm text-muted hover:text-teal">
         {t.idea.backToList}
       </Link>
@@ -371,6 +380,7 @@ export default async function IdeaDetailPage({
             </Link>
           </div>
         </aside>
+      </div>
       </div>
     </div>
   );
