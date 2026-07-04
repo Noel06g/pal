@@ -192,7 +192,7 @@ export function HowItWorks() {
               style={{ transitionDelay: `${i * 220}ms` }}
             >
               <span
-                className="flex h-28 w-28 shrink-0 items-center justify-center border"
+                className="flex h-28 w-28 shrink-0 items-center justify-center rounded-2xl border shadow-card transition-transform duration-300 hover:scale-105"
                 style={{
                   borderColor: color.fg,
                   backgroundColor: color.bg,

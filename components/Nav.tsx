@@ -57,7 +57,7 @@ export function Nav({
     ].join(" ");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-paper">
+    <header className="sticky top-0 z-50 border-b border-border bg-paper shadow-nav">
       <div className="container-pal flex h-16 items-center justify-between gap-4">
         <Link href="/" className="flex shrink-0 items-center">
           <Image

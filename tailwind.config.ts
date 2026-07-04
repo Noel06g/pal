@@ -1,11 +1,9 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Document-style design system ("printed monograph"), crimson palette:
- * clean off-white canvas, near-black text, neutral-gray hairline borders,
- * underlined crimson links, a red square stamp as the only brand mark.
- * No radii, no shadows, no webfonts. Chromatic color is reserved for
- * illustration.
+ * Modern crimson design system: clean off-white canvas, near-black text,
+ * soft rounded surfaces, layered shadows for depth, a bold filled crimson
+ * as the primary action color.
  *
  * Legacy token names (teal/paper/card/…) are kept and remapped so existing
  * component classes pick up the new system without churn:
@@ -42,9 +40,10 @@ const config: Config = {
         amber: "#9A6B16",
       },
       borderRadius: {
-        DEFAULT: "0px",
-        lg: "0px",
-        xl: "0px",
+        DEFAULT: "10px",
+        md: "10px",
+        lg: "14px",
+        xl: "20px",
       },
       fontFamily: {
         // The system stack IS the brand voice — no webfonts.
@@ -66,8 +65,11 @@ const config: Config = {
         ],
       },
       boxShadow: {
-        // Elevation is expressed with hairline borders, never shadows.
-        card: "none",
+        // Warm, low-contrast shadows — depth without looking heavy.
+        soft: "0 1px 2px rgba(17,17,17,0.05)",
+        card: "0 1px 2px rgba(17,17,17,0.04), 0 8px 24px -8px rgba(17,17,17,0.10)",
+        lift: "0 16px 32px -12px rgba(183,28,28,0.28)",
+        nav: "0 1px 3px rgba(17,17,17,0.05), 0 4px 16px -8px rgba(17,17,17,0.08)",
       },
       maxWidth: {
         content: "1200px",

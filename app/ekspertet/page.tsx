@@ -108,7 +108,7 @@ export default async function ExpertsPage({
       ) : (
         <div className="card flex flex-col items-center gap-3 p-12 text-center">
           <span
-            className="flex h-14 w-14 items-center justify-center bg-teal-tint text-ink"
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-tint text-ink"
             aria-hidden
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none">

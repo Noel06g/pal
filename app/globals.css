@@ -19,12 +19,6 @@
   h4 {
     @apply font-display;
   }
-  /* The system is sharp-cornered everywhere — no exceptions. */
-  *,
-  *::before,
-  *::after {
-    border-radius: 0 !important;
-  }
   /* Visible, consistent focus for keyboard users: a stamp-red outline. */
   :focus-visible {
     outline: 2px solid #b71c1c;
@@ -45,43 +39,45 @@
     @apply max-w-[560px];
   }
 
-  /* Buttons are outlined, never filled at rest; hover inverts and lifts slightly. */
+  /* Buttons are bold and pill-shaped; primary is filled crimson from the
+     start, everything lifts and gains shadow on hover. */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 border px-4 py-2.5 text-sm font-semibold transition-all hover:scale-[1.03] active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold shadow-soft transition-all hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-lift active:translate-y-0 active:scale-[0.98];
   }
   .btn-primary {
-    @apply btn border-stamp bg-paper text-stamp hover:bg-stamp hover:text-white;
+    @apply btn border-stamp bg-stamp text-white hover:border-teal-dk hover:bg-teal-dk;
   }
   .btn-secondary {
     @apply btn border-ink bg-paper text-ink hover:bg-ink hover:text-white;
   }
   .btn-ghost {
-    @apply btn border-transparent text-ink hover:underline;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-transparent px-4 py-2.5 text-sm font-semibold text-ink transition-all hover:underline;
   }
   .btn-danger {
-    @apply btn border-danger bg-paper text-danger hover:bg-danger hover:text-white;
+    @apply btn border-danger bg-danger text-white hover:border-danger hover:bg-[#d32f2f];
   }
   .btn-danger-soft {
-    @apply btn border-danger/40 bg-paper text-danger hover:border-danger;
+    @apply btn border-danger/40 bg-paper text-danger shadow-none hover:border-danger hover:bg-danger hover:text-white;
   }
 
-  /* Layer separation via 1px hairlines — never shadows. */
+  /* Layered cards: soft rounded corners + a gentle shadow instead of flat
+     hairlines — real depth, not just borders. */
   .card {
-    @apply border border-border bg-card;
+    @apply rounded-xl border border-border bg-card shadow-card;
   }
   .card-lift {
-    @apply transition-all duration-200 hover:-translate-y-1 hover:scale-[1.015] hover:border-ink;
+    @apply transition-all duration-200 hover:-translate-y-1 hover:scale-[1.015] hover:border-ink hover:shadow-lift;
   }
 
   .chip {
-    @apply inline-flex items-center gap-1 border border-border bg-paper px-2.5 py-1 text-xs font-medium text-ink transition-colors;
+    @apply inline-flex items-center gap-1 rounded-full border border-border bg-paper px-2.5 py-1 text-xs font-medium text-ink transition-colors;
   }
 
   /* Field-tinted surface: colors set per-instance via CSS custom properties
      so one rule serves cards, pills and filter rows alike. */
   .tint {
     background-color: var(--tint-bg, transparent);
-    border-color: var(--tint-border, #dcd5c6);
+    border-color: var(--tint-border, #eaeaea);
     transition:
       background-color 200ms ease,
       border-color 200ms ease,
@@ -92,7 +88,7 @@
   }
 
   .input {
-    @apply w-full border border-border bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-muted focus-visible:border-ink;
+    @apply w-full rounded-xl border border-border bg-paper px-3.5 py-2.5 text-sm text-ink shadow-soft transition-shadow placeholder:text-muted focus-visible:border-ink focus-visible:shadow-card;
   }
   .label {
     @apply mb-1.5 block text-sm font-semibold text-ink;
@@ -101,15 +97,15 @@
     @apply mt-1 text-xs text-muted;
   }
 
-  /* Status badges: monochrome, bordered, no fills. */
+  /* Status badges: soft pill shapes. */
   .badge-ok {
-    @apply inline-flex items-center border border-ink/30 px-2 py-0.5 text-xs font-semibold text-ink;
+    @apply inline-flex items-center rounded-full border border-ink/30 px-2.5 py-0.5 text-xs font-semibold text-ink;
   }
   .badge-amber {
-    @apply inline-flex items-center border border-border px-2 py-0.5 text-xs font-semibold text-amber;
+    @apply inline-flex items-center rounded-full border border-border px-2.5 py-0.5 text-xs font-semibold text-amber;
   }
   .badge-muted {
-    @apply inline-flex items-center border border-border px-2 py-0.5 text-xs font-semibold text-muted;
+    @apply inline-flex items-center rounded-full border border-border px-2.5 py-0.5 text-xs font-semibold text-muted;
   }
 
   /* The workhorse interactive style: always-underlined indigo links that
