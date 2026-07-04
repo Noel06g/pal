@@ -1,11 +1,19 @@
 import Link from "next/link";
 import Image from "next/image";
+import { FloatingBlobs } from "@/components/FloatingBlobs";
 import { t } from "@/lib/strings";
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-border bg-paper">
-      <div className="container-pal py-12">
+    <footer className="relative mt-24 overflow-hidden border-t border-border bg-paper">
+      <FloatingBlobs
+        opacity={0.08}
+        blobs={[
+          { color: "#B71C1C", top: "-30%", left: "8%", size: 260, anim: "animate-blob-a" },
+          { color: "#2F8F7A", top: "-10%", left: "70%", size: 220, anim: "animate-blob-b" },
+        ]}
+      />
+      <div className="container-pal relative py-12">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-sm">
             <Image

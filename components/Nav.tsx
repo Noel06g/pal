@@ -50,7 +50,7 @@ export function Nav({
 
   const navLinkClass = (active: boolean) =>
     [
-      "px-1 py-2 text-sm underline decoration-1 underline-offset-4 transition-colors",
+      "px-1 py-2 text-sm underline decoration-1 underline-offset-4 transition-all hover:-translate-y-0.5 inline-block",
       active
         ? "font-semibold text-ink decoration-ink"
         : "text-teal hover:text-teal-dk",

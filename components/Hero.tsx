@@ -1,12 +1,8 @@
 import Link from "next/link";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
+import { FloatingBlobs } from "@/components/FloatingBlobs";
 import { HeroIllustration } from "@/components/HeroIllustration";
 import { t } from "@/lib/strings";
-
-// Soft red glow in the corners, fading into the page — not a rainbow wash.
-const HERO_BACKGROUND =
-  "radial-gradient(900px 500px at 88% 8%, rgba(183,28,28,0.10), transparent 60%), " +
-  "radial-gradient(700px 420px at 4% 100%, rgba(211,47,47,0.06), transparent 60%)";
 
 export type HeroStats = { ideas: number; experts: number } | null;
 
@@ -26,11 +22,7 @@ export function Hero({ stats }: { stats?: HeroStats }) {
 
   return (
     <section className="relative overflow-hidden">
-      <div
-        className="absolute inset-0 -z-10"
-        style={{ backgroundImage: HERO_BACKGROUND }}
-        aria-hidden
-      />
+      <FloatingBlobs />
       <div className="container-pal py-16 sm:py-24">
         <div className="grid items-start gap-12 lg:grid-cols-[1fr_360px]">
           <div className="animate-fade-up">
@@ -69,11 +61,14 @@ export function Hero({ stats }: { stats?: HeroStats }) {
             )}
           </div>
 
-          {/* The one moment of color the system permits. */}
-          <HeroIllustration
+          <div
             className="animate-fade-up mx-auto hidden w-full max-w-[360px] lg:block"
             style={{ animationDelay: "150ms" }}
-          />
+          >
+            <div className="animate-float-y">
+              <HeroIllustration className="w-full" />
+            </div>
+          </div>
         </div>
       </div>
     </section>
